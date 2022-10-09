@@ -1,0 +1,17 @@
+{
+  "name": "dentist-appointment-booking-server",
+  "version": "1.0.0",
+  "description": "Dentist appointment booking API, BSc Thesis by Jakub Wierzchowiec 2022",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "echo \"Error: no test specified\" && exit 1",
+    "dev": "echo \"Error: no test specified\" && exit 1",
+    "start": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jakub Wierzchowiec",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
