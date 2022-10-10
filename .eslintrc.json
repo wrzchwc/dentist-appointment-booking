@@ -1,0 +1,62 @@
+{
+  "root": true,
+  "env": {
+    "node": true,
+    "es2022": true,
+    "jest": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "overrides": [
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "no-console": "warn",
+    "no-constant-binary-expression": "error",
+    "no-duplicate-imports": "error",
+    "no-self-compare": "error",
+    "no-unreachable": "error",
+    "no-unreachable-loop": "error",
+    "no-unused-private-class-members": "error",
+    "arrow-body-style": [
+      "error",
+      "always"
+    ],
+    "camelcase": [
+      "warn",
+      "always"
+    ],
+    "eqeqeq": [
+      "error",
+      "always"
+    ],
+    "func-name-matching": [
+      "warn",
+      "always"
+    ],
+    "sort-imports": [
+      "error",
+      {
+        "ignoreCase": false,
+        "ignoreDecalarationSort": true,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": [
+          "none",
+          "all",
+          "multiple",
+          "single"
+        ],
+        "allowSepartedGroups": false
+      }
+    ]
+  }
+}
