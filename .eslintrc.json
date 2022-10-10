@@ -31,10 +31,6 @@
       "error",
       "always"
     ],
-    "camelcase": [
-      "warn",
-      "always"
-    ],
     "eqeqeq": [
       "error",
       "always"
@@ -47,7 +43,7 @@
       "error",
       {
         "ignoreCase": false,
-        "ignoreDecalarationSort": true,
+        "ignoreDeclarationSort": true,
         "ignoreMemberSort": false,
         "memberSyntaxSortOrder": [
           "none",
@@ -55,7 +51,7 @@
           "multiple",
           "single"
         ],
-        "allowSepartedGroups": false
+        "allowSeparatedGroups": false
       }
     ]
   }
