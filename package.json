@@ -4,13 +4,16 @@
   "description": "Dentist appointment booking API, BSc Thesis by Jakub Wierzchowiec 2022",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "echo \"Error: no test specified\" && exit 1",
-    "dev": "echo \"Error: no test specified\" && exit 1",
-    "start": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "build": "tsc",
+    "dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\"",
+    "start": "npm run build && node dist/server.js"
   },
   "author": "Jakub Wierzchowiec",
   "license": "ISC",
+  "jest": {
+    "testEnvironment": "node"
+  },
   "dependencies": {
     "cookie-session": "^2.0.0",
     "cors": "^2.8.5",
@@ -29,6 +32,7 @@
     "@types/node": "^18.8.3",
     "concurrently": "^7.4.0",
     "eslint": "^8.25.0",
+    "eslint-config-prettier": "^8.5.0",
     "jest": "^29.1.2",
     "keygrip": "^1.1.0",
     "morgan": "^1.10.0",
