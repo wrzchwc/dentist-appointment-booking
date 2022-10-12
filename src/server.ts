@@ -13,7 +13,7 @@ const server = createServer({ key, cert }, app);
 
 (async function startServer() {
     try {
-        await postgresConnect();
+        console.log(await postgresConnect());
         server.listen(process.env.PORT, () => {
             console.log('Server ready');
             console.log(`Listening on port ${process.env.PORT}`);

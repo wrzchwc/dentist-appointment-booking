@@ -12,7 +12,7 @@ const postgres = new Sequelize(process.env.POSTGRES_URI || '', { logging: false 
 export async function postgresConnect() {
     try {
         await postgres.authenticate();
-        console.log('Database connection established successfully');
+        return 'Database connection established successfully';
     } catch (error) {
         throw new Error('Database connection failed');
     }
@@ -25,7 +25,7 @@ export async function postgresConnect() {
 export async function postgresDisconnect() {
     try {
         await postgres.close();
-        console.log('Database connection closed successfully');
+        return 'Database connection closed successfully';
     } catch (error) {
         throw new Error('Database disconnection failed');
     }
