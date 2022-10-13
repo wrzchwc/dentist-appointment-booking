@@ -4,8 +4,13 @@
   "description": "Dentist appointment booking API, BSc Thesis by Jakub Wierzchowiec 2022",
   "main": "index.js",
   "scripts": {
+    "lint": "npx eslint src test",
+    "lint:fix": "npm run lint --fix",
+    "prettier": "npx prettier src test --check",
+    "prettier:fix": "npm run prettier -- --write",
+    "format": "npm run prettier:fix && npm run lint:fix",
     "test": "jest",
-    "build": "tsc",
+    "build": "npm run format && tsc",
     "dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\"",
     "start": "npm run build && node dist/server.js"
   },
