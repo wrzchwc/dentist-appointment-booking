@@ -27,10 +27,6 @@
     "no-unreachable": "error",
     "no-unreachable-loop": "error",
     "no-unused-private-class-members": "error",
-    "arrow-body-style": [
-      "error",
-      "always"
-    ],
     "eqeqeq": [
       "error",
       "always"
