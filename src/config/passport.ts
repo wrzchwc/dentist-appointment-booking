@@ -1,14 +1,12 @@
 import passport from 'passport';
-import { config } from 'dotenv';
 import { Profile, Strategy } from 'passport-google-oauth20';
 import { User } from '../models';
-
-config();
+import environment from './environment';
 
 const AUTH_OPTIONS = {
     callbackURL: '/v1/auth/google/callback',
-    clientID: process.env.OAUTH_CLIENT_ID || '',
-    clientSecret: process.env.OAUTH_CLIENT_SECRET || '',
+    clientID: environment.oauth.clientId,
+    clientSecret: environment.oauth.clientSecret,
 };
 
 interface SessionData {
