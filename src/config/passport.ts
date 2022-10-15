@@ -21,16 +21,9 @@ const strategy = new Strategy(AUTH_OPTIONS, (accessToken, refreshToken, profile,
 passport.use(strategy);
 
 passport.serializeUser(async (user, done) => {
-    const googleId = (user as Profile).id;
-    const name = (user as Profile).name?.givenName;
-    const surname = (user as Profile).name?.familyName;
-    const photoUrl = (user as Profile).photos?.at(0)?.value;
-    const email = (user as Profile).emails?.find(({ verified }) => verified)?.value;
-    const [persistedUser] = await User.findOrCreate({
-        where: { googleId },
-        defaults: { googleId, name, surname, photoUrl, email },
-    });
-    const data: SessionData = { googleId, isAdmin: persistedUser.toJSON().isAdmin };
+    const [registeredUser] = await User.register(user as Profile);
+    const { googleId, isAdmin } = registeredUser.toJSON();
+    const data: SessionData = { googleId, isAdmin };
     done(null, data);
 });
 

@@ -1,5 +1,6 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
 import { sequelizeInstance } from '../services';
+import { Profile } from 'passport-google-oauth20';
 
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare id: CreationOptional<string>;
@@ -9,6 +10,18 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     declare name?: string;
     declare surname?: string;
     declare photoUrl?: string;
+
+    static async register(userProfile: Profile) {
+        const googleId = userProfile.id;
+        const name = userProfile.name?.givenName;
+        const surname = userProfile.name?.familyName;
+        const photoUrl = userProfile.photos?.at(0)?.value;
+        const email = userProfile.emails?.find(({ verified }) => verified)?.value;
+        return await User.findOrCreate({
+            where: { googleId },
+            defaults: { googleId, name, surname, photoUrl, email },
+        });
+    }
 }
 
 User.init(
