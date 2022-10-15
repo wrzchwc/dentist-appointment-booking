@@ -2,8 +2,8 @@
 import { readFileSync } from 'fs';
 import { createServer } from 'https';
 import { config } from 'dotenv';
-import app from './app';
-import { checkConnection, disconnect } from './services/postgres/postgres';
+import app from './config/app';
+import { checkConnection, disconnect, synchroniseModels } from './services';
 
 config();
 
@@ -14,8 +14,8 @@ const server = createServer({ key, cert }, app);
 
 (async function startServer() {
     try {
-        console.log(await checkConnection());
-
+        await checkConnection();
+        await synchroniseModels();
         server.listen(process.env.PORT, () => {
             console.log('Server ready');
             console.log(`Listening on port ${process.env.PORT}`);

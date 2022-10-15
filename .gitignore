@@ -4,4 +4,4 @@ dist
 
 *.pem
 .env
-
+jest.config.js

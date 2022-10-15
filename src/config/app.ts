@@ -4,9 +4,9 @@ import cookieSession from 'cookie-session';
 import { config } from 'dotenv';
 import cors from 'cors';
 import morgan from 'morgan';
-import apiV1 from './routes/api-v1';
 import passport from 'passport';
-import './config/passport';
+import './passport';
+import { v1 } from '../api';
 
 config();
 
@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(cookieSession({ name: 'session', maxAge: 86400000, keys }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/v1', apiV1);
+app.use('/v1', v1.api);
 app.get('/', (req, res) => {
     res.send(
         `

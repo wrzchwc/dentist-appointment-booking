@@ -6,17 +6,13 @@ config();
 const URI = process.env.POSTGRES_URI || '';
 const OPTIONS = { logging: false };
 
-export enum PostgresSuccessMessage {
-    CONNECTED = 'Database connection established successfully',
-    DISCONNECTED = 'Database connection closed successfully',
-}
-
-export enum PostgresFailureMessage {
+export enum FailureMessage {
     CONNECTION = 'Database connection failed',
     DISCONNECTION = 'Database disconnection failed',
+    SYNCHRONISATION = 'Sequelize models synchronisation failed',
 }
 
-let postgres = new Sequelize(URI, OPTIONS);
+export let sequelizeInstance = new Sequelize(URI, OPTIONS);
 
 /**
  * Connects with database.
@@ -24,10 +20,9 @@ let postgres = new Sequelize(URI, OPTIONS);
  */
 export async function checkConnection() {
     try {
-        await postgres.authenticate();
-        return PostgresSuccessMessage.CONNECTED;
+        await sequelizeInstance.authenticate();
     } catch (error) {
-        throw new Error(PostgresFailureMessage.CONNECTION);
+        throw new Error(FailureMessage.CONNECTION);
     }
 }
 
@@ -37,13 +32,20 @@ export async function checkConnection() {
  */
 export async function disconnect() {
     try {
-        await postgres.close();
-        return PostgresSuccessMessage.DISCONNECTED;
+        await sequelizeInstance.close();
     } catch (error) {
-        throw new Error(PostgresFailureMessage.DISCONNECTION);
+        throw new Error(FailureMessage.DISCONNECTION);
     }
 }
 
 export function restore() {
-    postgres = new Sequelize(URI, OPTIONS);
+    sequelizeInstance = new Sequelize(URI, OPTIONS);
+}
+
+export async function synchroniseModels() {
+    try {
+        await sequelizeInstance.sync({ alter: true });
+    } catch (error) {
+        throw new Error(FailureMessage.SYNCHRONISATION);
+    }
 }
