@@ -1,14 +1,14 @@
 /* eslint no-console: 0*/
-import { readFileSync } from 'fs';
-import { createServer } from 'https';
-import app from './config/app';
 import { checkConnection, disconnect, synchroniseModels } from './services';
+import app from './config/app';
 import environment from './config/environment';
+import fs from 'fs';
+import https from 'https';
 
-const key = readFileSync('certs/key.pem');
-const cert = readFileSync('certs/cert.pem');
+const key = fs.readFileSync('certs/key.pem');
+const cert = fs.readFileSync('certs/cert.pem');
 
-const server = createServer({ key, cert }, app);
+const server = https.createServer({ key, cert }, app);
 
 (async function startServer() {
     try {

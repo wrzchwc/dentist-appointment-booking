@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { signOut } from './auth.controller';
 import passport from 'passport';
+import { signOut } from './auth.controller';
 
 enum AuthStrategy {
     GOOGLE = 'google',

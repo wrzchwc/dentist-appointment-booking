@@ -1,7 +1,7 @@
-import passport from 'passport';
 import { Profile, Strategy } from 'passport-google-oauth20';
 import { User } from '../models';
 import environment from './environment';
+import passport from 'passport';
 
 const AUTH_OPTIONS = {
     callbackURL: '/v1/auth/google/callback',

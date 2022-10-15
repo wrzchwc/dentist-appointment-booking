@@ -1,12 +1,13 @@
-import express from 'express';
-import helmet from 'helmet';
+import './passport';
 import cookieSession from 'cookie-session';
 import cors from 'cors';
+import environment from './environment';
+import express from 'express';
+import helmet from 'helmet';
 import morgan from 'morgan';
 import passport from 'passport';
-import './passport';
+
 import { v1 } from '../api';
-import environment from './environment';
 
 const keys = environment.cookieKeys;
 const app = express();

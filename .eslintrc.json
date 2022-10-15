@@ -39,7 +39,7 @@
       "error",
       {
         "ignoreCase": false,
-        "ignoreDeclarationSort": true,
+        "ignoreDeclarationSort": false,
         "ignoreMemberSort": false,
         "memberSyntaxSortOrder": [
           "none",
