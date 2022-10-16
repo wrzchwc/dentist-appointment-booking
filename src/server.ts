@@ -1,9 +1,11 @@
 /* eslint no-console: 0*/
 import { checkConnection, disconnect, synchroniseModels } from './services';
 import { app } from './config';
-import environment from './config/environment';
+import { config } from 'dotenv';
 import fs from 'fs';
 import https from 'https';
+
+config();
 
 const key = fs.readFileSync('certs/key.pem');
 const cert = fs.readFileSync('certs/cert.pem');
@@ -14,9 +16,9 @@ const server = https.createServer({ key, cert }, app);
     try {
         await checkConnection();
         await synchroniseModels();
-        server.listen(environment.port, () => {
+        server.listen(process.env.PORT, () => {
             console.log('Server ready');
-            console.log(`Listening on port ${environment.port}`);
+            console.log(`Listening on port ${process.env.PORT}`);
         });
     } catch (error) {
         console.error('Server launch failed');

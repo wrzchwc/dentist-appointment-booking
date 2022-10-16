@@ -1,7 +1,9 @@
 import { Sequelize } from 'sequelize';
-import environment from '../../config/environment';
+import { config } from 'dotenv';
 
-const URI = environment.postgresURI;
+config();
+
+const URI = process.env.POSTGRES_URI || '';
 const OPTIONS = { logging: false };
 
 export enum FailureMessage {

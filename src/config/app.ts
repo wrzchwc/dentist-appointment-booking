@@ -1,18 +1,20 @@
 import './passport';
+import { config } from 'dotenv';
 import cookieSession from 'cookie-session';
 import cors from 'cors';
-import environment from './environment';
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import passport from 'passport';
-
 import { v1 } from '../api';
 
-const keys = environment.cookieKeys;
+config();
+
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const keys = [process.env.COOKIE_KEY_1!, process.env.COOKIE_KEY_2!, process.env.COOKIE_KEY_3!];
 export const app = express();
 
-app.use(cors({ origin: environment.origin }));
+app.use(cors({ origin: process.env.ORIGIN }));
 app.use(helmet());
 app.use(morgan('combined'));
 app.use(express.json());
