@@ -6,7 +6,7 @@ config();
 const URI = process.env.POSTGRES_URI || '';
 const OPTIONS = { logging: false };
 
-export let sequelizeInstance = new Sequelize(URI, OPTIONS);
+export const sequelizeInstance = new Sequelize(URI, OPTIONS);
 
 /**
  * Connects with database.
@@ -30,10 +30,6 @@ export async function disconnect() {
     } catch (error) {
         throw new Error('Database disconnection failed');
     }
-}
-
-export function restore() {
-    sequelizeInstance = new Sequelize(URI, OPTIONS);
 }
 
 /**
