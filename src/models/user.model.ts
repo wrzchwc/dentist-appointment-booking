@@ -27,7 +27,7 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 User.init(
     {
         id: { type: DataTypes.UUID, primaryKey: true, allowNull: false, defaultValue: DataTypes.UUIDV4 },
-        googleId: { type: DataTypes.STRING, allowNull: false },
+        googleId: { type: DataTypes.STRING, allowNull: false, unique: true },
         isAdmin: { type: DataTypes.BOOLEAN, defaultValue: false, allowNull: false },
         email: { type: DataTypes.STRING },
         name: { type: DataTypes.STRING },

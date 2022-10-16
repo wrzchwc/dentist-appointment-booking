@@ -27,6 +27,7 @@
     "no-unreachable": "error",
     "no-unreachable-loop": "error",
     "no-unused-private-class-members": "error",
+    "no-unused-vars": "error",
     "eqeqeq": [
       "error",
       "always"
