@@ -11,8 +11,8 @@ const AUTH_OPTIONS = {
     clientSecret: process.env.OAUTH_CLIENT_SECRET || '',
 };
 
-interface SessionData {
-    googleId: string;
+export interface SessionData {
+    id: string;
     isAdmin: boolean;
 }
 
@@ -24,8 +24,8 @@ passport.use(strategy);
 
 passport.serializeUser(async (user, done) => {
     const [registeredUser] = await User.register(user as Profile);
-    const { googleId, isAdmin } = registeredUser.toJSON();
-    const data: SessionData = { googleId, isAdmin };
+    const { id, isAdmin } = registeredUser.toJSON();
+    const data: SessionData = { id, isAdmin };
     done(null, data);
 });
 

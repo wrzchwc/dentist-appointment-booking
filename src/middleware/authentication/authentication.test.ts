@@ -25,7 +25,7 @@ describe('authentication middleware', () => {
     });
 
     test('Should forward request if user authenticated', () => {
-        mockRequest = { ...mockRequest, user: { googleId: '213123123123', isAdmin: false } };
+        mockRequest = { ...mockRequest, user: { id: 'afsaf-adasd-dasd-dasd', isAdmin: false } };
 
         authentication(mockRequest as Request, mockResponse as Response, mockNext);
 
