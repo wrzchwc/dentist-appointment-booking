@@ -1,0 +1,26 @@
+name: Dentist Appointment Booking CI
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x]
+        os: [windows-latest, linux-latest, macos-latest]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Git
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{matrix.node-version}}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{matrix.node-version}}
+      - name: Install dependencies
+        run: npm install
+      - name: Compile to JavaScript
+        run: npm run build
+      - name: Run tests
+        run: npm test
