@@ -4,7 +4,7 @@ import keygrip from 'keygrip';
 
 config();
 
-interface Session {
+export interface Session {
     passport: { user: SessionData };
 }
 
