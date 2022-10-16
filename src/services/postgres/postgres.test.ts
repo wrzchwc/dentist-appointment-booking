@@ -1,4 +1,4 @@
-import { FailureMessage, checkConnection, disconnect, restore } from './postgres';
+import { checkConnection, disconnect, restore, synchroniseModels } from './postgres';
 
 jest.mock('sequelize', () => {
     return {
@@ -8,6 +8,9 @@ jest.mock('sequelize', () => {
                     return Promise.reject();
                 },
                 close() {
+                    return Promise.reject();
+                },
+                sync() {
                     return Promise.reject();
                 },
             };
@@ -21,10 +24,14 @@ describe('Postgres service errors', () => {
     });
 
     test('Should throw an error on unsuccessful connection', async () => {
-        await expect(checkConnection()).rejects.toThrowError(FailureMessage.CONNECTION);
+        await expect(checkConnection()).rejects.toThrowError('Database connection failed');
     });
 
     test('Should throw an error on unsuccessful disconnection', async () => {
-        await expect(disconnect()).rejects.toThrowError(FailureMessage.DISCONNECTION);
+        await expect(disconnect()).rejects.toThrowError('Database disconnection failed');
+    });
+
+    test('Should throw an error on unsuccessful models synchronisation', async () => {
+        await expect(synchroniseModels()).rejects.toThrowError('Sequelize models synchronisation failed');
     });
 });
