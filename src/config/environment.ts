@@ -24,5 +24,4 @@ const environment: Environment = {
         clientSecret: process.env.OAUTH_CLIENT_SECRET!,
     },
 };
-
 export default environment;

@@ -30,5 +30,3 @@ passport.serializeUser(async (user, done) => {
 passport.deserializeUser((data: SessionData, done) => {
     done(null, data);
 });
-
-export default {};

@@ -2,7 +2,7 @@
   "name": "dentist-appointment-booking-server",
   "version": "1.0.0",
   "description": "Dentist appointment booking API, BSc Thesis by Jakub Wierzchowiec 2022",
-  "main": "index.js",
+  "main": "dist/src/server.js",
   "scripts": {
     "lint": "npx eslint src jest.config.ts",
     "lint:fix": "npm run lint --fix",

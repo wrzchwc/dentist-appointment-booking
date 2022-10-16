@@ -10,7 +10,7 @@ import passport from 'passport';
 import { v1 } from '../api';
 
 const keys = environment.cookieKeys;
-const app = express();
+export const app = express();
 
 app.use(cors({ origin: environment.origin }));
 app.use(helmet());
@@ -28,5 +28,3 @@ app.get('/', (req, res) => {
         `
     );
 });
-
-export default app;

@@ -1,6 +1,6 @@
 /* eslint no-console: 0*/
 import { checkConnection, disconnect, synchroniseModels } from './services';
-import app from './config/app';
+import { app } from './config';
 import environment from './config/environment';
 import fs from 'fs';
 import https from 'https';
