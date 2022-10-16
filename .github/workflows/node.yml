@@ -24,6 +24,7 @@ jobs:
           echo ORIGIN=${{ secrets.ORIGIN }} >> .env
           echo OAUTH_CLIENT_ID=${{ secrets.OAUTH_CLIENT_ID }} >> .env
           echo OAUTH_CLIENT_SECRET=${{ secrets.OAUTH_CLIENT_SECRET }} >> .env
+          cat .env
       - name: Use Node.js ${{matrix.node-version}}
         uses: actions/setup-node@v2
         with:
