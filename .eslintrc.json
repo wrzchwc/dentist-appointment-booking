@@ -20,7 +20,7 @@
     "@typescript-eslint"
   ],
   "rules": {
-    "no-console": "warn",
+    "no-console": "error",
     "no-constant-binary-expression": "error",
     "no-duplicate-imports": "error",
     "no-self-compare": "error",
