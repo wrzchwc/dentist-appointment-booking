@@ -14,17 +14,6 @@ jobs:
     steps:
       - name: Checkout Git
         uses: actions/checkout@v2
-      - name: Create .env file
-        run: |
-          touch .env
-          echo PORT=${{ secrets.PORT }} >> .env
-          echo COOKIE_KEY_1=${{ secrets.COOKIE_KEY_1 }} >> .env
-          echo COOKIE_KEY_2=${{ secrets.COOKIE_KEY_2 }} >> .env
-          echo COOKIE_KEY_3=${{ secrets.COOKIE_KEY_3 }} >> .env
-          echo ORIGIN=${{ secrets.ORIGIN }} >> .env
-          echo OAUTH_CLIENT_ID=${{ secrets.OAUTH_CLIENT_ID }} >> .env
-          echo OAUTH_CLIENT_SECRET=${{ secrets.OAUTH_CLIENT_SECRET }} >> .env
-          cat .env
       - name: Use Node.js ${{matrix.node-version}}
         uses: actions/setup-node@v2
         with:
@@ -33,5 +22,15 @@ jobs:
         run: npm install
       - name: Compile to JavaScript
         run: npm run build
+               - name: Create .env file
+               run: |
+                 touch .env
+                 echo PORT=${{ secrets.PORT }} >> .env
+                 echo COOKIE_KEY_1=${{ secrets.COOKIE_KEY_1 }} >> .env
+                 echo COOKIE_KEY_2=${{ secrets.COOKIE_KEY_2 }} >> .env
+                 echo COOKIE_KEY_3=${{ secrets.COOKIE_KEY_3 }} >> .env
+                 echo ORIGIN=${{ secrets.ORIGIN }} >> .env
+                 echo OAUTH_CLIENT_ID=${{ secrets.OAUTH_CLIENT_ID }} >> .env
+                 echo OAUTH_CLIENT_SECRET=${{ secrets.OAUTH_CLIENT_SECRET }} >> .env
       - name: Run tests
         run: npm test
