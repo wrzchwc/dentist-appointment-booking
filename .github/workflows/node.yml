@@ -1,0 +1,37 @@
+name: Dentist Appointment Booking CI
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [ 16.x, 18.x ]
+        os: [ windows-latest, linux-latest, macos-latest ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Git
+        uses: actions/checkout@v2.5.0
+      - name: Use Node.js ${{matrix.node-version}}
+        uses: actions/setup-node@v3.5.1
+        with:
+          node-version: ${{matrix.node-version}}
+      - name: Install dependencies
+        run: npm install
+      - name: Build project
+        run: npm run build
+      - name: Create .env file
+        run: |
+          cd server
+          touch .env
+            echo PORT=${{ secrets.PORT }} >> .env
+            echo COOKIE_KEY_1=${{ secrets.COOKIE_KEY_1 }} >> .env
+            echo COOKIE_KEY_2=${{ secrets.COOKIE_KEY_2 }} >> .env
+            echo COOKIE_KEY_3=${{ secrets.COOKIE_KEY_3 }} >> .env
+            echo POSTGRES_URI=${{ secrets.POSTGRES_URI }} >> .env
+            echo OAUTH_CLIENT_ID=${{ secrets.OAUTH_CLIENT_ID }} >> .env
+            echo OAUTH_CLIENT_SECRET=${{ secrets.OAUTH_CLIENT_SECRET }} >> .env
+      - name: Run tests
+        run: npm test

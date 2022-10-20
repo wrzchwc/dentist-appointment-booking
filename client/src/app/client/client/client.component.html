@@ -1,0 +1,6 @@
+<a [href]="signOutUrl">
+    <button>Wyloguj się</button>
+</a>
+<button (click)="handleShowProfile()">Pokaz profil</button>
+<p>Zalogowano jako klient</p>
+<p>{{ profile | json }}</p>

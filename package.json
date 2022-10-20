@@ -1,0 +1,23 @@
+{
+  "name": "dentist-appoitment-booking",
+  "version": "1.0.0",
+  "description": "Dentist appointment booking API, BSc Thesis by Jakub Wierzchowiec 2022",
+  "main": "server/dist/src/server.js",
+  "scripts": {
+    "install:server": "cd server && npm install",
+    "install:client": "cd client && npm install",
+    "install": "npm install && npm run install:server && npm run install:client",
+    "build:server": "cd server && npm run build",
+    "build:client": "cd client && npm run build",
+    "build": "npm run build:server && npm run build:client",
+    "test": "cd server && npm test",
+    "start": "npm run build && cd server && npm start",
+    "dev:client": "npm run build:watch --prefix client",
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run build:watch --prefix client\""
+  },
+  "author": "Jakub Wierzchowiec",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^7.4.0"
+  }
+}
