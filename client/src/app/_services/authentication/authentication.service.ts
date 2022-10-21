@@ -16,14 +16,11 @@ export interface Profile {
 })
 export class AuthenticationService {
     baseUrl: string;
+    profile?: Profile;
 
     // eslint-disable-next-line no-unused-vars
     constructor(private client: HttpClient) {
         this.baseUrl = `${environment.apiUrl}/v1`;
-    }
-
-    signOut() {
-        return this.client.get(`${this.baseUrl}/auth/sign-out`);
     }
 
     getProfile() {
