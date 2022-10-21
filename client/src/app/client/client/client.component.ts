@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { AuthenticationService, Profile } from '../../.services/authentication/authentication.service';
+import { AuthenticationService, Profile } from '../../_services/authentication/authentication.service';
 
 @Component({
     selector: 'app-client',

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { environment } from './../../../environments/environment';
-import { AuthenticationService } from '../../.services/authentication/authentication.service';
+import { AuthenticationService } from '../../_services/authentication/authentication.service';
 
 @Component({
     selector: 'app-home',
