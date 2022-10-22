@@ -1,11 +1,4 @@
-import {
-    checkConnection,
-    createCookie,
-    createCookieHeader,
-    createSession,
-    createSignature,
-    disconnect,
-} from '../../services';
+import { checkConnection, createCookie, createCookieHeader, createSignature, disconnect } from '../../services';
 import { User } from '../../models';
 import { app } from '../../config';
 import supertest from 'supertest';
@@ -17,18 +10,18 @@ const photoUrl = 'www.image.com/123';
 const googleId = '381902381093';
 
 describe('/api/users', () => {
-    beforeAll(() => {
-        checkConnection();
+    beforeAll(async () => {
+        await checkConnection();
     });
 
-    afterAll(() => {
-        disconnect();
+    afterAll(async () => {
+        await disconnect();
     });
 
     describe('GET /me', () => {
         test('Should return 200 if user exists', async () => {
             const { id } = (await User.create({ name, surname, photoUrl, googleId, email })).toJSON();
-            const cookie = createCookie(createSession(id));
+            const cookie = createCookie(id);
             const signature = createSignature(cookie, 'session');
 
             const response = await supertest(app)
@@ -41,7 +34,7 @@ describe('/api/users', () => {
         });
 
         test('Should return 404 if user does not exist', async () => {
-            const cookie = createCookie(createSession('f2670877-efb2-4534-a970-807b082e463d'));
+            const cookie = createCookie('f2670877-efb2-4534-a970-807b082e463d');
             const signature = createSignature(cookie, 'session');
 
             await supertest(app)

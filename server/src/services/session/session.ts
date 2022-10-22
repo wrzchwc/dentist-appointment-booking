@@ -18,8 +18,8 @@ export function createSignature(cookie: string, sessionIdentifier: string) {
     return keygrip(keys).sign(`${sessionIdentifier}=${cookie}`);
 }
 
-export function createCookie(session: Session): string {
-    return Buffer.from(JSON.stringify(session)).toString('base64');
+export function createCookie(id: string): string {
+    return Buffer.from(JSON.stringify(createSession(id))).toString('base64');
 }
 
 export function createSession(id: string): Session {

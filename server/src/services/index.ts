@@ -1,2 +1,2 @@
 export * from './postgres/postgres';
-export * from './session/session';
+export { createCookie, createSignature, createCookieHeader } from './session/session';
