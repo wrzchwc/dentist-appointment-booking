@@ -9,9 +9,7 @@ import { environment } from './../../../environments/environment';
 export class HomeComponent {
     signInLink: string;
 
-    // eslint-disable-next-line no-unused-vars
     constructor() {
-        console.log('home');
         this.signInLink = `${environment.apiUrl}/v1/auth/google`;
     }
 }
