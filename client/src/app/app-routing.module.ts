@@ -1,20 +1,23 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { CheckAuthenticationResolver } from './_resolvers/authentication/check-authentication.resolver';
+import { AuthenticationResolver } from './_resolvers/authentication/authentication.resolver';
+import { AuthenticationGuard } from './_guards/authentication/authentication.guard';
 
 const routes: Routes = [
     {
         path: 'client',
+        canLoad: [AuthenticationGuard],
         loadChildren: () => import('./client/client.module').then((m) => m.ClientModule),
     },
     {
         path: 'admin',
+        canLoad: [AuthenticationGuard],
         loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule),
     },
     {
         path: '',
         loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
-        resolve: { profile: CheckAuthenticationResolver },
+        resolve: { profile: AuthenticationResolver },
     },
 ];
 

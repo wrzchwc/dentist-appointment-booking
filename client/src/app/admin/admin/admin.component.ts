@@ -10,6 +10,7 @@ export class AdminComponent {
     signOutUrl: string;
 
     constructor() {
+        console.log('admin');
         this.signOutUrl = `${environment.apiUrl}/v1/auth/sign-out`;
     }
 }

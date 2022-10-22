@@ -5,7 +5,7 @@ let mockRequest: Partial<Request>;
 let mockResponse: Partial<Response>;
 const mockNext: NextFunction = jest.fn();
 
-describe('authentication middleware', () => {
+describe('authorisation middleware', () => {
     beforeAll(() => {
         mockRequest = {
             isAuthenticated: jest.fn().mockReturnValue(true),

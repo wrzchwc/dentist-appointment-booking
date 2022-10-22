@@ -13,7 +13,8 @@ export class ClientComponent {
 
     // eslint-disable-next-line no-unused-vars
     constructor(private authentication: AuthenticationService) {
-        this.signOutUrl = `${environment.apiUrl}/v1/users/me`;
+        console.log('client');
+        this.signOutUrl = `${environment.apiUrl}/v1/auth/sign-out`;
     }
 
     handleShowProfile() {
