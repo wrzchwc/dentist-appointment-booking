@@ -7,6 +7,7 @@ export class Service extends Model<InferAttributes<Service>, InferCreationAttrib
     declare price?: number;
     declare count: number;
     declare detail?: number;
+    declare length?: number;
 }
 
 Service.init(
@@ -16,6 +17,7 @@ Service.init(
         price: { type: DataTypes.FLOAT },
         count: { type: DataTypes.SMALLINT, allowNull: false },
         detail: { type: DataTypes.STRING },
+        length: { type: DataTypes.SMALLINT },
     },
     { timestamps: false, sequelize: sequelizeInstance, tableName: 'services' }
 );
