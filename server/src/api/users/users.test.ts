@@ -16,7 +16,7 @@ const email = 'test123@gmail.com';
 const photoUrl = 'www.image.com/123';
 const googleId = '381902381093';
 
-describe('/v1/users', () => {
+describe('/api/users', () => {
     beforeAll(() => {
         checkConnection();
     });
