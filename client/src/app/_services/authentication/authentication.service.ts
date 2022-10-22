@@ -20,7 +20,7 @@ export class AuthenticationService {
 
     // eslint-disable-next-line no-unused-vars
     constructor(private client: HttpClient) {
-        this.baseUrl = `${environment.apiUrl}/v1`;
+        this.baseUrl = `${environment.apiUrl}/api`;
     }
 
     getProfile() {

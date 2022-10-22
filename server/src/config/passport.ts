@@ -6,7 +6,7 @@ import passport from 'passport';
 config();
 
 const AUTH_OPTIONS = {
-    callbackURL: '/v1/auth/google/callback',
+    callbackURL: '/api/auth/google/callback',
     clientID: process.env.OAUTH_CLIENT_ID || '',
     clientSecret: process.env.OAUTH_CLIENT_SECRET || '',
 };

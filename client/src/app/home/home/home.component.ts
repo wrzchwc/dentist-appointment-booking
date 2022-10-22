@@ -10,6 +10,6 @@ export class HomeComponent {
     signInLink: string;
 
     constructor() {
-        this.signInLink = `${environment.apiUrl}/v1/auth/google`;
+        this.signInLink = `${environment.apiUrl}/api/auth/google`;
     }
 }

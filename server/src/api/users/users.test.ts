@@ -5,9 +5,9 @@ import {
     createSession,
     createSignature,
     disconnect,
-} from '../../../services';
-import { User } from '../../../models';
-import { app } from '../../../config';
+} from '../../services';
+import { User } from '../../models';
+import { app } from '../../config';
 import supertest from 'supertest';
 
 const name = 'Kuba';
