@@ -32,7 +32,7 @@ describe('/v1/users', () => {
             const signature = createSignature(cookie, 'session');
 
             const response = await supertest(app)
-                .get('/v1/users/me')
+                .get('/api/users/me')
                 .set('Cookie', createCookieHeader('session', cookie, signature))
                 .expect(200);
             expect(response.body).toMatchObject({ email, id, isAdmin: false, name, photoUrl, surname });
@@ -45,7 +45,7 @@ describe('/v1/users', () => {
             const signature = createSignature(cookie, 'session');
 
             await supertest(app)
-                .get('/v1/users/me')
+                .get('/api/users/me')
                 .set('Cookie', createCookieHeader('session', cookie, signature))
                 .expect(404);
         });
