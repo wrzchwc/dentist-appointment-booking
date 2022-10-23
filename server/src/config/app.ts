@@ -1,4 +1,5 @@
 import './passport';
+import api from '../api';
 import { config } from 'dotenv';
 import cookieSession from 'cookie-session';
 import cors from 'cors';
@@ -7,7 +8,6 @@ import helmet from 'helmet';
 import { join } from 'path';
 import morgan from 'morgan';
 import passport from 'passport';
-import { v1 } from '../api';
 
 config();
 
@@ -23,7 +23,7 @@ app.use(express.static(join(__dirname, '..', '..', '..', 'public')));
 app.use(cookieSession({ name: 'session', maxAge: 86400000, keys, domain: 'localhost' }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/v1', v1.api);
+app.use('/api', api);
 app.get('/*', (req, res) => {
     res.sendFile(join(__dirname, '..', '..', '..', 'public', 'index.html'));
 });

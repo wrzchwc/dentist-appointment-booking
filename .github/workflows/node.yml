@@ -14,15 +14,31 @@ jobs:
     steps:
       - name: Checkout Git
         uses: actions/checkout@v2.5.0
+      - name: Create client/src/environments directory
+        run: mkdir client/src/environments
+      - name: Create Angular production environment
+        run: |
+          cd client/src/environments
+          echo export const environment = { >> environment.prod.ts
+          echo production: true, >> environment.prod.ts
+          echo "apiUrl: '${{secrets.API_URL}}'," >> environment.prod.ts
+          echo "};" >> environment.prod.ts
+      - name: Create Angular development environment
+        run: cp client/src/environments/environment.prod.ts client/src/environments/environment.ts
       - name: Use Node.js ${{matrix.node-version}}
         uses: actions/setup-node@v3.5.1
         with:
           node-version: ${{matrix.node-version}}
+          cache: 'npm'
+          cache-dependency-path: |
+            package-lock.json
+            client/package-lock.json
+            server/package-lock.json
       - name: Install dependencies
-        run: npm install
+        run: npm run install:repository
       - name: Build project
         run: npm run build
-      - name: Create .env file
+      - name: Create server/.env file
         run: |
           cd server
           touch .env

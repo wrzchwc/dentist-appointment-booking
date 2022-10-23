@@ -1,10 +1,12 @@
 import { Session, createCookie, createCookieHeader, createSession, createSignature } from './session';
 
+const id = 'abc';
+
 describe('Session service', () => {
     test('createSession should create objects matching Session interface', () => {
-        const expected: Session = { passport: { user: { id: 'abc', isAdmin: false } } };
+        const expected: Session = { passport: { user: { id, isAdmin: false } } };
 
-        const result = createSession('abc');
+        const result = createSession(id);
 
         expect(result).toMatchObject(expected);
     });
@@ -12,7 +14,7 @@ describe('Session service', () => {
     test('createCookie should return strings encoded in base64', () => {
         const expected = 'eyJwYXNzcG9ydCI6eyJ1c2VyIjp7ImlkIjoiYWJjIiwiaXNBZG1pbiI6ZmFsc2V9fX0=';
 
-        const result = createCookie(createSession('abc'));
+        const result = createCookie(id);
 
         expect(result).toBe(expected);
     });

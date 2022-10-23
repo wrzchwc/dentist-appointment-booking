@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { SessionData } from '../../../config';
-import { User } from '../../../models';
+import { SessionData } from '../../config';
+import { User } from '../../models';
 
 export async function getMe(request: Request, response: Response) {
     const attributes = ['id', 'isAdmin', 'name', 'surname', 'email', 'photoUrl'];
