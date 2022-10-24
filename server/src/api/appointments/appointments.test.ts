@@ -8,7 +8,7 @@ let cookie: string;
 let signature: string;
 let cookieHeader: [string];
 
-describe('/api/services', () => {
+describe('/api/appointments', () => {
     beforeAll(async () => {
         await checkConnection();
         id = (await User.create({ googleId: '381902381093' })).toJSON().id;
@@ -22,9 +22,12 @@ describe('/api/services', () => {
         await disconnect();
     });
 
-    describe('GET /', () => {
+    describe('GET /services', () => {
         test('Should return 200', async () => {
-            const { body } = await supertest(app).get('/api/services').set('Cookie', cookieHeader).expect(200);
+            const { body } = await supertest(app)
+                .get('/api/appointments/services')
+                .set('Cookie', cookieHeader)
+                .expect(200);
             expect(Array.isArray(body)).toBeTruthy();
         });
     });
