@@ -8,7 +8,7 @@ export class AppointmentFact extends Model<InferAttributes<AppointmentFact>, Inf
 
 AppointmentFact.init(
     {
-        id: { type: DataTypes.STRING, primaryKey: true, allowNull: false, defaultValue: DataTypes.UUIDV4 },
+        id: { type: DataTypes.UUID, primaryKey: true, allowNull: false, defaultValue: DataTypes.UUIDV4 },
         value: { type: DataTypes.STRING, allowNull: false, unique: true },
     },
     { timestamps: false, sequelize: sequelizeInstance, tableName: 'appointment_facts' }
