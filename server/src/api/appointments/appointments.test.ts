@@ -31,4 +31,14 @@ describe('/api/appointments', () => {
             expect(Array.isArray(body)).toBeTruthy();
         });
     });
+
+    describe('GET /questions', () => {
+        test('Should return 200', async () => {
+            const { body } = await supertest(app)
+                .get('/api/appointments/questions')
+                .set('Cookie', cookieHeader)
+                .expect(200);
+            expect(Array.isArray(body)).toBeTruthy();
+        });
+    });
 });
