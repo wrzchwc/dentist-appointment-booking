@@ -8,6 +8,7 @@ import helmet from 'helmet';
 import { join } from 'path';
 import morgan from 'morgan';
 import passport from 'passport';
+import { setContentSecurityPolicy } from '../services';
 
 config();
 
@@ -19,20 +20,12 @@ app.use(cors({ credentials: true }));
 app.use(helmet());
 app.use(morgan('combined'));
 app.use(express.json());
-app.use(
-    express.static(join(__dirname, '..', '..', '..', 'public'), {
-        setHeaders: (res) => {
-            res.setHeader(
-                'Content-Security-Policy',
-                "default-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com;"
-            );
-        },
-    })
-);
+app.use(express.static(join(__dirname, '..', '..', '..', 'public'), { setHeaders: setContentSecurityPolicy }));
 app.use(cookieSession({ name: 'session', maxAge: 86400000, keys, domain: 'localhost' }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api', api);
 app.get('/*', (req, res) => {
+    setContentSecurityPolicy(res);
     res.sendFile(join(__dirname, '..', '..', '..', 'public', 'index.html'));
 });
