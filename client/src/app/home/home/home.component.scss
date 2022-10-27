@@ -1,0 +1,39 @@
+.container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.main-container {
+    @extend .container;
+    background-image: url('../../../assets/background.svg');
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.google-logo {
+    $dimension: 24px;
+
+    height: $dimension;
+    width: $dimension;
+    margin-right: 10px;
+}
+
+.h-button {
+    padding: 15px 24px;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 18px;
+    font-style: normal;
+    width: 240px;
+    height: 54px;
+    border-radius: 5px;
+}
+
+.buttons-container {
+    @extend .container;
+    gap: 38px;
+    margin-left: 170px;
+}

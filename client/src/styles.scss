@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@use 'src/app/home/home/home.component.theme' as home;
 
 @include mat.core();
 
@@ -17,11 +18,12 @@ $client-theme: mat.define-light-theme(
 );
 
 @include mat.all-component-themes($client-theme);
+@include home.color($client-theme);
 
 html,
 body {
     height: 100%;
-    background-color: mat.get-color-from-palette(mat.$gray-palette, 50)
+    background-color: mat.get-color-from-palette(mat.$gray-palette, 50);
 }
 
 body {
