@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-client',
@@ -7,9 +6,5 @@ import { environment } from '../../../environments/environment';
     styleUrls: ['./client.component.scss'],
 })
 export class ClientComponent {
-    signOutUrl: string;
-
-    constructor() {
-        this.signOutUrl = `${environment.apiUrl}/api/auth/sign-out`;
-    }
+    constructor() {}
 }

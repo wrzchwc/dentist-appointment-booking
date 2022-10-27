@@ -1,3 +1,5 @@
+$dimension: 48px;
+
 .container {
     display: flex;
     flex-direction: row;
@@ -30,4 +32,38 @@
     font-weight: 500;
     font-size: 36px;
     line-height: 44px;
+}
+
+.user-container {
+    @extend .container;
+}
+
+.profile-container {
+    @extend .container;
+    gap: 19px;
+}
+
+.button-base {
+    height: $dimension;
+    width: $dimension;
+}
+
+.avatar {
+    @extend .button-base;
+    border-radius: 50%;
+    box-shadow: 0 3px 1px -2px #0003, 0 2px 2px #00000024, 0 1px 5px #0000001f;
+    cursor: pointer;
+}
+
+.user-name {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 34px;
+    cursor: default;
+}
+
+#user-photo.sign-out-icon {
+    line-height: $dimension;
+    font-size: $dimension;
 }

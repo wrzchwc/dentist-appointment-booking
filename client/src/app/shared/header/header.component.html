@@ -3,4 +3,17 @@
         <img src="/assets/favicon.svg" alt="" class="logo-item" />
         <h1 class="logo-item app-name styles-color-primary">Dentist Appointment Booking</h1>
     </div>
+    <ng-container *ngIf="auth.authenticated$ | async">
+        <div class="user-container">
+            <div class="profile-container">
+                <span class="styles-color-primary user-name">{{ auth.profile?.name }}</span>
+                <img [src]="auth.profile?.photoUrl" [alt]="auth.profile?.name" crossorigin="anonymous" class="avatar" />
+                <a [href]="signOutUrl">
+                    <button mat-icon-button color="primary" style="height: 48px; width: 48px" routerLink="/">
+                        <mat-icon id="user-photo" class="button-base sign-out-icon">logout</mat-icon>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </ng-container>
 </nav>
