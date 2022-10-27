@@ -15,6 +15,7 @@ export class AuthenticationResolver implements Resolve<Profile | undefined> {
         return this.authentication.getProfile().pipe(
             tap((profile) => {
                 this.authentication.profile = profile;
+                this.authentication.authenticated$.next(true);
                 this.router.navigateByUrl(profile.isAdmin ? '/admin' : '/client').then();
             }),
             catchError(() => of(undefined))

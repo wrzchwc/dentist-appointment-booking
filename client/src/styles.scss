@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
 @use 'src/app/home/home/home.component.theme' as home;
+@use 'src/app/shared/header/header.component.theme' as header;
 
 @include mat.core();
 
@@ -19,6 +20,7 @@ $client-theme: mat.define-light-theme(
 
 @include mat.all-component-themes($client-theme);
 @include home.color($client-theme);
+@include header.color($client-theme);
 
 html,
 body {

@@ -1,0 +1,33 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.main-container {
+    @extend .container;
+
+    position: fixed;
+    top: 0;
+    padding: 29px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.logo-container {
+    @extend .container;
+    gap: 38px;
+}
+
+.logo-item:hover {
+    opacity: 75%;
+    cursor: pointer;
+}
+
+.he-app-name {
+    margin-bottom: 0;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 44px;
+}
