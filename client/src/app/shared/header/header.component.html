@@ -15,10 +15,17 @@
             </ng-container>
             <ng-template #client>
                 <div class="nav-container">
-                    <button mat-raised-button color="primary" class="styles-color-accent nav-button">
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        class="styles-color-accent nav-button"
+                        routerLink="/client/booking"
+                    >
                         UMÓW WIZYTYĘ
                     </button>
-                    <button mat-button color="primary" class="nav-button">MOJE WIZYTY</button>
+                    <button mat-button color="primary" class="nav-button" routerLink="/client/appointments">
+                        MOJE WIZYTY
+                    </button>
                 </div>
             </ng-template>
             <div class="profile-container">
