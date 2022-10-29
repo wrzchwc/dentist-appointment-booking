@@ -1,4 +1,4 @@
-$dimension: 48px;
+@use 'src/dimensions' as dimensions;
 
 .container {
     display: flex;
@@ -44,8 +44,8 @@ $dimension: 48px;
 }
 
 .button-base {
-    height: $dimension;
-    width: $dimension;
+    height: dimensions.$icon-size;
+    width: dimensions.$icon-size;
 }
 
 .avatar {
@@ -63,8 +63,8 @@ $dimension: 48px;
 }
 
 #user-photo.sign-out-icon {
-    line-height: $dimension;
-    font-size: $dimension;
+    line-height: dimensions.$icon-size;
+    font-size: dimensions.$icon-size;
 }
 
 .nav-container {

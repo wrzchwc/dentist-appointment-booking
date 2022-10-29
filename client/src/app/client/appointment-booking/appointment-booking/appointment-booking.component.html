@@ -1,4 +1,16 @@
 <section class="main-container">
-    {{ services | json }}
-    {{ questions | json }}
+    <mat-stepper linear labelPosition="bottom" class="stepper">
+        <mat-step label="Zakres leczenia">
+            <ng-template matStepContent></ng-template>
+        </mat-step>
+        <mat-step label="Termin wizyty">
+            <ng-template matStepContent></ng-template>
+        </mat-step>
+        <mat-step label="Stan zdrowia">
+            <ng-template matStepContent></ng-template>
+        </mat-step>
+        <mat-step label="Podsumowanie">
+            <ng-template matStepContent></ng-template>
+        </mat-step>
+    </mat-stepper>
 </section>

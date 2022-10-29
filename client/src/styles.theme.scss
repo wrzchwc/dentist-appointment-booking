@@ -11,10 +11,48 @@
     }
 
     .styles-color-accent {
-        color: mat.get-color-from-palette($accent-palette) !important;
+        color: mat.get-color-from-palette($accent-palette);
     }
 
     .styles-background-accent {
         background-color: mat.get-color-from-palette($accent-palette);
+    }
+
+    app-appointment-booking {
+        .stepper {
+            .mat-horizontal-stepper-wrapper {
+                .mat-horizontal-stepper-header-container {
+                    .mat-step-header {
+                        .mat-step-label {
+                            .mat-step-text-label {
+                                @extend .styles-color-primary;
+                            }
+                        }
+
+                        .mat-step-icon {
+                            .mat-step-icon-content {
+                                @extend .styles-color-accent;
+                            }
+                        }
+
+                        .mat-step-icon-state-number:not(.mat-step-icon-selected) {
+                            @extend .styles-background-accent;
+
+                            .mat-step-icon-content {
+                                @extend .styles-color-primary;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    app-header {
+        .nav-container {
+            .mat-raised-button {
+                @extend .styles-color-accent;
+            }
+        }
     }
 }

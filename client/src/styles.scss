@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
 @use 'src/styles.theme' as styles;
+@use 'src/dimensions' as dimensions;
 
 @include mat.core();
 
@@ -31,4 +32,39 @@ body {
     font-family: Roboto, 'Helvetica Neue', sans-serif;
     font-style: normal;
     color: mat.get-color-from-palette(mat.$gray-palette, 900);
+}
+
+app-appointment-booking {
+    .stepper {
+        .mat-horizontal-stepper-wrapper {
+            .mat-horizontal-stepper-header-container {
+                .mat-step-header {
+                    $font-weight: 700;
+
+                    .mat-step-label {
+                        .mat-step-text-label {
+                            font-weight: $font-weight;
+                            font-size: 14px;
+                            line-height: 17px;
+                        }
+                    }
+
+                    .mat-step-icon {
+                        height: dimensions.$icon-size;
+                        width: dimensions.$icon-size;
+
+                        .mat-step-icon-content {
+                            font-weight: $font-weight;
+                            font-size: 17px;
+                            line-height: 19px;
+                        }
+                    }
+                }
+            }
+
+            .mat-horizontal-content-container {
+                padding: 0;
+            }
+        }
+    }
 }
