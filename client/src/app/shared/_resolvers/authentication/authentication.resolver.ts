@@ -12,13 +12,22 @@ export class AuthenticationResolver implements Resolve<Profile | undefined> {
 
     // eslint-disable-next-line no-unused-vars
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+        if (this.authentication.profile) {
+            this.redirect();
+            return of(this.authentication.profile);
+        }
+
         return this.authentication.getProfile().pipe(
             tap((profile) => {
                 this.authentication.profile = profile;
                 this.authentication.authenticated$.next(true);
-                this.router.navigateByUrl(profile.isAdmin ? '/admin' : '/client').then();
+                this.redirect();
             }),
             catchError(() => of(undefined))
         );
+    }
+
+    private redirect() {
+        this.router.navigateByUrl(this.authentication.profile?.isAdmin ? '/admin' : '/client').then();
     }
 }
