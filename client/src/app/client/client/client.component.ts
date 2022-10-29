@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthenticationService } from '../../_services/authentication/authentication.service';
 
 @Component({
     selector: 'app-client',
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
     styleUrls: ['./client.component.scss'],
 })
 export class ClientComponent {
-    constructor() {}
+    // eslint-disable-next-line no-unused-vars
+    constructor(public auth: AuthenticationService) {}
 }

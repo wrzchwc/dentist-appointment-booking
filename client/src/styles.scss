@@ -29,4 +29,6 @@ body {
 body {
     margin: 0;
     font-family: Roboto, 'Helvetica Neue', sans-serif;
+    font-style: normal;
+    color: mat.get-color-from-palette(mat.$gray-palette, 900);
 }
