@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
     styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent {
-    constructor() {}
+    currentDate: Date;
+
+    constructor() {
+        this.currentDate = new Date();
+    }
 }

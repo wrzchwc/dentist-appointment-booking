@@ -14,10 +14,12 @@
 }
 
 .greeting {
-    margin-bottom: 116px;
+    $dimension: 58px;
+
+    margin-bottom: 2 * $dimension;
     font-weight: 700;
-    font-size: 48px;
-    line-height: 58px;
+    font-size: $dimension - 10px;
+    line-height: $dimension;
 }
 
 .action-label {
@@ -32,4 +34,5 @@
     font-weight: 600;
     font-size: 32px;
     line-height: 39px;
+    margin-bottom: 0;
 }
