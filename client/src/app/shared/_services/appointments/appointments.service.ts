@@ -8,6 +8,6 @@ export class AppointmentsService {
     baseUrl: string;
 
     constructor() {
-        this.baseUrl = `${environment.apiUrl}/api`;
+        this.baseUrl = `${environment.apiUrl}/api/appointments`;
     }
 }
