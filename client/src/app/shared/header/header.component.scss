@@ -36,6 +36,7 @@ $dimension: 48px;
 
 .user-container {
     @extend .container;
+    gap: 80px;
 }
 
 .profile-container {
@@ -66,4 +67,16 @@ $dimension: 48px;
 #user-photo.sign-out-icon {
     line-height: $dimension;
     font-size: $dimension;
+}
+
+.nav-container {
+    @extend .container;
+    padding: 11px 43px;
+    gap: 40px;
+}
+
+.nav-button {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
 }
