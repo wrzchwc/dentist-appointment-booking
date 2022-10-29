@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Service } from '../../../shared/_services/appointments/services.service';
 
 @Component({
     selector: 'app-appointment-booking',
@@ -6,5 +8,9 @@ import { Component } from '@angular/core';
     styleUrls: ['./appointment-booking.component.scss'],
 })
 export class AppointmentBookingComponent {
-    constructor() {}
+    services: Service[];
+
+    constructor(private route: ActivatedRoute) {
+        this.services = route.snapshot.data['services'];
+    }
 }
