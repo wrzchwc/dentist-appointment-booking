@@ -7,8 +7,8 @@ export interface Service {
     name: string;
     price: number | null;
     count: number;
-    detail: string | null;
-    length: number;
+    detail: 'A' | 'B' | 'C' | null;
+    length: number | null;
 }
 
 @Injectable({
