@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 export interface Service {
     id: string;
     name: string;
-    price: number;
+    price: number | null;
     count: number;
     detail: string | null;
     length: number;
