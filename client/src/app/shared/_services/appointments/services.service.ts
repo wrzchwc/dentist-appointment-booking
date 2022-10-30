@@ -8,6 +8,7 @@ export interface Service {
     price: number;
     count: number;
     detail: string | null;
+    length: number;
 }
 
 @Injectable({

@@ -1,5 +1,9 @@
 @use 'src/dimensions' as dimensions;
 
+.shadow {
+    box-shadow: 0 3px 1px -2px #0003, 0 2px 2px #00000024, 0 1px 5px #0000001f;
+}
+
 .container {
     display: flex;
     flex-direction: row;
@@ -19,6 +23,7 @@
 
 .logo-container {
     @extend .container;
+
     gap: 38px;
 }
 
@@ -36,11 +41,13 @@
 
 .user-container {
     @extend .container;
+
     gap: 80px;
 }
 
 .profile-container {
     @extend .container;
+
     gap: 19px;
 }
 
@@ -51,8 +58,9 @@
 
 .avatar {
     @extend .button-base;
+    @extend .shadow;
+
     border-radius: 50%;
-    box-shadow: 0 3px 1px -2px #0003, 0 2px 2px #00000024, 0 1px 5px #0000001f;
     cursor: pointer;
 }
 
@@ -70,6 +78,7 @@
 
 .nav-container {
     @extend .container;
+
     padding: 11px 43px;
     gap: 40px;
 }
