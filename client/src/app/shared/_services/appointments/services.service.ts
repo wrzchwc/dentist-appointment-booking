@@ -2,14 +2,31 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 
-export interface Service {
+interface ServiceBase {
     id: string;
     name: string;
-    price: number | null;
     count: number;
-    detail: 'A' | 'B' | 'C' | null;
-    length: number | null;
 }
+
+interface StandardService extends ServiceBase {
+    price: number;
+    detail: null;
+    length: number;
+}
+
+interface ExceptionalPriceService extends ServiceBase {
+    price: null;
+    detail: 'A' | 'B';
+    length: number;
+}
+
+interface ExceptionalLengthService extends ServiceBase {
+    price: number;
+    detail: 'C';
+    length: null;
+}
+
+export type Service = StandardService | ExceptionalLengthService | ExceptionalPriceService;
 
 @Injectable({
     providedIn: 'root',
