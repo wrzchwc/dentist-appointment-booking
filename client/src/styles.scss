@@ -63,8 +63,16 @@ app-appointment-booking {
             }
 
             .mat-horizontal-content-container {
-                padding: 0;
+                padding: 0 0 5px;
             }
+        }
+    }
+}
+
+button.mat-icon-button {
+    span.mat-button-wrapper {
+        mat-icon.mat-icon {
+            vertical-align: unset;
         }
     }
 }

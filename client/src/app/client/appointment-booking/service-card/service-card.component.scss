@@ -1,0 +1,80 @@
+@use '@angular/material' as mat;
+@use 'src/dimensions' as dimensions;
+
+@function gap($factor) {
+    @return 20px * $factor;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.font-weight-700 {
+    font-weight: 700;
+}
+
+.main-container {
+    @extend .container;
+
+    padding: 25px;
+    background: mat.get-color-from-palette(mat.$gray-palette, 50);
+    gap: gap(2);
+}
+
+.details-container {
+    @extend .container;
+    @extend .font-weight-700;
+
+    gap: gap(1);
+    color: mat.get-color-from-palette(mat.$gray-palette, 900);
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.detail-container {
+    @extend .container;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.price-detail {
+    width: 62px;
+}
+
+.times-detail {
+    width: 106px;
+}
+
+.service-name {
+    @extend .font-weight-700;
+
+    font-size: 32px;
+    line-height: 39px;
+}
+
+.cart-container {
+    @extend .container;
+    @extend .font-weight-700;
+
+    gap: gap(1);
+}
+
+.action-container {
+    @extend .container;
+    gap: gap(2);
+}
+
+.icon {
+    width: dimensions.$icon-size;
+    height: dimensions.$icon-size;
+    font-size: dimensions.$icon-size;
+    line-height: dimensions.$icon-size;
+}
+
+.count {
+    @extend .font-weight-700;
+    font-size: 20px;
+    line-height: 24px;
+}

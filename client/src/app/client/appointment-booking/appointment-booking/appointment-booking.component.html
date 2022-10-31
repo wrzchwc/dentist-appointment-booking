@@ -2,6 +2,7 @@
     <mat-stepper linear labelPosition="bottom" class="stepper">
         <mat-step label="Zakres leczenia">
             <ng-template matStepContent>
+                <app-appointment-services [services]="services"></app-appointment-services>
                 <section class="step-buttons-container">
                     <button mat-raised-button color="primary" matStepperNext class="step-button">DALEJ</button>
                     <button mat-raised-button color="accent" routerLink="/client" class="step-button">ANULUJ</button>
