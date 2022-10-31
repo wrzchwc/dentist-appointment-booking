@@ -1,13 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { map, Observable } from 'rxjs';
 
-export interface AppointmentQuestion {
+interface AppointmentFact {
+    id: string;
+    value: string;
+}
+
+interface AppointmentQuestionBase {
     id: string;
     question: string;
     subquestion: string | null;
     womenOnly: boolean;
-    factId: string;
+}
+
+interface AppointmentQuestionResponse extends AppointmentQuestionBase {
+    AppointmentFact: AppointmentFact;
+}
+
+export interface AppointmentQuestion extends AppointmentQuestionBase {
+    fact: AppointmentFact;
 }
 
 @Injectable({
@@ -21,7 +34,14 @@ export class AppointQuestionsService {
         this.baseUrl = `${environment.apiUrl}/api/appointments/questions`;
     }
 
-    getAppointmentQuestions() {
-        return this.client.get<AppointmentQuestion[]>(this.baseUrl);
+    getAppointmentQuestions(): Observable<AppointmentQuestion[]> {
+        return this.client
+            .get<AppointmentQuestionResponse[]>(this.baseUrl)
+            .pipe(map((response) => response.map(this.mapToAppointmentQuestion)));
+    }
+
+    private mapToAppointmentQuestion(response: AppointmentQuestionResponse): AppointmentQuestion {
+        const { id, question, subquestion, womenOnly, AppointmentFact } = response;
+        return { id, question, subquestion, womenOnly, fact: AppointmentFact };
     }
 }

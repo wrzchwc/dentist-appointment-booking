@@ -19,6 +19,7 @@
         </mat-step>
         <mat-step label="Stan zdrowia">
             <ng-template matStepContent>
+                {{ questions | json }}
                 <section class="step-buttons-container">
                     <button mat-raised-button color="primary" matStepperNext class="step-button">DALEJ</button>
                     <button mat-raised-button color="accent" matStepperPrevious class="step-button">POWRÓT</button>
