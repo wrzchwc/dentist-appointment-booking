@@ -1,0 +1,16 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 22px;
+  margin-bottom: 80px;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 34px;
+  margin: 20px 0;
+  align-self: center;
+}
