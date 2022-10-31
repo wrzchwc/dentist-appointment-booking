@@ -1,7 +1,6 @@
 import {
     CreationOptional,
     DataTypes,
-    ForeignKey,
     HasOneCreateAssociationMixin,
     HasOneGetAssociationMixin,
     HasOneSetAssociationMixin,
@@ -21,10 +20,8 @@ export class AppointmentQuestion extends Model<
     declare subquestion: string | null;
     declare womenOnly: boolean;
 
-    declare factId: ForeignKey<AppointmentFact['id']>;
-
     declare getAppointmentFact: HasOneGetAssociationMixin<AppointmentFact>;
-    declare setAppointmentFact: HasOneSetAssociationMixin<AppointmentFact, 'factId'>;
+    declare setAppointmentFact: HasOneSetAssociationMixin<AppointmentFact, 'question'>;
     declare createAppointmentFact: HasOneCreateAssociationMixin<AppointmentFact>;
 }
 
@@ -38,5 +35,5 @@ AppointmentQuestion.init(
     { timestamps: false, sequelize: sequelizeInstance, tableName: 'appointment_questions' }
 );
 
-AppointmentFact.hasOne(AppointmentQuestion, { foreignKey: { name: 'factId' } });
-AppointmentQuestion.belongsTo(AppointmentFact, { foreignKey: { name: 'factId' } });
+AppointmentQuestion.hasOne(AppointmentFact, { foreignKey: { name: 'questionId' } });
+AppointmentFact.belongsTo(AppointmentQuestion, { foreignKey: { name: 'questionId' } });

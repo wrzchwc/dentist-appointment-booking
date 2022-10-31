@@ -1,8 +1,13 @@
-import { AppointmentQuestion, Service } from '../../models';
+import { AppointmentFact, AppointmentQuestion, Service } from '../../models';
 import { Request, Response } from 'express';
 
 export async function getQuestions(request: Request, response: Response) {
-    const questions = await AppointmentQuestion.findAll({});
+    const questions = await AppointmentQuestion.findAll({
+        include: {
+            model: AppointmentFact,
+            attributes: ['id', 'value'],
+        },
+    });
     response.status(200).json(questions);
 }
 
