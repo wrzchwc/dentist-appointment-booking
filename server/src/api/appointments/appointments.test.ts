@@ -47,8 +47,11 @@ describe('/api/appointments', () => {
         });
 
         test('should return questions including facts associated with them', () => {
-            const hasFactWithIdAndValue = (q: AppointmentQuestion) => q.AppointmentFact?.value && q.AppointmentFact.id;
-            expect(response.body.every(hasFactWithIdAndValue)).toBe(true);
+            expect(
+                response.body.every(
+                    ({ AppointmentFact }: AppointmentQuestion) => AppointmentFact?.id && AppointmentFact.value
+                )
+            ).toBe(true);
         });
     });
 });
