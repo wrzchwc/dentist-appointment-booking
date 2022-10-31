@@ -7,6 +7,7 @@ import {
     InferAttributes,
     InferCreationAttributes,
     Model,
+    NonAttribute,
 } from 'sequelize';
 import { AppointmentFact } from './appointment-fact.model';
 import { sequelizeInstance } from '../services';
@@ -19,6 +20,8 @@ export class AppointmentQuestion extends Model<
     declare question: string;
     declare subquestion: string | null;
     declare womenOnly: boolean;
+
+    declare AppointmentFact?: NonAttribute<AppointmentFact>;
 
     declare getAppointmentFact: HasOneGetAssociationMixin<AppointmentFact>;
     declare setAppointmentFact: HasOneSetAssociationMixin<AppointmentFact, 'question'>;
