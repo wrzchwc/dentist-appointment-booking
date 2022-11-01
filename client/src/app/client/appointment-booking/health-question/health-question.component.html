@@ -1,0 +1,23 @@
+<ng-container *ngIf="question">
+    <article class="main-container" [formGroup]="response">
+        <div class="question-container">
+            <p class="question">{{ question.question }}</p>
+            <ng-container *ngIf="question.subquestion && response.controls['positive'].value">
+                <mat-form-field appearance="outline">
+                    <mat-label>{{ question.subquestion }}</mat-label>
+                    <textarea
+                        matInput
+                        type="text"
+                        [placeholder]="question.subquestion"
+                        [formControl]="response.controls['detail']"
+                    >
+                    </textarea>
+                </mat-form-field>
+            </ng-container>
+        </div>
+        <mat-radio-group [formControl]="response.controls['positive']">
+            <mat-radio-button [value]="true">TAK</mat-radio-button>
+            <mat-radio-button [value]="false">NIE</mat-radio-button>
+        </mat-radio-group>
+    </article>
+</ng-container>

@@ -1,5 +1,9 @@
-.main-container {
+.container {
   display: flex;
+}
+.main-container {
+  @extend .container;
+
   flex-direction: column;
   justify-content: flex-start;
   align-items: stretch;

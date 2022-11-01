@@ -10,6 +10,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { AppointmentTimesPipe } from './_pipes/appointment-times.pipe';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { HealthStateComponent } from './health-state/health-state.component';
+import { MatRadioModule } from '@angular/material/radio';
+import { HealthQuestionComponent } from './health-question/health-question.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
     declarations: [
@@ -17,6 +24,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         ServiceCardComponent,
         AppointmentServicesComponent,
         AppointmentTimesPipe,
+        HealthStateComponent,
+        HealthQuestionComponent,
     ],
     imports: [
         CommonModule,
@@ -26,6 +35,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatCardModule,
         MatIconModule,
         MatTooltipModule,
+        MatRadioModule,
+        MatSlideToggleModule,
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
     ],
     exports: [AppointmentBookingComponent],
 })
