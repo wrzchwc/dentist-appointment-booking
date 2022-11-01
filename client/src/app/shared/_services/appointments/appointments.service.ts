@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
     providedIn: 'root',
 })
 export class AppointmentsService {
-    baseUrl: string;
+    readonly baseUrl: string;
 
     constructor() {
         this.baseUrl = `${environment.apiUrl}/api/appointments`;

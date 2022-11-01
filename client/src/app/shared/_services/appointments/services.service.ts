@@ -32,7 +32,7 @@ export type Service = StandardService | ExceptionalLengthService | ExceptionalPr
     providedIn: 'root',
 })
 export class ServicesService {
-    baseUrl: string;
+    readonly baseUrl: string;
 
     // eslint-disable-next-line no-unused-vars
     constructor(private client: HttpClient) {

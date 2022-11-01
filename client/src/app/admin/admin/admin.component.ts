@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DateService } from '../../shared/_services/appointments/date.service';
 
 @Component({
     selector: 'app-admin',
@@ -8,7 +9,7 @@ import { Component } from '@angular/core';
 export class AdminComponent {
     currentDate: Date;
 
-    constructor() {
-        this.currentDate = new Date();
+    constructor(private date: DateService) {
+        this.currentDate = date.getCurrentDate();
     }
 }
