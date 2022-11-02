@@ -19,6 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DateComponent } from './date/date.component';
 import { TimeCardComponent } from './time-card/time-card.component';
+import { AppointmentBookingRoutingModule } from './appointment-booking-routing.module';
 
 @NgModule({
     declarations: [
@@ -33,6 +34,7 @@ import { TimeCardComponent } from './time-card/time-card.component';
     ],
     imports: [
         CommonModule,
+        AppointmentBookingRoutingModule,
         MatStepperModule,
         MatButtonModule,
         RouterLink,
@@ -45,6 +47,5 @@ import { TimeCardComponent } from './time-card/time-card.component';
         MatFormFieldModule,
         MatInputModule,
     ],
-    exports: [AppointmentBookingComponent],
 })
 export class AppointmentBookingModule {}

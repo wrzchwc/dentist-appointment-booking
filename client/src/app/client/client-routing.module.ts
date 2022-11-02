@@ -5,11 +5,6 @@ import { ClientAppointmentsComponent } from './client-appointments/client-appoin
 
 const routes: Routes = [
     { path: 'appointments', component: ClientAppointmentsComponent, title: 'Moje wizyty' },
-    {
-        path: 'appointment-booking',
-        loadChildren: () =>
-            import('../appointment-booking/appointment-booking.module').then((m) => m.AppointmentBookingModule),
-    },
     { path: '', component: ClientComponent, title: 'Panel klienta' },
 ];
 

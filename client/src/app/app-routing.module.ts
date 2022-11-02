@@ -6,8 +6,19 @@ import { AuthenticationGuard } from './shared/_guards/authentication/authenticat
 const routes: Routes = [
     {
         path: 'client',
-        canLoad: [AuthenticationGuard],
-        loadChildren: () => import('./client/client.module').then((m) => m.ClientModule),
+        children: [
+            {
+                path: 'appointment-booking',
+                canLoad: [AuthenticationGuard],
+                loadChildren: () =>
+                    import('./appointment-booking/appointment-booking.module').then((m) => m.AppointmentBookingModule),
+            },
+            {
+                path: '',
+                canLoad: [AuthenticationGuard],
+                loadChildren: () => import('./client/client.module').then((m) => m.ClientModule),
+            },
+        ],
     },
     {
         path: 'admin',
