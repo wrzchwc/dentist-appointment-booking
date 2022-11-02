@@ -17,6 +17,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { DateComponent } from './date/date.component';
+import { TimeCardComponent } from './time-card/time-card.component';
 
 @NgModule({
     declarations: [
@@ -26,6 +28,8 @@ import { MatInputModule } from '@angular/material/input';
         AppointmentTimesPipe,
         HealthStateComponent,
         HealthQuestionComponent,
+        DateComponent,
+        TimeCardComponent,
     ],
     imports: [
         CommonModule,
