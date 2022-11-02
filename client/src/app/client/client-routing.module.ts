@@ -2,17 +2,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ClientComponent } from './client/client.component';
 import { ClientAppointmentsComponent } from './client-appointments/client-appointments.component';
-import { AppointmentBookingComponent } from './appointment-booking/appointment-booking/appointment-booking.component';
-import { ServicesResolver } from '../shared/_resolvers/appointment-data/services.resolver';
-import { AppointmentQuestionsResolver } from './appointment-booking/_resolvers/appointment-data/appointment-questions.resolver';
 
 const routes: Routes = [
     { path: 'appointments', component: ClientAppointmentsComponent, title: 'Moje wizyty' },
     {
         path: 'appointment-booking',
-        component: AppointmentBookingComponent,
-        title: 'Rezerwacja wizyty',
-        resolve: { services: ServicesResolver, appointmentQuestions: AppointmentQuestionsResolver },
+        loadChildren: () =>
+            import('../appointment-booking/appointment-booking.module').then((m) => m.AppointmentBookingModule),
     },
     { path: '', component: ClientComponent, title: 'Panel klienta' },
 ];

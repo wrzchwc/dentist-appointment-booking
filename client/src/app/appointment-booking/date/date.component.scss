@@ -1,0 +1,65 @@
+@use '../appointment-booking';
+
+.main-container {
+    align-items: center;
+}
+
+.cursor {
+    cursor: default;
+}
+
+.label {
+    margin-bottom: 0;
+    font-weight: 700;
+}
+
+.estimated-length {
+    @extend .label;
+    @extend .cursor;
+
+    font-size: 16px;
+    line-height: 19px;
+}
+
+.subtitle {
+    @extend .label;
+    @extend .cursor;
+
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.button {
+    @extend .subtitle;
+
+    width: 252px;
+    height: 90px;
+    padding: 21px 23px;
+    white-space: normal;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+}
+
+.buttons-container {
+    @extend .container;
+
+    justify-content: center;
+    align-items: center;
+    gap: 320px;
+}
+
+.time-cards-container {
+    @extend .container;
+
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.title {
+    @extend .cursor;
+}
