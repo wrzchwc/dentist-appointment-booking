@@ -9,7 +9,7 @@ import { AppointmentQuestionsResolver } from './appointment-booking/_resolvers/a
 const routes: Routes = [
     { path: 'appointments', component: ClientAppointmentsComponent, title: 'Moje wizyty' },
     {
-        path: 'booking',
+        path: 'appointment-booking',
         component: AppointmentBookingComponent,
         title: 'Rezerwacja wizyty',
         resolve: { services: ServicesResolver, appointmentQuestions: AppointmentQuestionsResolver },
