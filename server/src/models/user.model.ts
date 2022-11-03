@@ -1,4 +1,5 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import { Appointment } from './appointment.model';
 import { Profile } from 'passport-google-oauth20';
 import { sequelizeInstance } from '../services';
 
@@ -40,3 +41,6 @@ User.init(
         tableName: 'users',
     }
 );
+
+User.hasMany(Appointment, { foreignKey: 'userId' });
+Appointment.belongsTo(User, { foreignKey: 'userId' });
