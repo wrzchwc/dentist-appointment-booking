@@ -1,0 +1,39 @@
+<ng-container *ngIf="auth.profile">
+    <section class="main-container">
+        <h1 class="styles-color-primary title">Oto podsumowanie Twojej wizyty</h1>
+        <section class="content-wrapper">
+            <div class="content-container">
+                <mat-card class="card">
+                    <mat-icon color="primary">person</mat-icon>
+                    <h2 class="styles-color-accent card-header">Pacjent(ka)</h2>
+                    <h3 class="card-content">{{ auth.profile.name }} {{ auth.profile.surname }}</h3>
+                    <h4 class="card-content">{{ auth.profile.email }}</h4>
+                </mat-card>
+                <mat-card class="card">
+                    <mat-icon color="primary">medical_information</mat-icon>
+                    <h2 class="styles-color-accent card-header">Stan zdrowia</h2>
+                    <h3 class="card-content">Czuje się dobrze</h3>
+                </mat-card>
+            </div>
+            <div class="content-container">
+                <mat-card class="card">
+                    <mat-icon color="primary">toc</mat-icon>
+                    <h2 class="styles-color-accent card-header">Zakres leczenia</h2>
+                </mat-card>
+            </div>
+            <div class="content-container">
+                <mat-card class="card">
+                    <mat-icon color="primary">event_available</mat-icon>
+                    <h2 class="styles-color-accent card-header">Termin wizyty</h2>
+                    <h3 class="card-content">{{ time.selectedTime$ | async | date: 'dd.MM.yyyy' }} r.</h3>
+                    <h4 class="card-content">{{ time.selectedTime$ | async | date: 'HH.mm' }}</h4>
+                </mat-card>
+                <mat-card class="card">
+                    <mat-icon color="primary">payments</mat-icon>
+                    <h2 class="styles-color-accent card-header">Szacowana cena wizyty</h2>
+                    <h3 class="styles-color-warn card-content">0 PLN</h3>
+                </mat-card>
+            </div>
+        </section>
+    </section>
+</ng-container>

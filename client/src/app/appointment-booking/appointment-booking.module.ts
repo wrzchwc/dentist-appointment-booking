@@ -20,6 +20,8 @@ import { MatInputModule } from '@angular/material/input';
 import { DateComponent } from './date/date.component';
 import { TimeCardComponent } from './time-card/time-card.component';
 import { AppointmentBookingRoutingModule } from './appointment-booking-routing.module';
+import { SummaryComponent } from './summary/summary.component';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
     declarations: [
@@ -31,6 +33,7 @@ import { AppointmentBookingRoutingModule } from './appointment-booking-routing.m
         HealthQuestionComponent,
         DateComponent,
         TimeCardComponent,
+        SummaryComponent,
     ],
     imports: [
         CommonModule,
@@ -46,6 +49,7 @@ import { AppointmentBookingRoutingModule } from './appointment-booking-routing.m
         ReactiveFormsModule,
         MatFormFieldModule,
         MatInputModule,
+        MatTableModule,
     ],
 })
 export class AppointmentBookingModule {}
