@@ -1,7 +1,7 @@
 import { createAppointment, getQuestions, getServices } from './appointments.controller';
 import { Router } from 'express';
 import { authentication } from '../../middleware';
-import { findUser } from '../../middleware/user/findUser';
+import { findUser } from '../../middleware/user/find-user';
 
 export const router = Router();
 
