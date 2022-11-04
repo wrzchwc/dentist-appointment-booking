@@ -1,6 +1,7 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import { CreationOptional, DataTypes, ForeignKey, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
 import { Factor } from './factor.model';
 import { Service } from './service.model';
+import { User } from './user.model';
 import { sequelizeInstance } from '../services';
 
 export class Appointment extends Model<InferAttributes<Appointment>, InferCreationAttributes<Appointment>> {
@@ -8,6 +9,8 @@ export class Appointment extends Model<InferAttributes<Appointment>, InferCreati
     declare confirmed: CreationOptional<boolean>;
     declare estimatedPrice: Date | null;
     declare startsAt: Date | null;
+
+    declare userId: ForeignKey<User['id']>;
 }
 
 Appointment.init(

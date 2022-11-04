@@ -1,4 +1,11 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import {
+    CreationOptional,
+    DataTypes,
+    HasManyCreateAssociationMixin,
+    InferAttributes,
+    InferCreationAttributes,
+    Model,
+} from 'sequelize';
 import { Appointment } from './appointment.model';
 import { Profile } from 'passport-google-oauth20';
 import { sequelizeInstance } from '../services';
@@ -11,6 +18,8 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     declare name?: string;
     declare surname?: string;
     declare photoUrl?: string;
+
+    declare createAppointment: HasManyCreateAssociationMixin<Appointment>;
 
     static async register(userProfile: Profile) {
         const googleId = userProfile.id;
