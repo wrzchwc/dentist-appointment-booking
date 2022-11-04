@@ -1,4 +1,4 @@
-import { AppointmentQuestion, User } from '../../models';
+import { Appointment, AppointmentQuestion, User } from '../../models';
 import { checkConnection, createCookie, createCookieHeader, createSignature, disconnect } from '../../services';
 import { Response } from 'superagent';
 import { app } from '../../config';
@@ -9,8 +9,9 @@ describe('/api/appointments', () => {
     let cookie: string;
     let signature: string;
     let cookieHeader: [string];
+    let response: Response;
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         await checkConnection();
         id = (await User.create({ googleId: '381902381093' })).toJSON().id;
         cookie = createCookie(id);
@@ -18,26 +19,25 @@ describe('/api/appointments', () => {
         cookieHeader = createCookieHeader('session', cookie, signature);
     });
 
-    afterAll(async () => {
+    afterEach(async () => {
         await User.destroy({ where: { id } });
+    });
+
+    afterAll(async () => {
         await disconnect();
     });
 
-    describe('GET /services', () => {
-        let response: Response;
-
-        test('Should return 200', async () => {
+    describe('/services GET', () => {
+        it('should return 200', async () => {
             response = await supertest(app).get('/api/appointments/services').set('Cookie', cookieHeader).expect(200);
         });
 
-        test('should return array of objects', () => {
+        it('should return array of objects', () => {
             expect(Array.isArray(response.body)).toBeTruthy();
         });
     });
 
-    describe('GET /questions', () => {
-        let response: Response;
-
+    describe('/questions GET', () => {
         test('Should return 200', async () => {
             response = await supertest(app).get('/api/appointments/questions').set('Cookie', cookieHeader).expect(200);
         });
@@ -52,6 +52,33 @@ describe('/api/appointments', () => {
                     ({ AppointmentFact }: AppointmentQuestion) => AppointmentFact?.id && AppointmentFact.value
                 )
             ).toBe(true);
+        });
+    });
+
+    describe('/ POST', () => {
+        beforeEach(async () => {
+            response = await supertest(app).post('/api/appointments').set('Cookie', cookieHeader);
+        });
+
+        afterEach(async () => {
+            await Appointment.destroy({ where: { id: response.body.id } });
+        });
+
+        it('should return 201 on successful creation', () => {
+            expect(response.status).toBe(201);
+        });
+
+        it('should return correct body response', () => {
+            const expected: Partial<Appointment> = {
+                id: response.body.id,
+                confirmed: false,
+                estimatedPrice: null,
+                startsAt: null,
+                Services: [],
+                Factors: [],
+            };
+
+            expect(response.body).toMatchObject(expected);
         });
     });
 });

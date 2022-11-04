@@ -5,6 +5,7 @@ const config: JestConfigWithTsJest = {
     testEnvironment: 'node',
     moduleFileExtensions: ['ts', 'js'],
     modulePathIgnorePatterns: ['<rootDir>/dist'],
+    testTimeout: 10000,
 };
 
 export default config;
