@@ -36,18 +36,22 @@ interface AddServiceToAppointmentRequest extends Request {
 
 export async function addServiceToAppointment(request: AddServiceToAppointmentRequest, response: Response) {
     try {
-        const [appointment, service] = await Promise.all([
-            Appointment.findByPk(request.params.appointmentId),
-            Service.findByPk(request.body.serviceId),
-        ]);
+        const appointment = await Appointment.findByPk(request.params.appointmentId, { include: Service });
+        if (!appointment) {
+            return response.status(404).send('Appointment not found');
+        }
 
-        if (appointment && service) {
-            await appointment.addService(service, {});
-            response.sendStatus(200);
+        const service = appointment.services.find(({ id }) => id === request.body.serviceId);
+        if (!service) {
+            await appointment.addService(request.body.serviceId);
+        } else {
+            await service.appointment.increment({ quantity: 1 });
         }
     } catch (e) {
-        response.sendStatus(400);
+        return response.status(500).send('Operation failed');
     }
+
+    response.sendStatus(200);
 }
 
 interface RemoveServiceFromAppointmentRequest extends Request {
@@ -55,14 +59,24 @@ interface RemoveServiceFromAppointmentRequest extends Request {
 }
 
 export async function removeServiceFromAppointment(request: RemoveServiceFromAppointmentRequest, response: Response) {
-    const [appointment, service] = await Promise.all([
-        Appointment.findByPk(request.params.appointmentId),
-        Service.findByPk(request.params.serviceId),
-    ]);
+    let appointment: Appointment | null = null;
 
-    if (appointment && service) {
-        await appointment.removeService(service);
-        return response.sendStatus(200);
+    try {
+        appointment = await Appointment.findByPk(request.params.appointmentId, { include: Service });
+        if (!appointment) {
+            return response.status(404).send('Appointment not found');
+        }
+
+        const service = appointment.services.find(({ id }) => id === request.params.serviceId);
+        if (!service) {
+            return response.status(400).send('Service not associated with appointment');
+        } else if (service.appointment.quantity === 1) {
+            await appointment.removeService(request.params.serviceId);
+        } else {
+            await service.appointment.decrement({ quantity: 1 });
+        }
+    } catch (e) {
+        return response.status(500).send('Operation failed');
     }
-    response.sendStatus(404);
+    return response.sendStatus(200);
 }
