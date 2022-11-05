@@ -1,4 +1,9 @@
 import {
+    BelongsToManyAddAssociationMixin,
+    BelongsToManyAddAssociationsMixin,
+    BelongsToManyGetAssociationsMixin,
+    BelongsToManyRemoveAssociationMixin,
+    BelongsToManySetAssociationsMixin,
     CreationOptional,
     DataTypes,
     ForeignKey,
@@ -18,10 +23,16 @@ export class Appointment extends Model<InferAttributes<Appointment>, InferCreati
     declare estimatedPrice: Date | null;
     declare startsAt: Date | null;
 
+    declare userId: ForeignKey<User['id']>;
+
     declare Services: NonAttribute<Service[]>;
     declare Factors: NonAttribute<Factor[]>;
 
-    declare userId: ForeignKey<User['id']>;
+    declare addService: BelongsToManyAddAssociationMixin<Service, string>;
+    declare addServices: BelongsToManyAddAssociationsMixin<Service, string>;
+    declare getServices: BelongsToManyGetAssociationsMixin<Service>;
+    declare setService: BelongsToManySetAssociationsMixin<Service, string>;
+    declare removeService: BelongsToManyRemoveAssociationMixin<Service, string>;
 }
 
 Appointment.init(
@@ -39,7 +50,11 @@ Appointment.belongsToMany(Service, {
     foreignKey: 'appointmentId',
     timestamps: false,
 });
-Service.belongsToMany(Appointment, { through: 'appointments_services', foreignKey: 'serviceId', timestamps: false });
+Service.belongsToMany(Appointment, {
+    through: 'appointments_services',
+    foreignKey: 'serviceId',
+    timestamps: false,
+});
 
 Appointment.hasMany(Factor, { foreignKey: 'appointmentId' });
 Factor.belongsTo(Appointment, { foreignKey: 'appointmentId' });
