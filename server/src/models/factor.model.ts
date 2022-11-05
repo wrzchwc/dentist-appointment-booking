@@ -11,5 +11,5 @@ Factor.init(
         id: { type: DataTypes.UUID, primaryKey: true, allowNull: false, defaultValue: DataTypes.UUIDV4 },
         additionalInfo: { type: DataTypes.STRING },
     },
-    { sequelize: sequelizeInstance, tableName: 'factors', timestamps: false }
+    { sequelize: sequelizeInstance, tableName: 'factors', timestamps: false, modelName: 'factor' }
 );

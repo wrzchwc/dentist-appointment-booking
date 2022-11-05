@@ -1,4 +1,5 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model, NonAttribute } from 'sequelize';
+import { AppointmentsServices } from './appointments-services.model';
 import { sequelizeInstance } from '../services';
 
 export class Service extends Model<InferAttributes<Service>, InferCreationAttributes<Service>> {
@@ -8,6 +9,8 @@ export class Service extends Model<InferAttributes<Service>, InferCreationAttrib
     declare count: number;
     declare detail?: number;
     declare length?: number;
+
+    declare appointment: NonAttribute<AppointmentsServices>;
 }
 
 Service.init(
@@ -19,5 +22,5 @@ Service.init(
         detail: { type: DataTypes.STRING },
         length: { type: DataTypes.SMALLINT },
     },
-    { timestamps: false, sequelize: sequelizeInstance, tableName: 'services' }
+    { timestamps: false, sequelize: sequelizeInstance, tableName: 'services', modelName: 'service' }
 );

@@ -1,9 +1,6 @@
 import {
     BelongsToManyAddAssociationMixin,
-    BelongsToManyAddAssociationsMixin,
-    BelongsToManyGetAssociationsMixin,
     BelongsToManyRemoveAssociationMixin,
-    BelongsToManySetAssociationsMixin,
     CreationOptional,
     DataTypes,
     ForeignKey,
@@ -12,6 +9,7 @@ import {
     Model,
     NonAttribute,
 } from 'sequelize';
+import { AppointmentsServices } from './appointments-services.model';
 import { Factor } from './factor.model';
 import { Service } from './service.model';
 import { User } from './user.model';
@@ -25,13 +23,10 @@ export class Appointment extends Model<InferAttributes<Appointment>, InferCreati
 
     declare userId: ForeignKey<User['id']>;
 
-    declare Services: NonAttribute<Service[]>;
-    declare Factors: NonAttribute<Factor[]>;
+    declare services: NonAttribute<Service[]>;
+    declare factors: NonAttribute<Factor[]>;
 
     declare addService: BelongsToManyAddAssociationMixin<Service, string>;
-    declare addServices: BelongsToManyAddAssociationsMixin<Service, string>;
-    declare getServices: BelongsToManyGetAssociationsMixin<Service>;
-    declare setService: BelongsToManySetAssociationsMixin<Service, string>;
     declare removeService: BelongsToManyRemoveAssociationMixin<Service, string>;
 }
 
@@ -46,12 +41,12 @@ Appointment.init(
 );
 
 Appointment.belongsToMany(Service, {
-    through: 'appointments_services',
+    through: AppointmentsServices,
     foreignKey: 'appointmentId',
     timestamps: false,
 });
 Service.belongsToMany(Appointment, {
-    through: 'appointments_services',
+    through: AppointmentsServices,
     foreignKey: 'serviceId',
     timestamps: false,
 });

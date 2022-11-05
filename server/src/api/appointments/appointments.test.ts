@@ -74,8 +74,8 @@ describe('/api/appointments', () => {
                 confirmed: false,
                 estimatedPrice: null,
                 startsAt: null,
-                Services: [],
-                Factors: [],
+                services: [],
+                factors: [],
             };
 
             expect(response.body).toMatchObject(expected);
