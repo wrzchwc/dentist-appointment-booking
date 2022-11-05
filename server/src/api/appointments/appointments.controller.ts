@@ -59,10 +59,8 @@ interface RemoveServiceFromAppointmentRequest extends Request {
 }
 
 export async function removeServiceFromAppointment(request: RemoveServiceFromAppointmentRequest, response: Response) {
-    let appointment: Appointment | null = null;
-
     try {
-        appointment = await Appointment.findByPk(request.params.appointmentId, { include: Service });
+        const appointment = await Appointment.findByPk(request.params.appointmentId, { include: Service });
         if (!appointment) {
             return response.status(404).send('Appointment not found');
         }
