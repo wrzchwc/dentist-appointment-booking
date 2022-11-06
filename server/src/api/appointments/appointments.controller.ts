@@ -62,19 +62,19 @@ export async function removeServiceFromAppointment(request: RemoveServiceFromApp
     try {
         const appointment = await Appointment.findByPk(request.params.appointmentId, { include: Service });
         if (!appointment) {
-            return response.status(404).send('Appointment not found');
+            return response.status(404).send({ error: 'Appointment not found' });
         }
 
         const service = appointment.services.find(({ id }) => id === request.params.serviceId);
         if (!service) {
-            return response.status(400).send('Service not associated with appointment');
+            return response.status(400).json({ error: 'Service not associated with appointment' });
         } else if (service.appointment.quantity === 1) {
             await appointment.removeService(request.params.serviceId);
         } else {
             await service.appointment.decrement({ quantity: 1 });
         }
     } catch (e) {
-        return response.status(500).send('Operation failed');
+        return response.status(500).json({ error: 'Operation failed' });
     }
     return response.sendStatus(200);
 }
