@@ -38,7 +38,7 @@ export async function addServiceToAppointment(request: AddServiceToAppointmentRe
     try {
         const appointment = await Appointment.findByPk(request.params.appointmentId, { include: Service });
         if (!appointment) {
-            return response.status(404).send('Appointment not found');
+            return response.status(404).send({ error: 'Appointment not found' });
         }
 
         const service = appointment.services.find(({ id }) => id === request.body.serviceId);
@@ -48,7 +48,7 @@ export async function addServiceToAppointment(request: AddServiceToAppointmentRe
             await service.appointment.increment({ quantity: 1 });
         }
     } catch (e) {
-        return response.status(500).send('Operation failed');
+        return response.status(500).send({ error: 'Operation failed' });
     }
 
     response.sendStatus(200);
