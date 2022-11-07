@@ -221,14 +221,14 @@ describe('/api/appointments', () => {
                 expect(response.status).toBe(200);
             });
 
-            it('should call AppointmentsServices.prototype.increment with correct arguments', () => {
+            it('should call AppointmentsServices.increment with correct arguments', () => {
                 expect(AppointmentsServices.increment).toHaveBeenCalledWith(
                     { quantity: 1 },
                     { where: { appointmentId: appointment.id, serviceId: service.id } }
                 );
             });
 
-            it('should call AppointmentsServices.prototype.increment once', () => {
+            it('should call AppointmentsServices.increment once', () => {
                 expect(AppointmentsServices.increment).toBeCalledTimes(1);
             });
         });
@@ -387,7 +387,7 @@ describe('/api/appointments', () => {
                     { where: { appointmentId: appointment.toJSON().id, serviceId: service.toJSON().id } }
                 );
 
-                jest.spyOn(AppointmentsServices.prototype, 'decrement');
+                jest.spyOn(AppointmentsServices, 'decrement');
 
                 const url = `/api/appointments/${appointment.toJSON().id}/services/${service.toJSON().id}`;
                 response = await supertest(app).delete(url).set('Cookie', cookieHeader);
@@ -403,12 +403,20 @@ describe('/api/appointments', () => {
                 expect(response.status).toBe(200);
             });
 
-            it('should call AppointmentsServices.prototype.decrement once', () => {
-                expect(AppointmentsServices.prototype.decrement).toHaveBeenCalledTimes(1);
+            it('should call AppointmentsServices.decrement once', () => {
+                expect(AppointmentsServices.decrement).toHaveBeenCalledTimes(1);
             });
 
-            it('should call AppointmentsServices.prototype.decrement with correct argument', () => {
-                expect(AppointmentsServices.prototype.decrement).toHaveBeenCalledWith({ quantity: 1 });
+            it('should call AppointmentsServices.decrement with correct argument', () => {
+                expect(AppointmentsServices.decrement).toHaveBeenCalledWith(
+                    { quantity: 1 },
+                    {
+                        where: {
+                            appointmentId: appointment.id,
+                            serviceId: service.id,
+                        },
+                    }
+                );
             });
         });
     });

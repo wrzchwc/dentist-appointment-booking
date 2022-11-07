@@ -87,7 +87,16 @@ export async function removeServiceFromAppointment(request: RemoveServiceFromApp
         } else if (service.appointment.quantity === 1) {
             await appointment.removeService(request.params.serviceId);
         } else {
-            await service.appointment.decrement({ quantity: 1 });
+            // await service.appointment.decrement({ quantity: 1 });
+            await AppointmentsServices.decrement(
+                { quantity: 1 },
+                {
+                    where: {
+                        appointmentId: appointment.id,
+                        serviceId: service.id,
+                    },
+                }
+            );
         }
     } catch (e) {
         return response.status(500).json({ error: 'Operation failed' });
