@@ -53,15 +53,7 @@ export async function addServiceToAppointment(request: AddServiceToAppointmentRe
         if (!service) {
             await appointment.addService(request.body.serviceId);
         } else {
-            await AppointmentsServices.increment(
-                { quantity: 1 },
-                {
-                    where: {
-                        appointmentId: request.params.appointmentId,
-                        serviceId: request.body.serviceId,
-                    },
-                }
-            );
+            await updateServiceQuantity(1, appointment, service);
         }
     } catch (e) {
         return response.status(500).send({ error: 'Operation failed' });
@@ -87,19 +79,15 @@ export async function removeServiceFromAppointment(request: RemoveServiceFromApp
         } else if (service.appointment.quantity === 1) {
             await appointment.removeService(request.params.serviceId);
         } else {
-            // await service.appointment.decrement({ quantity: 1 });
-            await AppointmentsServices.decrement(
-                { quantity: 1 },
-                {
-                    where: {
-                        appointmentId: appointment.id,
-                        serviceId: service.id,
-                    },
-                }
-            );
+            await updateServiceQuantity(-1, appointment, service);
         }
     } catch (e) {
         return response.status(500).json({ error: 'Operation failed' });
     }
     return response.sendStatus(200);
+}
+
+async function updateServiceQuantity(quantityDelta: 1 | -1, appointment: Appointment, service: Service) {
+    const where = { appointmentId: appointment.id, serviceId: service.id };
+    await AppointmentsServices.increment({ quantity: quantityDelta }, { where });
 }

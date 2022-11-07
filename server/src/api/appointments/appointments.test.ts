@@ -375,6 +375,7 @@ describe('/api/appointments', () => {
         describe('if service has been associated with appointment more than once', () => {
             let appointment: Appointment;
             let service: Service;
+            let url: string;
 
             beforeEach(async () => {
                 [appointment, service] = await Promise.all([
@@ -384,13 +385,12 @@ describe('/api/appointments', () => {
                 await appointment.addService(service);
                 await AppointmentsServices.increment(
                     { quantity: 1 },
-                    { where: { appointmentId: appointment.toJSON().id, serviceId: service.toJSON().id } }
+                    { where: { appointmentId: appointment.id, serviceId: service.id } }
                 );
 
-                jest.spyOn(AppointmentsServices, 'decrement');
+                jest.spyOn(AppointmentsServices, 'increment');
 
-                const url = `/api/appointments/${appointment.toJSON().id}/services/${service.toJSON().id}`;
-                response = await supertest(app).delete(url).set('Cookie', cookieHeader);
+                url = `/api/appointments/${appointment.id}/services/${service.id}`;
             });
 
             afterEach(async () => {
@@ -399,24 +399,32 @@ describe('/api/appointments', () => {
                 jest.clearAllMocks();
             });
 
-            it('should return 200', () => {
-                expect(response.status).toBe(200);
+            it('should return 200', async () => {
+                const expected = 200;
+
+                const { status } = await supertest(app).delete(url).set('Cookie', cookieHeader);
+
+                expect(status).toBe(expected);
             });
 
-            it('should call AppointmentsServices.decrement once', () => {
-                expect(AppointmentsServices.decrement).toHaveBeenCalledTimes(1);
+            it('should call AppointmentsServices.increment once', async () => {
+                jest.spyOn(AppointmentsServices, 'increment').mockClear();
+                const expected = 1;
+
+                await supertest(app).delete(url).set('Cookie', cookieHeader);
+
+                expect(AppointmentsServices.increment).toHaveBeenCalledTimes(expected);
             });
 
-            it('should call AppointmentsServices.decrement with correct argument', () => {
-                expect(AppointmentsServices.decrement).toHaveBeenCalledWith(
-                    { quantity: 1 },
-                    {
-                        where: {
-                            appointmentId: appointment.id,
-                            serviceId: service.id,
-                        },
-                    }
-                );
+            it('should call AppointmentsServices.increment with correct argument', async () => {
+                const expected = [
+                    { quantity: -1 },
+                    { where: { appointmentId: appointment.id, serviceId: service.id } },
+                ];
+
+                await supertest(app).delete(url).set('Cookie', cookieHeader);
+
+                expect(AppointmentsServices.increment).toHaveBeenCalledWith(...expected);
             });
         });
     });
