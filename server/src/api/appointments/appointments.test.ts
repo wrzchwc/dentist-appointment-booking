@@ -203,7 +203,7 @@ describe('/api/appointments', () => {
                 ]);
                 await appointment.addService(service);
 
-                jest.spyOn(AppointmentsServices.prototype, 'increment');
+                jest.spyOn(AppointmentsServices, 'increment');
 
                 response = await supertest(app)
                     .post(`/api/appointments/${appointment.toJSON().id}/services`)
@@ -222,11 +222,14 @@ describe('/api/appointments', () => {
             });
 
             it('should call AppointmentsServices.prototype.increment with correct arguments', () => {
-                expect(AppointmentsServices.prototype.increment).toHaveBeenCalledWith({ quantity: 1 });
+                expect(AppointmentsServices.increment).toHaveBeenCalledWith(
+                    { quantity: 1 },
+                    { where: { appointmentId: appointment.id, serviceId: service.id } }
+                );
             });
 
             it('should call AppointmentsServices.prototype.increment once', () => {
-                expect(AppointmentsServices.prototype.increment).toBeCalledTimes(1);
+                expect(AppointmentsServices.increment).toBeCalledTimes(1);
             });
         });
     });

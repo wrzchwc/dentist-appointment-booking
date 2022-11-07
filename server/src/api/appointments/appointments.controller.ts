@@ -1,4 +1,12 @@
-import { Appointment, AppointmentFact, AppointmentQuestion, Factor, Service, User } from '../../models';
+import {
+    Appointment,
+    AppointmentFact,
+    AppointmentQuestion,
+    AppointmentsServices,
+    Factor,
+    Service,
+    User,
+} from '../../models';
 import { Request, Response } from 'express';
 
 export async function getQuestions(request: Request, response: Response) {
@@ -45,7 +53,15 @@ export async function addServiceToAppointment(request: AddServiceToAppointmentRe
         if (!service) {
             await appointment.addService(request.body.serviceId);
         } else {
-            await service.appointment.increment({ quantity: 1 });
+            await AppointmentsServices.increment(
+                { quantity: 1 },
+                {
+                    where: {
+                        appointmentId: request.params.appointmentId,
+                        serviceId: request.body.serviceId,
+                    },
+                }
+            );
         }
     } catch (e) {
         return response.status(500).send({ error: 'Operation failed' });
