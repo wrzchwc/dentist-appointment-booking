@@ -280,15 +280,14 @@ describe('/api/appointments', () => {
                             },
                         ],
                     } as unknown as Appointment);
-                    jest.spyOn(AppointmentsServices.prototype, 'decrement').mockRejectedValue(null);
+                    jest.spyOn(AppointmentsServices.prototype, 'increment').mockRejectedValue(null);
                     response = await supertest(app).delete(url).set('Cookie', cookieHeader);
                 });
 
                 itShouldReturn500AndErrorMessageInBody();
 
-                it('should call AppointmentsServices.prototype.decrement', () => {
-                    expect.assertions(1);
-                    expect(AppointmentsServices.prototype.decrement).rejects.toBe(null);
+                it('should call AppointmentsServices.prototype.increment', () => {
+                    expect(AppointmentsServices.prototype.increment).rejects.toBe(null);
                 });
             });
         });
