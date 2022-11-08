@@ -1,3 +1,4 @@
+import * as requests from './appointments.requests';
 import {
     Appointment,
     AppointmentFact,
@@ -37,12 +38,7 @@ export async function createAppointment(request: Request, response: Response) {
     }
 }
 
-interface AddServiceToAppointmentRequest extends Request {
-    params: { appointmentId: string };
-    body: { serviceId: string };
-}
-
-export async function addServiceToAppointment(request: AddServiceToAppointmentRequest, response: Response) {
+export async function addServiceToAppointment(request: requests.AddServiceToAppointmentRequest, response: Response) {
     const { appointmentId } = request.params;
     const { serviceId } = request.body;
 
@@ -70,11 +66,10 @@ async function increaseServiceQuantity(appointment: Appointment, service: Servic
     return updateServiceQuantity(true, appointment.id, service.id);
 }
 
-interface RemoveServiceFromAppointmentRequest extends Request {
-    params: { appointmentId: string; serviceId: string };
-}
-
-export async function removeServiceFromAppointment(request: RemoveServiceFromAppointmentRequest, response: Response) {
+export async function removeServiceFromAppointment(
+    request: requests.RemoveServiceFromAppointmentRequest,
+    response: Response
+) {
     try {
         const [appointment] = await findAppointmentAndService(request.params.appointmentId, request.params.serviceId);
         if (!appointment) {
