@@ -38,7 +38,7 @@ export async function createAppointment(request: Request, response: Response) {
     }
 }
 
-export async function addServiceToAppointment(request: requests.AddServiceToAppointmentRequest, response: Response) {
+export async function addServiceToAppointment(request: requests.AddServiceToAppointment, response: Response) {
     const { appointmentId } = request.params;
     const { serviceId } = request.body;
 
@@ -66,10 +66,7 @@ async function increaseServiceQuantity(appointment: Appointment, service: Servic
     return updateServiceQuantity(true, appointment.id, service.id);
 }
 
-export async function removeServiceFromAppointment(
-    request: requests.RemoveServiceFromAppointmentRequest,
-    response: Response
-) {
+export async function removeServiceFromAppointment(request: requests.RemoveServiceFromAppointment, response: Response) {
     try {
         const [appointment] = await findAppointmentAndService(request.params.appointmentId, request.params.serviceId);
         if (!appointment) {

@@ -1,10 +1,10 @@
 import { Request } from 'express';
 
-export interface AddServiceToAppointmentRequest extends Request {
+export interface AddServiceToAppointment extends Request {
     params: { appointmentId: string };
     body: { serviceId: string };
 }
 
-export interface RemoveServiceFromAppointmentRequest extends Request {
+export interface RemoveServiceFromAppointment extends Request {
     params: { appointmentId: string; serviceId: string };
 }
