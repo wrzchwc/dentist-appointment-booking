@@ -109,11 +109,32 @@ describe('/api/appointments', () => {
                 itShouldReturn500AndErrorMessageInBody();
             });
 
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            describe.skip('service lookup', () => {});
+            describe('service lookup', () => {
+                beforeEach(async () => {
+                    jest.spyOn(Service, 'findByPk').mockRejectedValue(null);
+                    response = await supertest(app).post(url).set('Cookie', cookieHeader);
+                });
 
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            describe.skip('association evaluation', () => {});
+                itShouldReturn500AndErrorMessageInBody();
+
+                it('should call Service.findByPk', () => {
+                    expect(Service.findByPk).rejects.toBe(null);
+                });
+            });
+
+            describe('association evaluation', () => {
+                beforeEach(async () => {
+                    jest.spyOn(Appointment, 'findByPk').mockRejectedValue({});
+                    jest.spyOn(Appointment.prototype, 'hasService').mockRejectedValue(null);
+                    response = await supertest(app).post(url).set('Cookie', cookieHeader);
+                });
+
+                itShouldReturn500AndErrorMessageInBody();
+
+                it('should call Appointment.prototype.hasService', () => {
+                    expect(Appointment.prototype.hasService).rejects.toBe(null);
+                });
+            });
 
             describe('adding service to appointment', () => {
                 beforeEach(async () => {
