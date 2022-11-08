@@ -53,13 +53,17 @@ export async function addServiceToAppointment(request: AddServiceToAppointmentRe
         if (!service) {
             await appointment.addService(request.body.serviceId);
         } else {
-            await updateServiceQuantity(1, appointment, service);
+            await increaseServiceQuantity(appointment, service);
         }
     } catch (e) {
         return response.status(500).send({ error: 'Operation failed' });
     }
 
     response.sendStatus(200);
+}
+
+async function increaseServiceQuantity(appointment: Appointment, service: Service) {
+    return updateServiceQuantity(true, appointment.id, service.id);
 }
 
 interface RemoveServiceFromAppointmentRequest extends Request {
@@ -79,7 +83,7 @@ export async function removeServiceFromAppointment(request: RemoveServiceFromApp
         } else if (service.appointment.quantity === 1) {
             await appointment.removeService(request.params.serviceId);
         } else {
-            await updateServiceQuantity(-1, appointment, service);
+            await decreaseServiceQuantity(appointment, service);
         }
     } catch (e) {
         return response.status(500).json({ error: 'Operation failed' });
@@ -87,7 +91,11 @@ export async function removeServiceFromAppointment(request: RemoveServiceFromApp
     return response.sendStatus(200);
 }
 
-async function updateServiceQuantity(quantityDelta: 1 | -1, appointment: Appointment, service: Service) {
-    const where = { appointmentId: appointment.id, serviceId: service.id };
-    await AppointmentsServices.increment({ quantity: quantityDelta }, { where });
+async function decreaseServiceQuantity(appointment: Appointment, service: Service) {
+    return updateServiceQuantity(false, appointment.id, service.id);
+}
+
+async function updateServiceQuantity(increment: boolean, appointmentId: string, serviceId: string) {
+    const where = { appointmentId, serviceId };
+    await AppointmentsServices.increment({ quantity: increment ? 1 : -1 }, { where });
 }
