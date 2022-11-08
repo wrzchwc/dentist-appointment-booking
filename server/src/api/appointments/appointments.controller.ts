@@ -44,7 +44,7 @@ interface AddServiceToAppointmentRequest extends Request {
 
 export async function addServiceToAppointment(request: AddServiceToAppointmentRequest, response: Response) {
     try {
-        const appointment = await Appointment.findByPk(request.params.appointmentId, { include: Service });
+        const [appointment] = await findAppointmentAndService(request.params.appointmentId);
         if (!appointment) {
             return response.status(404).send({ error: 'Appointment not found' });
         }
@@ -72,7 +72,7 @@ interface RemoveServiceFromAppointmentRequest extends Request {
 
 export async function removeServiceFromAppointment(request: RemoveServiceFromAppointmentRequest, response: Response) {
     try {
-        const appointment = await Appointment.findByPk(request.params.appointmentId, { include: Service });
+        const [appointment] = await findAppointmentAndService(request.params.appointmentId);
         if (!appointment) {
             return response.status(404).send({ error: 'Appointment not found' });
         }
@@ -89,6 +89,10 @@ export async function removeServiceFromAppointment(request: RemoveServiceFromApp
         return response.status(500).json({ error: 'Operation failed' });
     }
     return response.sendStatus(200);
+}
+
+async function findAppointmentAndService(appointmentId: string) {
+    return Promise.all([Appointment.findByPk(appointmentId, { include: Service })]);
 }
 
 async function decreaseServiceQuantity(appointment: Appointment, service: Service) {
