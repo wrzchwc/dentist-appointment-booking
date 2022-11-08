@@ -1,5 +1,6 @@
 import {
     BelongsToManyAddAssociationMixin,
+    BelongsToManyHasAssociationMixin,
     BelongsToManyRemoveAssociationMixin,
     CreationOptional,
     DataTypes,
@@ -27,6 +28,7 @@ export class Appointment extends Model<InferAttributes<Appointment>, InferCreati
     declare factors: NonAttribute<Factor[]>;
 
     declare addService: BelongsToManyAddAssociationMixin<Service, string>;
+    declare hasService: BelongsToManyHasAssociationMixin<Service, string>;
     declare removeService: BelongsToManyRemoveAssociationMixin<Service, string>;
 }
 

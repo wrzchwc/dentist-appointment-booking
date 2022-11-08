@@ -109,6 +109,12 @@ describe('/api/appointments', () => {
                 itShouldReturn500AndErrorMessageInBody();
             });
 
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            describe.skip('service lookup', () => {});
+
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            describe.skip('association evaluation', () => {});
+
             describe('adding service to appointment', () => {
                 beforeEach(async () => {
                     jest.spyOn(Appointment, 'findByPk').mockResolvedValue({ services: [] } as unknown as Appointment);
@@ -150,6 +156,9 @@ describe('/api/appointments', () => {
                 expect(response.body).toMatchObject({ error: 'Appointment not found' });
             });
         });
+
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        describe.skip('if requested service does not exist', () => {});
 
         describe('if service is not associated with appointment', () => {
             let appointmentId: string;
@@ -310,6 +319,9 @@ describe('/api/appointments', () => {
                 expect(response.body).toMatchObject({ error: 'Appointment not found' });
             });
         });
+
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        describe.skip('if requested service does not exist', () => {});
 
         describe('if service is not associated with appointment', () => {
             let appointmentId: string;

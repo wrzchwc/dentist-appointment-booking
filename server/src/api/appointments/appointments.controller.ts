@@ -43,17 +43,19 @@ interface AddServiceToAppointmentRequest extends Request {
 }
 
 export async function addServiceToAppointment(request: AddServiceToAppointmentRequest, response: Response) {
+    const { appointmentId } = request.params;
+    const { serviceId } = request.body;
+
     try {
-        const [appointment] = await findAppointmentAndService(request.params.appointmentId);
+        const [appointment, service] = await findAppointmentAndService(appointmentId, serviceId);
         if (!appointment) {
             return response.status(404).send({ error: 'Appointment not found' });
         }
 
-        const service = appointment.services.find(({ id }) => id === request.body.serviceId);
-        if (!service) {
-            await appointment.addService(request.body.serviceId);
+        if (!(await appointment.hasService(serviceId))) {
+            await appointment.addService(serviceId);
         } else {
-            await increaseServiceQuantity(appointment, service);
+            await increaseServiceQuantity(appointment, service as Service);
         }
     } catch (e) {
         return response.status(500).send({ error: 'Operation failed' });
@@ -72,7 +74,7 @@ interface RemoveServiceFromAppointmentRequest extends Request {
 
 export async function removeServiceFromAppointment(request: RemoveServiceFromAppointmentRequest, response: Response) {
     try {
-        const [appointment] = await findAppointmentAndService(request.params.appointmentId);
+        const [appointment] = await findAppointmentAndService(request.params.appointmentId, request.params.serviceId);
         if (!appointment) {
             return response.status(404).send({ error: 'Appointment not found' });
         }
@@ -88,11 +90,12 @@ export async function removeServiceFromAppointment(request: RemoveServiceFromApp
     } catch (e) {
         return response.status(500).json({ error: 'Operation failed' });
     }
+
     return response.sendStatus(200);
 }
 
-async function findAppointmentAndService(appointmentId: string) {
-    return Promise.all([Appointment.findByPk(appointmentId, { include: Service })]);
+async function findAppointmentAndService(appointmentId: string, serviceId: string) {
+    return Promise.all([Appointment.findByPk(appointmentId, { include: Service }), Service.findByPk(serviceId)]);
 }
 
 async function decreaseServiceQuantity(appointment: Appointment, service: Service) {
