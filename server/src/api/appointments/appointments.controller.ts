@@ -49,7 +49,9 @@ export async function addServiceToAppointment(request: AddServiceToAppointmentRe
     try {
         const [appointment, service] = await findAppointmentAndService(appointmentId, serviceId);
         if (!appointment) {
-            return response.status(404).send({ error: 'Appointment not found' });
+            return response.status(404).json({ error: 'Appointment not found' });
+        } else if (!service) {
+            return response.status(404).json({ error: 'Service not found' });
         }
 
         if (!(await appointment.hasService(serviceId))) {
@@ -58,7 +60,7 @@ export async function addServiceToAppointment(request: AddServiceToAppointmentRe
             await increaseServiceQuantity(appointment, service as Service);
         }
     } catch (e) {
-        return response.status(500).send({ error: 'Operation failed' });
+        return response.status(500).json({ error: 'Operation failed' });
     }
 
     response.sendStatus(200);

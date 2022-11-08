@@ -138,7 +138,9 @@ describe('/api/appointments', () => {
 
             describe('adding service to appointment', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({ services: [] } as unknown as Appointment);
+                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
+                    jest.spyOn(Service, 'findByPk').mockResolvedValue({} as Service);
+                    jest.spyOn(Appointment.prototype, 'hasService').mockResolvedValue(false);
                     jest.spyOn(Appointment.prototype, 'addService').mockRejectedValue(null);
                     response = await supertest(app).post(url).set('Cookie', cookieHeader);
                 });
@@ -178,8 +180,25 @@ describe('/api/appointments', () => {
             });
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        describe.skip('if requested service does not exist', () => {});
+        describe('if requested service does not exist', () => {
+            beforeEach(async () => {
+                jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
+                jest.spyOn(Service, 'findByPk').mockResolvedValue(null);
+                response = await supertest(app).post(url).set('Cookie', cookieHeader);
+            });
+
+            afterEach(() => {
+                jest.restoreAllMocks();
+            });
+
+            it('should return 404', () => {
+                expect(response.status).toBe(404);
+            });
+
+            it('should return appropriate error message', () => {
+                expect(response.body).toMatchObject({ error: 'Service not found' });
+            });
+        });
 
         describe('if service is not associated with appointment', () => {
             let appointmentId: string;
