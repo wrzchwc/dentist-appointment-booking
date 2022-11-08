@@ -10,6 +10,8 @@ import {
 } from '../../models';
 import { Request, Response } from 'express';
 
+class AppointmentError extends Error {}
+
 export async function getQuestions(request: Request, response: Response) {
     const questions = await AppointmentQuestion.findAll({
         include: {
@@ -44,22 +46,32 @@ export async function addServiceToAppointment(request: requests.AddServiceToAppo
 
     try {
         const [appointment, service] = await findAppointmentAndService(appointmentId, serviceId);
-        if (!appointment) {
-            return response.status(404).json({ error: 'Appointment not found' });
-        } else if (!service) {
-            return response.status(404).json({ error: 'Service not found' });
-        }
 
-        if (!(await appointment.hasService(serviceId))) {
-            await appointment.addService(serviceId);
+        if (!(await appointment.hasService(service.id))) {
+            await appointment.addService(service.id);
         } else {
-            await increaseServiceQuantity(appointment, service as Service);
+            await increaseServiceQuantity(appointment, service);
         }
     } catch (e) {
+        if (e instanceof AppointmentError) {
+            return response.status(404).json({ error: e.message });
+        }
         return response.status(500).json({ error: 'Operation failed' });
     }
 
     response.sendStatus(200);
+}
+
+async function findAppointmentAndService(appointmentId: string, serviceId: string): Promise<[Appointment, Service]> {
+    const [appointment, service] = await findNullableAppointmentAndService(appointmentId, serviceId);
+
+    if (!appointment) {
+        throw new AppointmentError('Appointment not found');
+    } else if (!service) {
+        throw new AppointmentError('Service not found');
+    }
+
+    return [appointment, service];
 }
 
 async function increaseServiceQuantity(appointment: Appointment, service: Service) {
@@ -68,7 +80,10 @@ async function increaseServiceQuantity(appointment: Appointment, service: Servic
 
 export async function removeServiceFromAppointment(request: requests.RemoveServiceFromAppointment, response: Response) {
     try {
-        const [appointment] = await findAppointmentAndService(request.params.appointmentId, request.params.serviceId);
+        const [appointment] = await findNullableAppointmentAndService(
+            request.params.appointmentId,
+            request.params.serviceId
+        );
         if (!appointment) {
             return response.status(404).send({ error: 'Appointment not found' });
         }
@@ -88,8 +103,8 @@ export async function removeServiceFromAppointment(request: requests.RemoveServi
     return response.sendStatus(200);
 }
 
-async function findAppointmentAndService(appointmentId: string, serviceId: string) {
-    return Promise.all([Appointment.findByPk(appointmentId, { include: Service }), Service.findByPk(serviceId)]);
+async function findNullableAppointmentAndService(appointmentId: string, serviceId: string) {
+    return Promise.all([Appointment.findByPk(appointmentId), Service.findByPk(serviceId)]);
 }
 
 async function decreaseServiceQuantity(appointment: Appointment, service: Service) {
