@@ -88,7 +88,7 @@ async function findAppointmentServiceAssociation(appointmentId: string, serviceI
     const association = await AppointmentsServices.findOne({ where: { appointmentId, serviceId } });
 
     if (!association) {
-        throw new ModelError('Service not associated with appointment', 400);
+        throw new ModelError('Appointment and service not associated', 400);
     }
 
     return association;
@@ -104,18 +104,7 @@ async function updateServiceQuantity(increment: boolean, appointmentId: string, 
 }
 
 async function findAppointmentAndService(appointmentId: string, serviceId: string): Promise<[Appointment, Service]> {
-    const [appointment, service] = await Promise.all([
-        Appointment.findByPk(appointmentId),
-        Service.findByPk(serviceId),
-    ]);
-
-    if (!appointment) {
-        throw new ModelError('Appointment not found', 404);
-    } else if (!service) {
-        throw new ModelError('Service not found', 404);
-    }
-
-    return [appointment, service];
+    return await Promise.all([Appointment.find(appointmentId), Service.find(serviceId)]);
 }
 
 function getErrorData(e: unknown | ModelError): [number, string] {

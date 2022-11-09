@@ -102,7 +102,8 @@ describe('/api/appointments', () => {
 
             describe('appointment lookup', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockRejectedValue(null);
+                    jest.spyOn(Appointment, 'find').mockRejectedValue(null);
+                    jest.spyOn(Service, 'find').mockResolvedValue({} as Service);
                     response = await supertest(app).post(url).set('Cookie', cookieHeader);
                 });
 
@@ -124,15 +125,16 @@ describe('/api/appointments', () => {
 
             describe('association evaluation', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockRejectedValue({});
-                    jest.spyOn(Appointment.prototype, 'hasService').mockRejectedValue(null);
+                    jest.spyOn(Appointment, 'find').mockResolvedValue({} as Appointment);
+                    jest.spyOn(Service, 'find').mockResolvedValue({} as Service);
+                    jest.spyOn(AppointmentsServices, 'findOne').mockRejectedValue(null);
                     response = await supertest(app).post(url).set('Cookie', cookieHeader);
                 });
 
                 itShouldReturn500AndErrorMessageInBody();
 
-                it('should call Appointment.prototype.hasService', () => {
-                    expect(Appointment.prototype.hasService).rejects.toBe(null);
+                it('should call AppointmentsServices.findOne', () => {
+                    expect(AppointmentsServices.findOne).rejects.toBe(null);
                 });
             });
 
@@ -164,6 +166,8 @@ describe('/api/appointments', () => {
         describe('if requested appointment does not exist', () => {
             beforeEach(async () => {
                 jest.spyOn(Appointment, 'findByPk').mockResolvedValue(null);
+                jest.spyOn(Service, 'findByPk').mockResolvedValue({} as Service);
+                jest.spyOn(AppointmentsServices, 'findOne').mockResolvedValue({} as AppointmentsServices);
                 response = await supertest(app).post(url).set('Cookie', cookieHeader);
             });
 
@@ -440,7 +444,7 @@ describe('/api/appointments', () => {
             });
 
             it('should return error message in body', () => {
-                expect(response.body).toMatchObject({ error: 'Service not associated with appointment' });
+                expect(response.body).toMatchObject({ error: 'Appointment and service not associated' });
             });
         });
 

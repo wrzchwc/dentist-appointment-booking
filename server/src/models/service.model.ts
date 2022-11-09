@@ -1,5 +1,6 @@
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model, NonAttribute } from 'sequelize';
 import { AppointmentsServices } from './appointments-services.model';
+import { ModelError } from './model-error';
 import { sequelizeInstance } from '../services';
 
 export class Service extends Model<InferAttributes<Service>, InferCreationAttributes<Service>> {
@@ -11,6 +12,16 @@ export class Service extends Model<InferAttributes<Service>, InferCreationAttrib
     declare length?: number;
 
     declare appointment: NonAttribute<AppointmentsServices>;
+
+    static async find(id: string) {
+        const service = await Service.findByPk(id);
+
+        if (!service) {
+            throw new ModelError('Service not found', 404);
+        }
+
+        return service;
+    }
 }
 
 Service.init(

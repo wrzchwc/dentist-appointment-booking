@@ -12,6 +12,7 @@ import {
 } from 'sequelize';
 import { AppointmentsServices } from './appointments-services.model';
 import { Factor } from './factor.model';
+import { ModelError } from './model-error';
 import { Service } from './service.model';
 import { User } from './user.model';
 import { sequelizeInstance } from '../services';
@@ -30,6 +31,14 @@ export class Appointment extends Model<InferAttributes<Appointment>, InferCreati
     declare addService: BelongsToManyAddAssociationMixin<Service, string>;
     declare hasService: BelongsToManyHasAssociationMixin<Service, string>;
     declare removeService: BelongsToManyRemoveAssociationMixin<Service, string>;
+
+    static async find(id: string) {
+        const appointment = await Appointment.findByPk(id);
+        if (!appointment) {
+            throw new ModelError('Appointment not found', 404);
+        }
+        return appointment;
+    }
 }
 
 Appointment.init(
