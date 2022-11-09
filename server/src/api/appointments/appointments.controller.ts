@@ -54,10 +54,6 @@ export async function addServiceToAppointment(request: requests.AddServiceToAppo
     response.sendStatus(200);
 }
 
-async function increaseServiceQuantity(appointment: m.Appointment, service: m.Service) {
-    return updateServiceQuantity(true, appointment.id, service.id);
-}
-
 export async function removeServiceFromAppointment(request: requests.RemoveServiceFromAppointment, response: Response) {
     const { appointmentId, serviceId } = request.params;
 
@@ -74,6 +70,32 @@ export async function removeServiceFromAppointment(request: requests.RemoveServi
     }
 
     response.sendStatus(200);
+}
+
+export async function createAppointmentFactor(request: AddFactToAppointment, response: Response) {
+    let factor: m.Factor;
+
+    try {
+        const [appointment, fact] = await Promise.all([
+            m.Appointment.find(request.params.appointmentId),
+            m.AppointmentFact.find(request.body.factId),
+        ]);
+        const { id } = await fact.createFactor(request.body);
+        await appointment.addFactor(id);
+        factor = await m.Factor.find(id, {
+            include: [{ model: m.AppointmentFact, attributes: ['value'] }],
+            attributes: ['id', 'additionalInfo', 'appointmentId'],
+        });
+    } catch (e) {
+        const [code, error] = getErrorData(e);
+        return response.status(code).json({ error });
+    }
+
+    response.status(201).json(factor);
+}
+
+async function increaseServiceQuantity(appointment: m.Appointment, service: m.Service) {
+    return updateServiceQuantity(true, appointment.id, service.id);
 }
 
 async function findAppointmentServiceAssociation(appointmentId: string, serviceId: string) {
@@ -104,26 +126,4 @@ async function findAppointmentAndService(
 
 function getErrorData(e: unknown | m.ModelError): [number, string] {
     return e instanceof m.ModelError ? [e.httpCode, e.message] : [500, 'Operation failed'];
-}
-
-export async function createAppointmentFactor(request: AddFactToAppointment, response: Response) {
-    let factor: m.Factor;
-
-    try {
-        const [appointment, fact] = await Promise.all([
-            m.Appointment.find(request.params.appointmentId),
-            m.AppointmentFact.find(request.body.factId),
-        ]);
-        const { id } = await fact.createFactor(request.body);
-        await appointment.addFactor(id);
-        factor = await m.Factor.find(id, {
-            include: [{ model: m.AppointmentFact, attributes: ['value'] }],
-            attributes: ['id', 'additionalInfo', 'appointmentId'],
-        });
-    } catch (e) {
-        const [code, error] = getErrorData(e);
-        return response.status(code).json({ error });
-    }
-
-    response.status(201).json(factor);
 }

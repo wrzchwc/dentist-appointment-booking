@@ -21,7 +21,7 @@ export class AppointmentQuestion extends Model<
     declare subquestion: string | null;
     declare womenOnly: boolean;
 
-    declare AppointmentFact?: NonAttribute<AppointmentFact>;
+    declare fact?: NonAttribute<AppointmentFact>;
 
     declare getAppointmentFact: HasOneGetAssociationMixin<AppointmentFact>;
     declare setAppointmentFact: HasOneSetAssociationMixin<AppointmentFact, 'question'>;

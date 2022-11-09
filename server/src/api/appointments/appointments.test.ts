@@ -56,20 +56,20 @@ describe('/api/appointments', () => {
     });
 
     describe('/questions GET', () => {
+        beforeEach(async () => {
+            response = await supertest(app).get('/api/appointments/questions').set('Cookie', cookieHeader);
+        });
+
         test('Should return 200', async () => {
-            response = await supertest(app).get('/api/appointments/questions').set('Cookie', cookieHeader).expect(200);
+            expect(response.status).toBe(200);
         });
 
         test('should return array of objects', () => {
-            expect(Array.isArray(response.body)).toBeTruthy();
+            expect(Array.isArray(response.body)).toBe(true);
         });
 
         test('should return questions including facts associated with them', () => {
-            expect(
-                response.body.every(
-                    ({ AppointmentFact }: AppointmentQuestion) => AppointmentFact?.id && AppointmentFact.value
-                )
-            ).toBe(true);
+            expect(response.body.every(({ fact }: AppointmentQuestion) => fact?.id && fact.value)).toBe(true);
         });
     });
 
