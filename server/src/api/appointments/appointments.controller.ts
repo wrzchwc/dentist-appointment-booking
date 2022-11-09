@@ -1,21 +1,12 @@
+import * as m from '../../models';
 import * as requests from './appointments.requests';
-import {
-    Appointment,
-    AppointmentFact,
-    AppointmentQuestion,
-    AppointmentsServices,
-    Factor,
-    ModelError,
-    Service,
-    User,
-} from '../../models';
 import { Request, Response } from 'express';
 import { AddFactToAppointment } from './appointments.requests';
 
 export async function getQuestions(request: Request, response: Response) {
-    const questions = await AppointmentQuestion.findAll({
+    const questions = await m.AppointmentQuestion.findAll({
         include: {
-            model: AppointmentFact,
+            model: m.AppointmentFact,
             attributes: ['id', 'value'],
         },
     });
@@ -23,18 +14,18 @@ export async function getQuestions(request: Request, response: Response) {
 }
 
 export async function getServices(request: Request, response: Response) {
-    const services = await Service.findAll();
+    const services = await m.Service.findAll();
     response.status(200).json(services);
 }
 
 export async function createAppointment(request: Request, response: Response) {
-    let appointment: Appointment | null = null;
+    let appointment: m.Appointment | null = null;
 
     try {
-        const { id } = await Appointment.create({ userId: (request.user as User).id });
+        const { id } = await m.Appointment.create({ userId: (request.user as m.User).id });
 
-        appointment = await Appointment.findByPk(id, {
-            include: [Service, Factor],
+        appointment = await m.Appointment.findByPk(id, {
+            include: [m.Service, m.Factor],
             attributes: ['id', 'confirmed', 'estimatedPrice', 'startsAt'],
         });
     } catch (e) {
@@ -51,7 +42,7 @@ export async function addServiceToAppointment(request: requests.AddServiceToAppo
     try {
         const [[appointment, service], areAssociated] = await Promise.all([
             findAppointmentAndService(appointmentId, serviceId),
-            AppointmentsServices.findOne({ where: { appointmentId, serviceId } }),
+            m.AppointmentsServices.findOne({ where: { appointmentId, serviceId } }),
         ]);
 
         await (areAssociated ? increaseServiceQuantity(appointment, service) : appointment.addService(serviceId));
@@ -63,7 +54,7 @@ export async function addServiceToAppointment(request: requests.AddServiceToAppo
     response.sendStatus(200);
 }
 
-async function increaseServiceQuantity(appointment: Appointment, service: Service) {
+async function increaseServiceQuantity(appointment: m.Appointment, service: m.Service) {
     return updateServiceQuantity(true, appointment.id, service.id);
 }
 
@@ -86,44 +77,47 @@ export async function removeServiceFromAppointment(request: requests.RemoveServi
 }
 
 async function findAppointmentServiceAssociation(appointmentId: string, serviceId: string) {
-    const association = await AppointmentsServices.findOne({ where: { appointmentId, serviceId } });
+    const association = await m.AppointmentsServices.findOne({ where: { appointmentId, serviceId } });
 
     if (!association) {
-        throw new ModelError('Appointment and service not associated', 400);
+        throw new m.ModelError('Appointment and service not associated', 400);
     }
 
     return association;
 }
 
-async function decreaseServiceQuantity(appointment: Appointment, service: Service) {
+async function decreaseServiceQuantity(appointment: m.Appointment, service: m.Service) {
     return updateServiceQuantity(false, appointment.id, service.id);
 }
 
 async function updateServiceQuantity(increment: boolean, appointmentId: string, serviceId: string) {
     const where = { appointmentId, serviceId };
-    await AppointmentsServices.increment({ quantity: increment ? 1 : -1 }, { where });
+    await m.AppointmentsServices.increment({ quantity: increment ? 1 : -1 }, { where });
 }
 
-async function findAppointmentAndService(appointmentId: string, serviceId: string): Promise<[Appointment, Service]> {
-    return await Promise.all([Appointment.find(appointmentId), Service.find(serviceId)]);
+async function findAppointmentAndService(
+    appointmentId: string,
+    serviceId: string
+): Promise<[m.Appointment, m.Service]> {
+    return await Promise.all([m.Appointment.find(appointmentId), m.Service.find(serviceId)]);
 }
 
-function getErrorData(e: unknown | ModelError): [number, string] {
-    return e instanceof ModelError ? [e.httpCode, e.message] : [500, 'Operation failed'];
+function getErrorData(e: unknown | m.ModelError): [number, string] {
+    return e instanceof m.ModelError ? [e.httpCode, e.message] : [500, 'Operation failed'];
 }
 
 export async function createAppointmentFactor(request: AddFactToAppointment, response: Response) {
-    let factor: Factor;
+    let factor: m.Factor;
 
     try {
         const [appointment, fact] = await Promise.all([
-            Appointment.find(request.params.appointmentId),
-            AppointmentFact.find(request.body.factId),
+            m.Appointment.find(request.params.appointmentId),
+            m.AppointmentFact.find(request.body.factId),
         ]);
         const { id } = await fact.createFactor(request.body);
         await appointment.addFactor(id);
-        factor = await Factor.find(id, {
-            include: [{ model: AppointmentFact, attributes: ['value'] }],
+        factor = await m.Factor.find(id, {
+            include: [{ model: m.AppointmentFact, attributes: ['value'] }],
             attributes: ['id', 'additionalInfo', 'appointmentId'],
         });
     } catch (e) {
