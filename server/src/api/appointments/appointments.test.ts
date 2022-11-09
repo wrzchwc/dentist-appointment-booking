@@ -300,36 +300,71 @@ describe('/api/appointments', () => {
                 });
 
                 itShouldReturn500AndErrorMessageInBody();
+
+                it('should call Appointment.findByPk', () => {
+                    expect(Appointment.findByPk).rejects.toBe(null);
+                });
             });
 
-            describe('service removal', () => {
+            describe('service lookup', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({
-                        services: [{ id: serviceId, appointment: { quantity: 1 } }],
-                    } as unknown as Appointment);
-                    jest.spyOn(Appointment.prototype, 'removeService').mockRejectedValue(null);
+                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
+                    jest.spyOn(Service, 'findByPk').mockRejectedValue(null);
+
                     response = await supertest(app).delete(url).set('Cookie', cookieHeader);
                 });
 
                 itShouldReturn500AndErrorMessageInBody();
 
-                it('should call Appointment.prototype.removeService with correct service id', () => {
-                    expect.assertions(1);
+                it('should call Service.findByPk', () => {
+                    expect(Service.findByPk).rejects.toBe(null);
+                });
+            });
+
+            describe('association evaluation', () => {
+                beforeEach(async () => {
+                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
+                    jest.spyOn(Service, 'findByPk').mockRejectedValue({} as Service);
+                    jest.spyOn(Appointment.prototype, 'hasService').mockRejectedValue(null);
+
+                    response = await supertest(app).delete(url).set('Cookie', cookieHeader);
+                });
+
+                itShouldReturn500AndErrorMessageInBody();
+
+                it('should call Appointment.prototype.hasService', () => {
+                    expect(Appointment.prototype.hasService).rejects.toBe(null);
+                });
+            });
+
+            describe('service removal', () => {
+                beforeEach(async () => {
+                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
+                    jest.spyOn(Service, 'findByPk').mockResolvedValue({} as Service);
+                    jest.spyOn(AppointmentsServices, 'findOne').mockResolvedValue({
+                        quantity: 1,
+                    } as AppointmentsServices);
+                    jest.spyOn(Appointment.prototype, 'removeService').mockRejectedValue(null);
+
+                    response = await supertest(app).delete(url).set('Cookie', cookieHeader);
+                });
+
+                itShouldReturn500AndErrorMessageInBody();
+
+                it('should call Appointment.prototype.removeService', () => {
                     expect(Appointment.prototype.removeService).rejects.toBe(null);
                 });
             });
 
             describe('service quantity decremental', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({
-                        services: [
-                            {
-                                id: serviceId,
-                                appointment: { quantity: 2, decrement: jest.fn().mockRejectedValue(null) },
-                            },
-                        ],
-                    } as unknown as Appointment);
+                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
+                    jest.spyOn(Service, 'findByPk').mockResolvedValue({} as Service);
+                    jest.spyOn(AppointmentsServices, 'findOne').mockResolvedValue({
+                        quantity: 2,
+                    } as AppointmentsServices);
                     jest.spyOn(AppointmentsServices.prototype, 'increment').mockRejectedValue(null);
+
                     response = await supertest(app).delete(url).set('Cookie', cookieHeader);
                 });
 
@@ -344,6 +379,8 @@ describe('/api/appointments', () => {
         describe('if requested appointment does not exist', () => {
             beforeEach(async () => {
                 jest.spyOn(Appointment, 'findByPk').mockResolvedValue(null);
+                jest.spyOn(Service, 'findByPk').mockResolvedValue({} as Service);
+                jest.spyOn(AppointmentsServices, 'findOne').mockResolvedValue({} as AppointmentsServices);
                 response = await supertest(app).delete(url).set('Cookie', cookieHeader);
             });
 
@@ -360,22 +397,42 @@ describe('/api/appointments', () => {
             });
         });
 
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        describe.skip('if requested service does not exist', () => {});
+        describe('if requested service does not exist', () => {
+            beforeEach(async () => {
+                jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
+                jest.spyOn(Service, 'findByPk').mockResolvedValue(null);
+                response = await supertest(app).delete(url).set('Cookie', cookieHeader);
+            });
+
+            afterEach(() => {
+                jest.restoreAllMocks();
+            });
+
+            it('should return 404', () => {
+                expect(response.status).toBe(404);
+            });
+
+            it('should return appropriate error message', () => {
+                expect(response.body).toMatchObject({ error: 'Service not found' });
+            });
+        });
 
         describe('if service is not associated with appointment', () => {
-            let appointmentId: string;
+            let appointment: Appointment;
+            let service: Service;
 
             beforeEach(async () => {
-                const { id } = await Appointment.create();
-                appointmentId = id;
+                [appointment, service] = await Promise.all([
+                    await Appointment.create(),
+                    Service.create({ name: '', count: 0 }),
+                ]);
 
-                const url = `/api/appointments/${appointmentId}/services/${serviceId}`;
+                const url = `/api/appointments/${appointment.id}/services/${service.id}`;
                 response = await supertest(app).delete(url).set('Cookie', cookieHeader);
             });
 
             afterEach(async () => {
-                await Appointment.destroy({ where: { id: appointmentId } });
+                await Promise.all([appointment.destroy(), service.destroy()]);
             });
 
             it('should return 400', () => {
