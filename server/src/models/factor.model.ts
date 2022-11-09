@@ -1,15 +1,34 @@
-import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import * as s from 'sequelize';
+import { Appointment } from './appointment.model';
+import { AppointmentFact } from './appointment-fact.model';
+import { ModelError } from './model-error';
+import { NonAttribute } from 'sequelize';
 import { sequelizeInstance } from '../services';
 
-export class Factor extends Model<InferAttributes<Factor>, InferCreationAttributes<Factor>> {
-    declare id: CreationOptional<string>;
+type FactorFindOptions = Omit<s.FindOptions<s.InferAttributes<Factor>>, 'where'> | undefined;
+
+export class Factor extends s.Model<s.InferAttributes<Factor>, s.InferCreationAttributes<Factor>> {
+    declare id: s.CreationOptional<string>;
     declare additionalInfo: string | null;
+
+    declare appointmentId: s.ForeignKey<Appointment['id']>;
+    declare factId: s.ForeignKey<AppointmentFact['id']>;
+
+    declare fact: NonAttribute<AppointmentFact>;
+
+    static async find(id: string, options: FactorFindOptions) {
+        const factor = await Factor.findByPk(id, options);
+        if (!factor) {
+            throw new ModelError('Factor not found', 404);
+        }
+        return factor;
+    }
 }
 
 Factor.init(
     {
-        id: { type: DataTypes.UUID, primaryKey: true, allowNull: false, defaultValue: DataTypes.UUIDV4 },
-        additionalInfo: { type: DataTypes.STRING },
+        id: { type: s.DataTypes.UUID, primaryKey: true, allowNull: false, defaultValue: s.DataTypes.UUIDV4 },
+        additionalInfo: { type: s.DataTypes.STRING },
     },
     { sequelize: sequelizeInstance, tableName: 'factors', timestamps: false, modelName: 'factor' }
 );

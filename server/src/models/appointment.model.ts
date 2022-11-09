@@ -5,6 +5,7 @@ import {
     CreationOptional,
     DataTypes,
     ForeignKey,
+    HasManyAddAssociationMixin,
     InferAttributes,
     InferCreationAttributes,
     Model,
@@ -20,7 +21,7 @@ import { sequelizeInstance } from '../services';
 export class Appointment extends Model<InferAttributes<Appointment>, InferCreationAttributes<Appointment>> {
     declare id: CreationOptional<string>;
     declare confirmed: CreationOptional<boolean>;
-    declare estimatedPrice: Date | null;
+    declare estimatedPrice: CreationOptional<number>;
     declare startsAt: Date | null;
 
     declare userId: ForeignKey<User['id']>;
@@ -31,6 +32,8 @@ export class Appointment extends Model<InferAttributes<Appointment>, InferCreati
     declare addService: BelongsToManyAddAssociationMixin<Service, string>;
     declare hasService: BelongsToManyHasAssociationMixin<Service, string>;
     declare removeService: BelongsToManyRemoveAssociationMixin<Service, string>;
+
+    declare addFactor: HasManyAddAssociationMixin<Factor, string>;
 
     static async find(id: string) {
         const appointment = await Appointment.findByPk(id);
@@ -45,22 +48,20 @@ Appointment.init(
     {
         id: { type: DataTypes.UUID, primaryKey: true, allowNull: false, defaultValue: DataTypes.UUIDV4 },
         confirmed: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
-        estimatedPrice: { type: DataTypes.FLOAT },
+        estimatedPrice: { type: DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
         startsAt: { type: DataTypes.DATE },
     },
-    { sequelize: sequelizeInstance, tableName: 'appointments', timestamps: false }
+    { sequelize: sequelizeInstance, tableName: 'appointments', timestamps: false, modelName: 'appointment' }
 );
 
 Appointment.belongsToMany(Service, {
     through: AppointmentsServices,
-    foreignKey: 'appointmentId',
     timestamps: false,
 });
 Service.belongsToMany(Appointment, {
     through: AppointmentsServices,
-    foreignKey: 'serviceId',
     timestamps: false,
 });
 
-Appointment.hasMany(Factor, { foreignKey: 'appointmentId' });
-Factor.belongsTo(Appointment, { foreignKey: 'appointmentId' });
+Appointment.hasMany(Factor);
+Factor.belongsTo(Appointment);

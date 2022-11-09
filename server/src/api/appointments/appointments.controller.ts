@@ -10,6 +10,7 @@ import {
     User,
 } from '../../models';
 import { Request, Response } from 'express';
+import { AddFactToAppointment } from './appointments.requests';
 
 export async function getQuestions(request: Request, response: Response) {
     const questions = await AppointmentQuestion.findAll({
@@ -109,4 +110,26 @@ async function findAppointmentAndService(appointmentId: string, serviceId: strin
 
 function getErrorData(e: unknown | ModelError): [number, string] {
     return e instanceof ModelError ? [e.httpCode, e.message] : [500, 'Operation failed'];
+}
+
+export async function createAppointmentFactor(request: AddFactToAppointment, response: Response) {
+    let factor: Factor;
+
+    try {
+        const [appointment, fact] = await Promise.all([
+            Appointment.find(request.params.appointmentId),
+            AppointmentFact.find(request.body.factId),
+        ]);
+        const { id } = await fact.createFactor(request.body);
+        await appointment.addFactor(id);
+        factor = await Factor.find(id, {
+            include: [{ model: AppointmentFact, attributes: ['value'] }],
+            attributes: ['id', 'additionalInfo', 'appointmentId'],
+        });
+    } catch (e) {
+        const [code, error] = getErrorData(e);
+        return response.status(code).json({ error });
+    }
+
+    response.status(201).json(factor);
 }

@@ -8,3 +8,8 @@ export interface AddServiceToAppointment extends Request {
 export interface RemoveServiceFromAppointment extends Request {
     params: { appointmentId: string; serviceId: string };
 }
+
+export interface AddFactToAppointment extends Request {
+    params: { appointmentId: string };
+    body: { factId: string; additionalInfo?: string };
+}
