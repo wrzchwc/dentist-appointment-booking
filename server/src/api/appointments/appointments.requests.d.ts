@@ -13,3 +13,7 @@ export interface AddFactToAppointment extends Request {
     params: { appointmentId: string };
     body: { factId: string; additionalInfo?: string };
 }
+
+export interface RemoveAppointmentFactor {
+    params: { appointmentId: string; factId: string };
+}

@@ -10,4 +10,5 @@ router.get('/services', controller.getServices);
 router.delete('/:appointmentId/services/:serviceId', authentication, controller.removeServiceFromAppointment);
 router.post('/:appointmentId/services', authentication, controller.addServiceToAppointment);
 router.post('/', authentication, findUser, controller.createAppointment);
-router.post('/:appointmentId/factors', authentication, controller.createAppointmentFactor);
+router.delete('/:appointmentId/facts/:factId', authentication, controller.removeFactFromAppointment);
+router.post('/:appointmentId/facts', authentication, controller.addFactToAppointment);

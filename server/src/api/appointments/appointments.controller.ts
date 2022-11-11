@@ -1,7 +1,6 @@
 import * as m from '../../models';
-import * as requests from './appointments.requests';
+import * as r from './appointments.requests';
 import { Request, Response } from 'express';
-import { AddFactToAppointment } from './appointments.requests';
 
 export async function getQuestions(request: Request, response: Response) {
     const questions = await m.AppointmentQuestion.findAll({
@@ -25,7 +24,7 @@ export async function createAppointment(request: Request, response: Response) {
         const { id } = await m.Appointment.create({ userId: (request.user as m.User).id });
 
         appointment = await m.Appointment.findByPk(id, {
-            include: [m.Service, m.Factor],
+            include: [m.Service, m.HealthSurvey],
             attributes: ['id', 'confirmed', 'estimatedPrice', 'startsAt'],
         });
     } catch (e) {
@@ -35,7 +34,7 @@ export async function createAppointment(request: Request, response: Response) {
     response.status(201).json(appointment);
 }
 
-export async function addServiceToAppointment(request: requests.AddServiceToAppointment, response: Response) {
+export async function addServiceToAppointment(request: r.AddServiceToAppointment, response: Response) {
     const { appointmentId } = request.params;
     const { serviceId } = request.body;
 
@@ -54,7 +53,7 @@ export async function addServiceToAppointment(request: requests.AddServiceToAppo
     response.sendStatus(200);
 }
 
-export async function removeServiceFromAppointment(request: requests.RemoveServiceFromAppointment, response: Response) {
+export async function removeServiceFromAppointment(request: r.RemoveServiceFromAppointment, response: Response) {
     const { appointmentId, serviceId } = request.params;
 
     try {
@@ -72,26 +71,32 @@ export async function removeServiceFromAppointment(request: requests.RemoveServi
     response.sendStatus(200);
 }
 
-export async function createAppointmentFactor(request: AddFactToAppointment, response: Response) {
-    let factor: m.Factor;
-
+export async function addFactToAppointment({ params, body }: r.AddFactToAppointment, response: Response) {
     try {
-        const [appointment, fact] = await Promise.all([
-            m.Appointment.find(request.params.appointmentId),
-            m.AppointmentFact.find(request.body.factId),
-        ]);
-        const { id } = await fact.createFactor(request.body);
-        await appointment.addFactor(id);
-        factor = await m.Factor.find(id, {
-            include: [{ model: m.AppointmentFact, attributes: ['value'] }],
-            attributes: ['id', 'additionalInfo', 'appointmentId'],
-        });
+        const [appointment, fact] = await findAppointmentAndFact(params.appointmentId, body.factId);
+        await appointment.addFact(fact, { through: { additionalInfo: body.additionalInfo } });
     } catch (e) {
         const [code, error] = getErrorData(e);
         return response.status(code).json({ error });
     }
 
-    response.status(201).json(factor);
+    response.sendStatus(200);
+}
+
+export async function removeFactFromAppointment({ params }: r.RemoveAppointmentFactor, response: Response) {
+    try {
+        const [[appointment, fact]] = await Promise.all([
+            findAppointmentAndFact(params.appointmentId, params.factId),
+            m.HealthSurvey.find(params.appointmentId, params.factId),
+        ]);
+
+        await appointment.removeFact(fact);
+    } catch (e) {
+        const [code, message] = getErrorData(e);
+        return response.status(code).json({ error: message });
+    }
+
+    response.sendStatus(200);
 }
 
 async function increaseServiceQuantity(appointment: m.Appointment, service: m.Service) {
@@ -122,6 +127,13 @@ async function findAppointmentAndService(
     serviceId: string
 ): Promise<[m.Appointment, m.Service]> {
     return await Promise.all([m.Appointment.find(appointmentId), m.Service.find(serviceId)]);
+}
+
+async function findAppointmentAndFact(
+    appointmentId: string,
+    factId: string
+): Promise<[m.Appointment, m.AppointmentFact]> {
+    return Promise.all([m.Appointment.find(appointmentId), m.AppointmentFact.find(factId)]);
 }
 
 function getErrorData(e: unknown | m.ModelError): [number, string] {
