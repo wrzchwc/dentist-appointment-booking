@@ -74,7 +74,7 @@ export async function removeServiceFromAppointment(request: r.RemoveServiceFromA
 export async function addFactToAppointment({ params, body }: r.AddFactToAppointment, response: Response) {
     try {
         const [appointment, fact] = await findAppointmentAndFact(params.appointmentId, body.factId);
-        await appointment.addFact(fact, { through: { additionalInfo: body.additionalInfo } });
+        await appointment.addFact(fact.id, { through: { additionalInfo: body.additionalInfo } });
     } catch (e) {
         const [code, error] = getErrorData(e);
         return response.status(code).json({ error });

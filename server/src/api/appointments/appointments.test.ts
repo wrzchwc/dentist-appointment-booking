@@ -1,12 +1,4 @@
-import {
-    Appointment,
-    AppointmentFact,
-    AppointmentQuestion,
-    AppointmentsServices,
-    Factor,
-    Service,
-    User,
-} from '../../models';
+import { Appointment, AppointmentFact, AppointmentQuestion, AppointmentsServices, Service, User } from '../../models';
 import { checkConnection, createCookie, createCookieHeader, createSignature, disconnect } from '../../services';
 import { Response } from 'superagent';
 import { app } from '../../config';
@@ -93,7 +85,7 @@ describe('/api/appointments', () => {
                 estimatedPrice: 0,
                 startsAt: null,
                 services: [],
-                factors: [],
+                facts: [],
             };
 
             expect(response.body).toMatchObject(expected);
@@ -549,10 +541,10 @@ describe('/api/appointments', () => {
         });
     });
 
-    describe('/:appointmentId/factors POST', () => {
+    describe('/:appointmentId/facts POST', () => {
         const appointmentId = '9a3726b3-23cd-4db0-b6ae-bbebdcade682';
         const factId = 'a76ea8e7-e534-4452-9664-68d9d9f75386';
-        const url = `/api/appointments/${appointmentId}/factors`;
+        const url = `/api/appointments/${appointmentId}/facts`;
         const additionalInfo = '';
 
         describe('if there is unexpected during', () => {
@@ -562,7 +554,7 @@ describe('/api/appointments', () => {
 
             describe('appointment lookup', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'find').mockRejectedValue(null);
+                    jest.spyOn(Appointment, 'findByPk').mockRejectedValue(null);
                     jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue({} as AppointmentFact);
 
                     response = await supertest(app)
@@ -573,14 +565,18 @@ describe('/api/appointments', () => {
 
                 itShouldReturn500AndErrorMessageInBody();
 
-                it('should call Appointment.find', () => {
-                    expect(Appointment.find).rejects.toBe(null);
+                it('should call Appointment.findByPk once', () => {
+                    expect(Appointment.findByPk).toHaveBeenCalledTimes(1);
+                });
+
+                it(`should call Appointment.findByPk with ${appointmentId}`, () => {
+                    expect(Appointment.findByPk).toHaveBeenCalledWith(appointmentId);
                 });
             });
 
             describe('fact lookup', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'find').mockResolvedValue({} as Appointment);
+                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
                     jest.spyOn(AppointmentFact, 'findByPk').mockRejectedValue(null);
 
                     response = await supertest(app)
@@ -591,16 +587,22 @@ describe('/api/appointments', () => {
 
                 itShouldReturn500AndErrorMessageInBody();
 
-                it('should call AppointmentFact.findByPk', () => {
-                    expect(AppointmentFact.findByPk).rejects.toBe(true);
+                it(`should call AppointmentFact.findByPk with ${factId}`, () => {
+                    expect(AppointmentFact.findByPk).toHaveBeenCalledWith(factId);
+                });
+
+                it('should call AppointmentFact.findByPk once', () => {
+                    expect(AppointmentFact.findByPk).toHaveBeenCalledTimes(1);
                 });
             });
 
-            describe.skip('factor creation', () => {
+            describe('adding fact to appointment', () => {
+                const addFact = jest.fn(() => Promise.reject());
+
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'find').mockResolvedValue({} as Appointment);
+                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({ addFact } as unknown as Appointment);
                     jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue({} as AppointmentFact);
-                    //todo jest.spyOn(something).mockRejectedValue(null);
+                    addFact.mockClear();
 
                     response = await supertest(app)
                         .post(url)
@@ -608,21 +610,21 @@ describe('/api/appointments', () => {
                         .send({ factId, additionalInfo });
                 });
 
-                //todo: it should call some AppointmentFact method
-
                 itShouldReturn500AndErrorMessageInBody();
-            });
 
-            describe.skip('adding fact to appointment', () => {
-                //todo it should call some Appointment.prototype methods
+                it('should call Appointment.prototype.addFact once', () => {
+                    expect(addFact).toHaveBeenCalledTimes(1);
+                });
 
-                itShouldReturn500AndErrorMessageInBody();
+                it(`should call Appointment.prototype.addFact with ${factId}`, () => {
+                    expect(Appointment.prototype.addFact).toHaveBeenCalledWith(factId);
+                });
             });
         });
 
         describe('if requested appointment does not exist', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'find').mockRejectedValue(null);
+                jest.spyOn(Appointment, 'findByPk').mockResolvedValue(null);
                 jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue({} as AppointmentFact);
 
                 response = await supertest(app).post(url).set('Cookie', cookieHeader).send({ factId, additionalInfo });
@@ -632,8 +634,12 @@ describe('/api/appointments', () => {
                 jest.restoreAllMocks();
             });
 
-            it('should call Appointment.find', () => {
-                expect(Appointment.find).rejects.toBe(null);
+            it('should call Appointment.findByPk once', () => {
+                expect(Appointment.findByPk).toHaveBeenCalledTimes(1);
+            });
+
+            it(`should call Appointment.findByPk with ${appointmentId}`, () => {
+                expect(Appointment.findByPk).toHaveBeenCalledWith(appointmentId);
             });
 
             it('should return 404', function () {
@@ -647,48 +653,59 @@ describe('/api/appointments', () => {
 
         describe('if requested fact does not exist', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'find').mockResolvedValue({} as Appointment);
-                jest.spyOn(AppointmentFact, 'findByPk').mockRejectedValue(null);
+                jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
+                jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue(null);
 
                 response = await supertest(app).post(url).set('Cookie', cookieHeader).send({ factId, additionalInfo });
             });
 
-            it('should call AppointmentFact.findByPk', () => {
-                expect(AppointmentFact.findByPk).rejects.toBe(null);
+            it('should call AppointmentFact.findByPk once', () => {
+                expect(AppointmentFact.findByPk).toHaveBeenCalledTimes(1);
             });
+
+            it(`should call AppointmentFact.findByPk with ${factId}`, () => {
+                expect(AppointmentFact.findByPk).toHaveBeenCalledWith(factId);
+            });
+
             it('should return 404', function () {
                 expect(response.status).toBe(404);
             });
 
             it('should return appropriate error message in body', () => {
-                expect(response.body).toMatchObject({ error: 'Appointment fact not found' });
+                expect(response.body).toMatchObject({ error: 'Fact not found' });
             });
         });
 
-        describe.skip('if all preconditions are met', () => {
+        describe('if fact cam be added to appointment', () => {
             let appointment: Appointment;
-            let factor: Factor;
+            let fact: AppointmentFact;
 
             beforeEach(async () => {
-                [appointment, factor] = await Promise.all([Appointment.create(), Factor.create({ additionalInfo })]);
-                //todo: jest.spyOn(somtething)
+                [appointment, fact] = await Promise.all([Appointment.create(), AppointmentFact.create({ value: '' })]);
+
+                jest.spyOn(Appointment.prototype, 'addFact');
+
                 response = await supertest(app)
-                    .post(`/api/appointments/${appointment.id}/factors`)
+                    .post(`/api/appointments/${appointment.id}/facts`)
                     .set('Cookie', cookieHeader)
-                    .send({});
+                    .send({ additionalInfo, factId: fact.id });
             });
 
             afterEach(async () => {
-                await Promise.all([appointment.destroy(), factor.destroy()]);
+                await Promise.all([appointment.destroy(), fact.destroy()]);
                 jest.clearAllMocks();
             });
 
-            it('should return 201', function () {
-                expect(response.status).toBe(201);
+            it('should return 200', function () {
+                expect(response.status).toBe(200);
             });
 
-            it('should return created fact', () => {
-                expect(response.body).toMatchObject({});
+            it('should call Appointment.prototype.addFact once', () => {
+                expect(Appointment.prototype.addFact).toHaveBeenCalledTimes(1);
+            });
+
+            it('should call Appointment.prototype.addFact with correct arguments', () => {
+                expect(Appointment.prototype.addFact).toHaveBeenCalledWith(fact.id, { through: { additionalInfo } });
             });
         });
     });
