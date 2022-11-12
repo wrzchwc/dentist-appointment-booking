@@ -22,13 +22,12 @@ export async function createAppointment(request: Request, response: Response) {
 
     try {
         const { id } = await m.Appointment.create({ userId: (request.user as m.User).id });
-
         appointment = await m.Appointment.findByPk(id, {
-            include: [m.Service, m.HealthSurvey],
+            include: [m.Service, m.AppointmentFact],
             attributes: ['id', 'confirmed', 'estimatedPrice', 'startsAt'],
         });
     } catch (e) {
-        response.status(500).json({ error: 'Operation failed!' });
+        return response.status(500).json({ error: 'Operation failed!' });
     }
 
     response.status(201).json(appointment);
@@ -90,7 +89,7 @@ export async function removeFactFromAppointment({ params }: r.RemoveAppointmentF
             m.HealthSurvey.find(params.appointmentId, params.factId),
         ]);
 
-        await appointment.removeFact(fact);
+        await appointment.removeFact(fact.id);
     } catch (e) {
         const [code, message] = getErrorData(e);
         return response.status(code).json({ error: message });

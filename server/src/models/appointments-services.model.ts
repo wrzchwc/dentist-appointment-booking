@@ -19,6 +19,6 @@ AppointmentsServices.init(
         timestamps: false,
         tableName: 'appointments_services',
         sequelize: sequelizeInstance,
-        modelName: 'appointment',
+        modelName: 'appointmentServices',
     }
 );
