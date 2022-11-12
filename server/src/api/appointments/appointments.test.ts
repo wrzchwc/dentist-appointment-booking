@@ -87,14 +87,8 @@ describe('/api/appointments', () => {
         });
 
         it('should return correct body response', () => {
-            const expected: Partial<Appointment> = {
-                id: response.body.id,
-                confirmed: false,
-                estimatedPrice: 0,
-                startsAt: null,
-                services: [],
-                facts: [],
-            };
+            const { id } = response.body;
+            const expected: Partial<Appointment> = { id, confirmed: false, startsAt: null, services: [], facts: [] };
 
             expect(response.body).toMatchObject(expected);
         });

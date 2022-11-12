@@ -24,7 +24,7 @@ export async function createAppointment(request: Request, response: Response) {
         const { id } = await m.Appointment.create({ userId: (request.user as m.User).id });
         appointment = await m.Appointment.findByPk(id, {
             include: [m.Service, m.AppointmentFact],
-            attributes: ['id', 'confirmed', 'estimatedPrice', 'startsAt'],
+            attributes: ['id', 'confirmed', 'startsAt'],
         });
     } catch (e) {
         return response.status(500).json({ error: 'Operation failed!' });

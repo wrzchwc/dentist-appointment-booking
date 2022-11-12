@@ -10,7 +10,6 @@ import { sequelizeInstance } from '../services';
 export class Appointment extends s.Model<s.InferAttributes<Appointment>, s.InferCreationAttributes<Appointment>> {
     declare id: s.CreationOptional<string>;
     declare confirmed: s.CreationOptional<boolean>;
-    declare estimatedPrice: s.CreationOptional<number>;
     declare startsAt: Date | null;
 
     declare userId: s.ForeignKey<User['id']>;
@@ -37,7 +36,6 @@ Appointment.init(
     {
         id: { type: s.DataTypes.UUID, primaryKey: true, allowNull: false, defaultValue: s.DataTypes.UUIDV4 },
         confirmed: { type: s.DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
-        estimatedPrice: { type: s.DataTypes.FLOAT, allowNull: false, defaultValue: 0 },
         startsAt: { type: s.DataTypes.DATE },
     },
     { sequelize: sequelizeInstance, tableName: 'appointments', timestamps: false, modelName: 'appointment' }
