@@ -1,6 +1,7 @@
 import * as m from '../../models';
 import * as r from './appointments.requests';
 import { Request, Response } from 'express';
+import { Appointment } from '../../models';
 
 export async function getQuestions(request: Request, response: Response) {
     const questions = await m.AppointmentQuestion.findAll({
@@ -96,6 +97,22 @@ export async function removeFactFromAppointment({ params }: r.RemoveAppointmentF
     }
 
     response.sendStatus(200);
+}
+
+export async function updateAppointmentStartDate(request: r.UpdateAppointmentStartDate, response: Response) {
+    const { startsAt } = request.body;
+    const { appointmentId } = request.params;
+    let appointment: Appointment;
+
+    try {
+        await Appointment.update({ startsAt }, { where: { id: appointmentId } });
+        appointment = await Appointment.find(appointmentId);
+    } catch (e) {
+        const [code, message] = getErrorData(e);
+        return response.status(code).json({ error: message });
+    }
+
+    response.status(200).json(appointment);
 }
 
 async function increaseServiceQuantity(appointment: m.Appointment, service: m.Service) {
