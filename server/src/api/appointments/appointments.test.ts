@@ -672,6 +672,10 @@ describe('/api/appointments', () => {
                 response = await supertest(app).post(url).set('Cookie', cookieHeader).send({ factId, additionalInfo });
             });
 
+            afterEach(() => {
+                jest.restoreAllMocks();
+            });
+
             it('should call AppointmentFact.findByPk once', () => {
                 expect(AppointmentFact.findByPk).toHaveBeenCalledTimes(1);
             });
@@ -705,6 +709,7 @@ describe('/api/appointments', () => {
             });
 
             afterEach(async () => {
+                await appointment.removeFact(fact);
                 await Promise.all([appointment.destroy(), fact.destroy()]);
                 jest.clearAllMocks();
             });
@@ -875,6 +880,7 @@ describe('/api/appointments', () => {
             });
 
             afterEach(() => {
+                jest.restoreAllMocks();
                 jest.clearAllMocks();
             });
 
