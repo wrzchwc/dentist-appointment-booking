@@ -29,7 +29,7 @@ describe('/api/services', () => {
 
     describe('/ GET', () => {
         it('should return 200', async () => {
-            response = await supertest(app).get('/api/appointments/services').set('Cookie', cookieHeader).expect(200);
+            response = await supertest(app).get('/api/services').set('Cookie', cookieHeader).expect(200);
         });
 
         it('should return array of objects', () => {
