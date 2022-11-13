@@ -1,7 +1,10 @@
 import { Request } from 'express';
 
-export interface AddServiceToAppointment extends Request {
+interface AppointmentRequest extends Request {
     params: { appointmentId: string };
+}
+
+export interface AddServiceToAppointment extends AppointmentRequest {
     body: { serviceId: string };
 }
 
@@ -9,8 +12,7 @@ export interface RemoveServiceFromAppointment extends Request {
     params: { appointmentId: string; serviceId: string };
 }
 
-export interface AddFactToAppointment extends Request {
-    params: { appointmentId: string };
+export interface AddFactToAppointment extends AppointmentRequest {
     body: { factId: string; additionalInfo?: string };
 }
 
@@ -18,7 +20,10 @@ export interface RemoveAppointmentFactor extends Request {
     params: { appointmentId: string; factId: string };
 }
 
-export interface UpdateAppointmentStartDate extends Request {
-    params: { appointmentId: string };
+export interface UpdateAppointmentStartDate extends AppointmentRequest {
     body: { startsAt: Date };
+}
+
+export interface UpdateAppointmentConfirmedStatus extends AppointmentRequest {
+    body: { confirmed: true };
 }

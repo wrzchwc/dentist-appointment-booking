@@ -100,19 +100,46 @@ export async function removeFactFromAppointment({ params }: r.RemoveAppointmentF
 }
 
 export async function updateAppointmentStartDate(request: r.UpdateAppointmentStartDate, response: Response) {
-    const { startsAt } = request.body;
-    const { appointmentId } = request.params;
-    let appointment: Appointment;
+    let updatedAppointments: Appointment[];
 
     try {
-        await Appointment.update({ startsAt }, { where: { id: appointmentId } });
-        appointment = await Appointment.find(appointmentId);
+        [, updatedAppointments] = await Appointment.update(
+            { startsAt: request.body.startsAt },
+            { where: { id: request.params.appointmentId }, returning: true }
+        );
     } catch (e) {
         const [code, message] = getErrorData(e);
         return response.status(code).json({ error: message });
     }
 
-    response.status(200).json(appointment);
+    if (updatedAppointments.length !== 1) {
+        return response.status(404).json({ error: 'Appointment not found' });
+    }
+
+    response.status(200).json(updatedAppointments[0]);
+}
+
+export async function updateAppointmentConfirmedStatus(
+    request: r.UpdateAppointmentConfirmedStatus,
+    response: Response
+) {
+    let updatedAppointments: Appointment[];
+
+    try {
+        [, updatedAppointments] = await Appointment.update(
+            { confirmed: request.body.confirmed },
+            { where: { id: request.params.appointmentId }, returning: true }
+        );
+    } catch (e) {
+        const [code, message] = getErrorData(e);
+        return response.status(code).json({ error: message });
+    }
+
+    if (updatedAppointments.length !== 1) {
+        return response.status(404).json({ error: 'Appointment not found' });
+    }
+
+    return response.status(200).json(updatedAppointments[0]);
 }
 
 async function increaseServiceQuantity(appointment: m.Appointment, service: m.Service) {

@@ -921,4 +921,92 @@ describe('/api/appointments', () => {
             });
         });
     });
+
+    describe('/:appointmentId/starts-at PATCH', () => {
+        const appointmentId = 'be62cd19-0962-43ee-9a43-64d560b3d123';
+        const url = `/api/appointments/${appointmentId}/starts-at`;
+        const startsAt = '2022-11-13T17:30:37.828Z';
+
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+
+        describe('if there is unexpected error during updating', () => {
+            beforeEach(async () => {
+                jest.spyOn(Appointment, 'update').mockImplementation(() => Promise.reject());
+
+                response = await supertest(app).patch(url).set('Cookie', cookieHeader).send({ startsAt });
+            });
+            itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
+
+            it('should call Appointment.update once', () => {
+                expect(Appointment.update).toHaveBeenCalledTimes(1);
+            });
+
+            it('should call Appointment.update with correct arguments', () => {
+                expect(Appointment.update).toHaveBeenCalledWith(
+                    { startsAt },
+                    { where: { id: appointmentId }, returning: true }
+                );
+            });
+        });
+
+        describe('if requested appointment has not been found', () => {
+            beforeEach(async () => {
+                jest.spyOn(Appointment, 'update');
+                response = await supertest(app).patch(url).set('Cookie', cookieHeader).send({ startsAt });
+            });
+
+            itShouldReturnErrorCodeAndErrorMessageInBody(404, 'Appointment not found');
+
+            it('should call Appointment.update once', () => {
+                expect(Appointment.update).toHaveBeenCalledTimes(1);
+            });
+
+            it('should call Appointment.update with correct arguments', () => {
+                expect(Appointment.update).toHaveBeenCalledWith(
+                    { startsAt },
+                    { where: { id: appointmentId }, returning: true }
+                );
+            });
+        });
+
+        describe('if requested appointment exists', () => {
+            let appointment: Appointment;
+
+            beforeEach(async () => {
+                const user = await User.findOne({ where: { googleId: '381902381093' } });
+                appointment = await user!.createAppointment();
+                jest.spyOn(Appointment, 'update');
+
+                response = await supertest(app)
+                    .patch(`/api/appointments/${appointment.id}/starts-at`)
+                    .set('Cookie', cookieHeader)
+                    .send({ startsAt });
+            });
+
+            afterEach(async () => {
+                await appointment.destroy();
+            });
+
+            it('should call Appointment.update once', () => {
+                expect(Appointment.update).toHaveBeenCalledTimes(1);
+            });
+
+            it('should call Appointment.update with correct arguments', () => {
+                expect(Appointment.update).toHaveBeenCalledWith(
+                    { startsAt },
+                    { where: { id: appointment.id }, returning: true }
+                );
+            });
+
+            it('should return 200', () => {
+                expect(response.status).toBe(200);
+            });
+
+            it('should return updated appointment in body', () => {
+                expect(response.body).toMatchObject({ ...appointment, startsAt });
+            });
+        });
+    });
 });

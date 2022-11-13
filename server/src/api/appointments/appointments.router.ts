@@ -13,3 +13,4 @@ router.post('/', authentication, findUser, controller.createAppointment);
 router.delete('/:appointmentId/facts/:factId', authentication, controller.removeFactFromAppointment);
 router.post('/:appointmentId/facts', authentication, controller.addFactToAppointment);
 router.patch('/:appointmentId/starts-at', authentication, controller.updateAppointmentStartDate);
+router.patch('/:appointmentId/confirm', authentication, controller.updateAppointmentConfirmedStatus);
