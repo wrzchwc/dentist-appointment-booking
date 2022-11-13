@@ -13,11 +13,6 @@ export async function getQuestions(request: Request, response: Response) {
     response.status(200).json(questions);
 }
 
-export async function getServices(request: Request, response: Response) {
-    const services = await m.Service.findAll();
-    response.status(200).json(services);
-}
-
 export async function createAppointment(request: Request, response: Response) {
     let appointment: m.Appointment | null = null;
 

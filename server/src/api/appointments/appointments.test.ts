@@ -45,16 +45,6 @@ describe('/api/appointments', () => {
         await disconnect();
     });
 
-    describe('/services GET', () => {
-        it('should return 200', async () => {
-            response = await supertest(app).get('/api/appointments/services').set('Cookie', cookieHeader).expect(200);
-        });
-
-        it('should return array of objects', () => {
-            expect(Array.isArray(response.body)).toBeTruthy();
-        });
-    });
-
     describe('/questions GET', () => {
         beforeEach(async () => {
             response = await supertest(app).get('/api/appointments/questions').set('Cookie', cookieHeader);
