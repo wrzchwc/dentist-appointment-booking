@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Service } from '../../shared/_services/appointments/services.service';
-import { AppointmentQuestion } from '../_services/appointment-questions/appoint-questions.service';
+import { AppointmentQuestion } from '../_services/appointment-questions/appointment-questions.service';
 import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AppointmentQuestion } from '../_services/appointment-questions/appoint-questions.service';
+import { AppointmentQuestion } from '../_services/appointment-questions/appointment-questions.service';
 import { FormBuilder, FormControl } from '@angular/forms';
 
 @Component({

@@ -36,7 +36,7 @@ export class ServicesService {
 
     // eslint-disable-next-line no-unused-vars
     constructor(private client: HttpClient) {
-        this.baseUrl = `${environment.apiUrl}/api/appointments/services`;
+        this.baseUrl = `${environment.apiUrl}/api/services`;
     }
 
     getServices() {
