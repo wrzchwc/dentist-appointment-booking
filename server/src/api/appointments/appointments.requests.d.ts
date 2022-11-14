@@ -27,3 +27,12 @@ export interface UpdateAppointmentStartDate extends AppointmentRequest {
 export interface UpdateAppointmentConfirmedStatus extends AppointmentRequest {
     body: { confirmed: true };
 }
+
+export interface GetAppointmentsQuery {
+    after?: Date;
+    before?: Date;
+}
+
+export interface GetAppointments extends Request {
+    query: GetAppointmentsQuery;
+}

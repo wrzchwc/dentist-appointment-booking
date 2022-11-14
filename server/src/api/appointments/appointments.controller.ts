@@ -2,6 +2,8 @@ import * as m from '../../models';
 import * as r from './appointments.requests';
 import { Request, Response } from 'express';
 import { Appointment } from '../../models';
+import { GetAppointmentsQuery } from './appointments.requests';
+import { Op } from 'sequelize';
 
 export async function getQuestions(request: Request, response: Response) {
     const questions = await m.AppointmentQuestion.findAll({
@@ -135,6 +137,34 @@ export async function updateAppointmentConfirmedStatus(
     }
 
     return response.status(200).json(updatedAppointments[0]);
+}
+
+export async function getAppointments({ query }: r.GetAppointments, response: Response) {
+    let appointments: Appointment[];
+
+    try {
+        appointments = await Appointment.findAll({
+            where: { confirmed: true, startsAt: getStartsAtCondition(query) },
+            include: [m.Service],
+            order: [['startsAt', 'ASC']],
+            attributes: ['id', 'startsAt'],
+        });
+    } catch (e) {
+        return response.status(500).json({ error: 'Operation failed' });
+    }
+
+    response.status(200).json(appointments);
+}
+
+function getStartsAtCondition({ before, after }: GetAppointmentsQuery) {
+    if (after && before) {
+        return { [Op.between]: [after, before] };
+    } else if (after) {
+        return { [Op.gt]: after };
+    } else if (before) {
+        return { [Op.lt]: before };
+    }
+    return { [Op.ne]: null };
 }
 
 async function increaseServiceQuantity(appointment: m.Appointment, service: m.Service) {
