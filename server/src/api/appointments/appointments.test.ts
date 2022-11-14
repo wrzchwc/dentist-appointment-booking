@@ -1,13 +1,6 @@
-import {
-    Appointment,
-    AppointmentFact,
-    AppointmentQuestion,
-    AppointmentsServices,
-    HealthSurvey,
-    Service,
-    User,
-} from '../../models';
+import * as m from '../../models';
 import { checkConnection, createCookie, createCookieHeader, createSignature, disconnect } from '../../services';
+import { Op } from 'sequelize';
 import { Response } from 'superagent';
 import { app } from '../../config';
 import supertest from 'supertest';
@@ -29,16 +22,28 @@ describe('/api/appointments', () => {
         });
     }
 
+    function itShouldReturn(code: number) {
+        it(`should return ${code}`, () => {
+            expect(response.status).toBe(code);
+        });
+    }
+
+    function itShouldReturnArrayOfObjects() {
+        it('should return array of objects', () => {
+            expect(Array.isArray(response.body)).toBe(true);
+        });
+    }
+
     beforeEach(async () => {
         await checkConnection();
-        id = (await User.create({ googleId: '381902381093' })).toJSON().id;
+        id = (await m.User.create({ googleId: '381902381093' })).toJSON().id;
         cookie = createCookie(id);
         signature = createSignature(cookie, 'session');
         cookieHeader = createCookieHeader('session', cookie, signature);
     });
 
     afterEach(async () => {
-        await User.destroy({ where: { id } });
+        await m.User.destroy({ where: { id } });
     });
 
     afterAll(async () => {
@@ -59,7 +64,7 @@ describe('/api/appointments', () => {
         });
 
         test('should return questions including facts associated with them', () => {
-            expect(response.body.every(({ fact }: AppointmentQuestion) => fact?.id && fact.value)).toBe(true);
+            expect(response.body.every(({ fact }: m.AppointmentQuestion) => fact?.id && fact.value)).toBe(true);
         });
     });
 
@@ -69,7 +74,7 @@ describe('/api/appointments', () => {
         });
 
         afterEach(async () => {
-            await Appointment.destroy({ where: { id: response.body.id } });
+            await m.Appointment.destroy({ where: { id: response.body.id } });
         });
 
         it('should return 201 on successful creation', () => {
@@ -78,7 +83,7 @@ describe('/api/appointments', () => {
 
         it('should return correct body response', () => {
             const { id } = response.body;
-            const expected: Partial<Appointment> = { id, confirmed: false, startsAt: null, services: [], facts: [] };
+            const expected: Partial<m.Appointment> = { id, confirmed: false, startsAt: null, services: [], facts: [] };
 
             expect(response.body).toMatchObject(expected);
         });
@@ -94,8 +99,8 @@ describe('/api/appointments', () => {
 
             describe('appointment lookup', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'find').mockRejectedValue(null);
-                    jest.spyOn(Service, 'find').mockResolvedValue({} as Service);
+                    jest.spyOn(m.Appointment, 'find').mockRejectedValue(null);
+                    jest.spyOn(m.Service, 'find').mockResolvedValue({} as m.Service);
                     response = await supertest(app).post(url).set('Cookie', cookieHeader);
                 });
 
@@ -104,38 +109,38 @@ describe('/api/appointments', () => {
 
             describe('service lookup', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Service, 'findByPk').mockRejectedValue(null);
+                    jest.spyOn(m.Service, 'findByPk').mockRejectedValue(null);
                     response = await supertest(app).post(url).set('Cookie', cookieHeader);
                 });
 
                 itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
 
                 it('should call Service.findByPk', () => {
-                    expect(Service.findByPk).rejects.toBe(null);
+                    expect(m.Service.findByPk).rejects.toBe(null);
                 });
             });
 
             describe('association evaluation', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'find').mockResolvedValue({} as Appointment);
-                    jest.spyOn(Service, 'find').mockResolvedValue({} as Service);
-                    jest.spyOn(AppointmentsServices, 'findOne').mockRejectedValue(null);
+                    jest.spyOn(m.Appointment, 'find').mockResolvedValue({} as m.Appointment);
+                    jest.spyOn(m.Service, 'find').mockResolvedValue({} as m.Service);
+                    jest.spyOn(m.AppointmentsServices, 'findOne').mockRejectedValue(null);
                     response = await supertest(app).post(url).set('Cookie', cookieHeader);
                 });
 
                 itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
 
                 it('should call AppointmentsServices.findOne', () => {
-                    expect(AppointmentsServices.findOne).rejects.toBe(null);
+                    expect(m.AppointmentsServices.findOne).rejects.toBe(null);
                 });
             });
 
             describe('adding service to appointment', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                    jest.spyOn(Service, 'findByPk').mockResolvedValue({} as Service);
-                    jest.spyOn(Appointment.prototype, 'hasService').mockResolvedValue(false);
-                    jest.spyOn(Appointment.prototype, 'addService').mockRejectedValue(null);
+                    jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                    jest.spyOn(m.Service, 'findByPk').mockResolvedValue({} as m.Service);
+                    jest.spyOn(m.Appointment.prototype, 'hasService').mockResolvedValue(false);
+                    jest.spyOn(m.Appointment.prototype, 'addService').mockRejectedValue(null);
                     response = await supertest(app).post(url).set('Cookie', cookieHeader);
                 });
 
@@ -144,9 +149,9 @@ describe('/api/appointments', () => {
 
             describe('service quantity incrementation', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({
+                    jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({
                         services: [{ id: 's', appointment: { increment: jest.fn().mockRejectedValue(null) } }],
-                    } as unknown as Appointment);
+                    } as unknown as m.Appointment);
 
                     response = await supertest(app).post(url).set('Cookie', cookieHeader).send({ serviceId: 's' });
                 });
@@ -157,9 +162,9 @@ describe('/api/appointments', () => {
 
         describe('if requested appointment does not exist', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'findByPk').mockResolvedValue(null);
-                jest.spyOn(Service, 'findByPk').mockResolvedValue({} as Service);
-                jest.spyOn(AppointmentsServices, 'findOne').mockResolvedValue({} as AppointmentsServices);
+                jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue(null);
+                jest.spyOn(m.Service, 'findByPk').mockResolvedValue({} as m.Service);
+                jest.spyOn(m.AppointmentsServices, 'findOne').mockResolvedValue({} as m.AppointmentsServices);
                 response = await supertest(app).post(url).set('Cookie', cookieHeader);
             });
 
@@ -178,8 +183,8 @@ describe('/api/appointments', () => {
 
         describe('if requested service does not exist', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                jest.spyOn(Service, 'findByPk').mockResolvedValue(null);
+                jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                jest.spyOn(m.Service, 'findByPk').mockResolvedValue(null);
                 response = await supertest(app).post(url).set('Cookie', cookieHeader);
             });
 
@@ -202,13 +207,13 @@ describe('/api/appointments', () => {
 
             beforeEach(async () => {
                 const [appointment, service] = await Promise.all([
-                    Appointment.create(),
-                    Service.create({ name: '', count: 0 }),
+                    m.Appointment.create(),
+                    m.Service.create({ name: '', count: 0 }),
                 ]);
                 appointmentId = appointment.toJSON().id;
                 serviceId = service.toJSON().id;
 
-                jest.spyOn(Appointment.prototype, 'addService');
+                jest.spyOn(m.Appointment.prototype, 'addService');
 
                 response = await supertest(app)
                     .post(`/api/appointments/${appointmentId}/services`)
@@ -218,8 +223,8 @@ describe('/api/appointments', () => {
 
             afterEach(async () => {
                 await Promise.all([
-                    Appointment.destroy({ where: { id: appointmentId } }),
-                    Service.destroy({ where: { id: serviceId } }),
+                    m.Appointment.destroy({ where: { id: appointmentId } }),
+                    m.Service.destroy({ where: { id: serviceId } }),
                 ]);
                 jest.clearAllMocks();
             });
@@ -229,26 +234,26 @@ describe('/api/appointments', () => {
             });
 
             it('should call Appointment.prototype.addService with correct service id', () => {
-                expect(Appointment.prototype.addService).toHaveBeenCalledWith(serviceId);
+                expect(m.Appointment.prototype.addService).toHaveBeenCalledWith(serviceId);
             });
 
             it('should call Appointment.prototype.addService once', () => {
-                expect(Appointment.prototype.addService).toBeCalledTimes(1);
+                expect(m.Appointment.prototype.addService).toBeCalledTimes(1);
             });
         });
 
         describe('if service is associated with appointment', () => {
-            let appointment: Appointment;
-            let service: Service;
+            let appointment: m.Appointment;
+            let service: m.Service;
 
             beforeEach(async () => {
                 [appointment, service] = await Promise.all([
-                    Appointment.create(),
-                    Service.create({ name: '', count: 0 }),
+                    m.Appointment.create(),
+                    m.Service.create({ name: '', count: 0 }),
                 ]);
                 await appointment.addService(service);
 
-                jest.spyOn(AppointmentsServices, 'increment');
+                jest.spyOn(m.AppointmentsServices, 'increment');
 
                 response = await supertest(app)
                     .post(`/api/appointments/${appointment.toJSON().id}/services`)
@@ -267,14 +272,14 @@ describe('/api/appointments', () => {
             });
 
             it('should call AppointmentsServices.increment with correct arguments', () => {
-                expect(AppointmentsServices.increment).toHaveBeenCalledWith(
+                expect(m.AppointmentsServices.increment).toHaveBeenCalledWith(
                     { quantity: 1 },
                     { where: { appointmentId: appointment.id, serviceId: service.id } }
                 );
             });
 
             it('should call AppointmentsServices.increment once', () => {
-                expect(AppointmentsServices.increment).toBeCalledTimes(1);
+                expect(m.AppointmentsServices.increment).toBeCalledTimes(1);
             });
         });
     });
@@ -291,21 +296,21 @@ describe('/api/appointments', () => {
 
             describe('appointment lookup', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockRejectedValue(null);
+                    jest.spyOn(m.Appointment, 'findByPk').mockRejectedValue(null);
                     response = await supertest(app).delete(url).set('Cookie', cookieHeader);
                 });
 
                 itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
 
                 it('should call Appointment.findByPk', () => {
-                    expect(Appointment.findByPk).rejects.toBe(null);
+                    expect(m.Appointment.findByPk).rejects.toBe(null);
                 });
             });
 
             describe('service lookup', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                    jest.spyOn(Service, 'findByPk').mockRejectedValue(null);
+                    jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                    jest.spyOn(m.Service, 'findByPk').mockRejectedValue(null);
 
                     response = await supertest(app).delete(url).set('Cookie', cookieHeader);
                 });
@@ -313,15 +318,15 @@ describe('/api/appointments', () => {
                 itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
 
                 it('should call Service.findByPk', () => {
-                    expect(Service.findByPk).rejects.toBe(null);
+                    expect(m.Service.findByPk).rejects.toBe(null);
                 });
             });
 
             describe('association evaluation', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                    jest.spyOn(Service, 'findByPk').mockRejectedValue({} as Service);
-                    jest.spyOn(Appointment.prototype, 'hasService').mockRejectedValue(null);
+                    jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                    jest.spyOn(m.Service, 'findByPk').mockRejectedValue({} as m.Service);
+                    jest.spyOn(m.Appointment.prototype, 'hasService').mockRejectedValue(null);
 
                     response = await supertest(app).delete(url).set('Cookie', cookieHeader);
                 });
@@ -329,18 +334,18 @@ describe('/api/appointments', () => {
                 itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
 
                 it('should call Appointment.prototype.hasService', () => {
-                    expect(Appointment.prototype.hasService).rejects.toBe(null);
+                    expect(m.Appointment.prototype.hasService).rejects.toBe(null);
                 });
             });
 
             describe('service removal', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                    jest.spyOn(Service, 'findByPk').mockResolvedValue({} as Service);
-                    jest.spyOn(AppointmentsServices, 'findOne').mockResolvedValue({
+                    jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                    jest.spyOn(m.Service, 'findByPk').mockResolvedValue({} as m.Service);
+                    jest.spyOn(m.AppointmentsServices, 'findOne').mockResolvedValue({
                         quantity: 1,
-                    } as AppointmentsServices);
-                    jest.spyOn(Appointment.prototype, 'removeService').mockRejectedValue(null);
+                    } as m.AppointmentsServices);
+                    jest.spyOn(m.Appointment.prototype, 'removeService').mockRejectedValue(null);
 
                     response = await supertest(app).delete(url).set('Cookie', cookieHeader);
                 });
@@ -348,18 +353,18 @@ describe('/api/appointments', () => {
                 itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
 
                 it('should call Appointment.prototype.removeService', () => {
-                    expect(Appointment.prototype.removeService).rejects.toBe(null);
+                    expect(m.Appointment.prototype.removeService).rejects.toBe(null);
                 });
             });
 
             describe('service quantity decremental', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                    jest.spyOn(Service, 'findByPk').mockResolvedValue({} as Service);
-                    jest.spyOn(AppointmentsServices, 'findOne').mockResolvedValue({
+                    jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                    jest.spyOn(m.Service, 'findByPk').mockResolvedValue({} as m.Service);
+                    jest.spyOn(m.AppointmentsServices, 'findOne').mockResolvedValue({
                         quantity: 2,
-                    } as AppointmentsServices);
-                    jest.spyOn(AppointmentsServices.prototype, 'increment').mockRejectedValue(null);
+                    } as m.AppointmentsServices);
+                    jest.spyOn(m.AppointmentsServices.prototype, 'increment').mockRejectedValue(null);
 
                     response = await supertest(app).delete(url).set('Cookie', cookieHeader);
                 });
@@ -367,16 +372,16 @@ describe('/api/appointments', () => {
                 itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
 
                 it('should call AppointmentsServices.prototype.increment', () => {
-                    expect(AppointmentsServices.prototype.increment).rejects.toBe(null);
+                    expect(m.AppointmentsServices.prototype.increment).rejects.toBe(null);
                 });
             });
         });
 
         describe('if requested appointment does not exist', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'findByPk').mockResolvedValue(null);
-                jest.spyOn(Service, 'findByPk').mockResolvedValue({} as Service);
-                jest.spyOn(AppointmentsServices, 'findOne').mockResolvedValue({} as AppointmentsServices);
+                jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue(null);
+                jest.spyOn(m.Service, 'findByPk').mockResolvedValue({} as m.Service);
+                jest.spyOn(m.AppointmentsServices, 'findOne').mockResolvedValue({} as m.AppointmentsServices);
                 response = await supertest(app).delete(url).set('Cookie', cookieHeader);
             });
 
@@ -395,8 +400,8 @@ describe('/api/appointments', () => {
 
         describe('if requested service does not exist', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                jest.spyOn(Service, 'findByPk').mockResolvedValue(null);
+                jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                jest.spyOn(m.Service, 'findByPk').mockResolvedValue(null);
                 response = await supertest(app).delete(url).set('Cookie', cookieHeader);
             });
 
@@ -414,13 +419,13 @@ describe('/api/appointments', () => {
         });
 
         describe('if service is not associated with appointment', () => {
-            let appointment: Appointment;
-            let service: Service;
+            let appointment: m.Appointment;
+            let service: m.Service;
 
             beforeEach(async () => {
                 [appointment, service] = await Promise.all([
-                    await Appointment.create(),
-                    Service.create({ name: '', count: 0 }),
+                    await m.Appointment.create(),
+                    m.Service.create({ name: '', count: 0 }),
                 ]);
 
                 const url = `/api/appointments/${appointment.id}/services/${service.id}`;
@@ -441,17 +446,17 @@ describe('/api/appointments', () => {
         });
 
         describe('if service has been associated with appointment only once', () => {
-            let appointment: Appointment;
-            let service: Service;
+            let appointment: m.Appointment;
+            let service: m.Service;
 
             beforeEach(async () => {
                 [appointment, service] = await Promise.all([
-                    Appointment.create(),
-                    Service.create({ name: '', count: 0 }),
+                    m.Appointment.create(),
+                    m.Service.create({ name: '', count: 0 }),
                 ]);
                 await appointment.addService(service);
 
-                jest.spyOn(Appointment.prototype, 'removeService');
+                jest.spyOn(m.Appointment.prototype, 'removeService');
 
                 const url = `/api/appointments/${appointment.toJSON().id}/services/${service.toJSON().id}`;
                 response = await supertest(app).delete(url).set('Cookie', cookieHeader);
@@ -468,31 +473,31 @@ describe('/api/appointments', () => {
             });
 
             it('should call Appointment.prototype.removeService correct service id', () => {
-                expect(Appointment.prototype.removeService).toHaveBeenCalledWith(service.toJSON().id);
+                expect(m.Appointment.prototype.removeService).toHaveBeenCalledWith(service.toJSON().id);
             });
 
             it('should call Appointment.prototype.removeService once', () => {
-                expect(Appointment.prototype.removeService).toBeCalledTimes(1);
+                expect(m.Appointment.prototype.removeService).toBeCalledTimes(1);
             });
         });
 
         describe('if service has been associated with appointment more than once', () => {
-            let appointment: Appointment;
-            let service: Service;
+            let appointment: m.Appointment;
+            let service: m.Service;
             let url: string;
 
             beforeEach(async () => {
                 [appointment, service] = await Promise.all([
-                    Appointment.create(),
-                    Service.create({ name: '', count: 0 }),
+                    m.Appointment.create(),
+                    m.Service.create({ name: '', count: 0 }),
                 ]);
                 await appointment.addService(service);
-                await AppointmentsServices.increment(
+                await m.AppointmentsServices.increment(
                     { quantity: 1 },
                     { where: { appointmentId: appointment.id, serviceId: service.id } }
                 );
 
-                jest.spyOn(AppointmentsServices, 'increment');
+                jest.spyOn(m.AppointmentsServices, 'increment');
 
                 url = `/api/appointments/${appointment.id}/services/${service.id}`;
             });
@@ -512,12 +517,12 @@ describe('/api/appointments', () => {
             });
 
             it('should call AppointmentsServices.increment once', async () => {
-                jest.spyOn(AppointmentsServices, 'increment').mockClear();
+                jest.spyOn(m.AppointmentsServices, 'increment').mockClear();
                 const expected = 1;
 
                 await supertest(app).delete(url).set('Cookie', cookieHeader);
 
-                expect(AppointmentsServices.increment).toHaveBeenCalledTimes(expected);
+                expect(m.AppointmentsServices.increment).toHaveBeenCalledTimes(expected);
             });
 
             it('should call AppointmentsServices.increment with correct argument', async () => {
@@ -528,7 +533,7 @@ describe('/api/appointments', () => {
 
                 await supertest(app).delete(url).set('Cookie', cookieHeader);
 
-                expect(AppointmentsServices.increment).toHaveBeenCalledWith(...expected);
+                expect(m.AppointmentsServices.increment).toHaveBeenCalledWith(...expected);
             });
         });
     });
@@ -546,8 +551,8 @@ describe('/api/appointments', () => {
 
             describe('appointment lookup', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockRejectedValue(null);
-                    jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue({} as AppointmentFact);
+                    jest.spyOn(m.Appointment, 'findByPk').mockRejectedValue(null);
+                    jest.spyOn(m.AppointmentFact, 'findByPk').mockResolvedValue({} as m.AppointmentFact);
 
                     response = await supertest(app)
                         .post(url)
@@ -558,18 +563,18 @@ describe('/api/appointments', () => {
                 itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
 
                 it('should call Appointment.findByPk once', () => {
-                    expect(Appointment.findByPk).toHaveBeenCalledTimes(1);
+                    expect(m.Appointment.findByPk).toHaveBeenCalledTimes(1);
                 });
 
                 it(`should call Appointment.findByPk with ${appointmentId}`, () => {
-                    expect(Appointment.findByPk).toHaveBeenCalledWith(appointmentId);
+                    expect(m.Appointment.findByPk).toHaveBeenCalledWith(appointmentId);
                 });
             });
 
             describe('fact lookup', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                    jest.spyOn(AppointmentFact, 'findByPk').mockRejectedValue(null);
+                    jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                    jest.spyOn(m.AppointmentFact, 'findByPk').mockRejectedValue(null);
 
                     response = await supertest(app)
                         .post(url)
@@ -580,11 +585,11 @@ describe('/api/appointments', () => {
                 itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
 
                 it(`should call AppointmentFact.findByPk with ${factId}`, () => {
-                    expect(AppointmentFact.findByPk).toHaveBeenCalledWith(factId);
+                    expect(m.AppointmentFact.findByPk).toHaveBeenCalledWith(factId);
                 });
 
                 it('should call AppointmentFact.findByPk once', () => {
-                    expect(AppointmentFact.findByPk).toHaveBeenCalledTimes(1);
+                    expect(m.AppointmentFact.findByPk).toHaveBeenCalledTimes(1);
                 });
             });
 
@@ -592,10 +597,10 @@ describe('/api/appointments', () => {
                 const addFact = jest.fn(() => Promise.reject());
 
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({
+                    jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({
                         addFact,
-                    } as unknown as Appointment);
-                    jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue({ id: factId } as AppointmentFact);
+                    } as unknown as m.Appointment);
+                    jest.spyOn(m.AppointmentFact, 'findByPk').mockResolvedValue({ id: factId } as m.AppointmentFact);
 
                     response = await supertest(app)
                         .post(url)
@@ -621,8 +626,8 @@ describe('/api/appointments', () => {
 
         describe('if requested appointment does not exist', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'findByPk').mockResolvedValue(null);
-                jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue({} as AppointmentFact);
+                jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue(null);
+                jest.spyOn(m.AppointmentFact, 'findByPk').mockResolvedValue({} as m.AppointmentFact);
 
                 response = await supertest(app).post(url).set('Cookie', cookieHeader).send({ factId, additionalInfo });
             });
@@ -632,11 +637,11 @@ describe('/api/appointments', () => {
             });
 
             it('should call Appointment.findByPk once', () => {
-                expect(Appointment.findByPk).toHaveBeenCalledTimes(1);
+                expect(m.Appointment.findByPk).toHaveBeenCalledTimes(1);
             });
 
             it(`should call Appointment.findByPk with ${appointmentId}`, () => {
-                expect(Appointment.findByPk).toHaveBeenCalledWith(appointmentId);
+                expect(m.Appointment.findByPk).toHaveBeenCalledWith(appointmentId);
             });
 
             it('should return 404', function () {
@@ -650,8 +655,8 @@ describe('/api/appointments', () => {
 
         describe('if requested fact does not exist', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue(null);
+                jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                jest.spyOn(m.AppointmentFact, 'findByPk').mockResolvedValue(null);
 
                 response = await supertest(app).post(url).set('Cookie', cookieHeader).send({ factId, additionalInfo });
             });
@@ -661,11 +666,11 @@ describe('/api/appointments', () => {
             });
 
             it('should call AppointmentFact.findByPk once', () => {
-                expect(AppointmentFact.findByPk).toHaveBeenCalledTimes(1);
+                expect(m.AppointmentFact.findByPk).toHaveBeenCalledTimes(1);
             });
 
             it(`should call AppointmentFact.findByPk with ${factId}`, () => {
-                expect(AppointmentFact.findByPk).toHaveBeenCalledWith(factId);
+                expect(m.AppointmentFact.findByPk).toHaveBeenCalledWith(factId);
             });
 
             it('should return 404', function () {
@@ -678,13 +683,16 @@ describe('/api/appointments', () => {
         });
 
         describe('if fact can be added to appointment', () => {
-            let appointment: Appointment;
-            let fact: AppointmentFact;
+            let appointment: m.Appointment;
+            let fact: m.AppointmentFact;
 
             beforeEach(async () => {
-                [appointment, fact] = await Promise.all([Appointment.create(), AppointmentFact.create({ value: '' })]);
+                [appointment, fact] = await Promise.all([
+                    m.Appointment.create(),
+                    m.AppointmentFact.create({ value: '' }),
+                ]);
 
-                jest.spyOn(Appointment.prototype, 'addFact');
+                jest.spyOn(m.Appointment.prototype, 'addFact');
 
                 response = await supertest(app)
                     .post(`/api/appointments/${appointment.id}/facts`)
@@ -703,11 +711,11 @@ describe('/api/appointments', () => {
             });
 
             it('should call Appointment.prototype.addFact once', () => {
-                expect(Appointment.prototype.addFact).toHaveBeenCalledTimes(1);
+                expect(m.Appointment.prototype.addFact).toHaveBeenCalledTimes(1);
             });
 
             it('should call Appointment.prototype.addFact with correct arguments', () => {
-                expect(Appointment.prototype.addFact).toHaveBeenCalledWith(fact.id, { through: { additionalInfo } });
+                expect(m.Appointment.prototype.addFact).toHaveBeenCalledWith(fact.id, { through: { additionalInfo } });
             });
         });
     });
@@ -723,11 +731,11 @@ describe('/api/appointments', () => {
             });
 
             it('should call Appointment.findByPk once', () => {
-                expect(Appointment.findByPk).toHaveBeenCalledTimes(1);
+                expect(m.Appointment.findByPk).toHaveBeenCalledTimes(1);
             });
 
             it(`should call Appointment.findByPk with ${appointmentId}`, () => {
-                expect(Appointment.findByPk).toHaveBeenCalledWith(appointmentId);
+                expect(m.Appointment.findByPk).toHaveBeenCalledWith(appointmentId);
             });
         }
 
@@ -737,11 +745,11 @@ describe('/api/appointments', () => {
             });
 
             it('should call AppointmentFact.findByPk once', () => {
-                expect(AppointmentFact.findByPk).toHaveBeenCalledTimes(1);
+                expect(m.AppointmentFact.findByPk).toHaveBeenCalledTimes(1);
             });
 
             it(`should call AppointmentFact.findByPk with ${factId}`, () => {
-                expect(AppointmentFact.findByPk).toHaveBeenCalledWith(factId);
+                expect(m.AppointmentFact.findByPk).toHaveBeenCalledWith(factId);
             });
         }
 
@@ -752,9 +760,9 @@ describe('/api/appointments', () => {
 
             describe('appointment lookup', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockImplementation(() => Promise.reject());
-                    jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue({} as AppointmentFact);
-                    jest.spyOn(HealthSurvey, 'findOne').mockResolvedValue({} as HealthSurvey);
+                    jest.spyOn(m.Appointment, 'findByPk').mockImplementation(() => Promise.reject());
+                    jest.spyOn(m.AppointmentFact, 'findByPk').mockResolvedValue({} as m.AppointmentFact);
+                    jest.spyOn(m.HealthSurvey, 'findOne').mockResolvedValue({} as m.HealthSurvey);
 
                     response = await supertest(app).delete(url).set('Cookie', cookieHeader);
                 });
@@ -766,9 +774,9 @@ describe('/api/appointments', () => {
 
             describe('fact lookup', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                    jest.spyOn(AppointmentFact, 'findByPk').mockImplementation(() => Promise.reject());
-                    jest.spyOn(HealthSurvey, 'findOne').mockResolvedValue({} as HealthSurvey);
+                    jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                    jest.spyOn(m.AppointmentFact, 'findByPk').mockImplementation(() => Promise.reject());
+                    jest.spyOn(m.HealthSurvey, 'findOne').mockResolvedValue({} as m.HealthSurvey);
 
                     response = await supertest(app).delete(url).set('Cookie', cookieHeader);
                 });
@@ -780,9 +788,9 @@ describe('/api/appointments', () => {
 
             describe('association evaluation', () => {
                 beforeEach(async () => {
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                    jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue({} as AppointmentFact);
-                    jest.spyOn(HealthSurvey, 'findOne').mockImplementation(() => Promise.reject());
+                    jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                    jest.spyOn(m.AppointmentFact, 'findByPk').mockResolvedValue({} as m.AppointmentFact);
+                    jest.spyOn(m.HealthSurvey, 'findOne').mockImplementation(() => Promise.reject());
 
                     response = await supertest(app).delete(url).set('Cookie', cookieHeader);
                 });
@@ -790,11 +798,11 @@ describe('/api/appointments', () => {
                 itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
 
                 it('should call HealthSurvey.findOne once', () => {
-                    expect(HealthSurvey.findOne).toHaveBeenCalledTimes(1);
+                    expect(m.HealthSurvey.findOne).toHaveBeenCalledTimes(1);
                 });
 
                 it(`should call HealthSurvey.findOne with ${appointmentId} and ${factId}`, () => {
-                    expect(HealthSurvey.findOne).toHaveBeenCalledWith({ where: { appointmentId, factId } });
+                    expect(m.HealthSurvey.findOne).toHaveBeenCalledWith({ where: { appointmentId, factId } });
                 });
             });
 
@@ -803,9 +811,9 @@ describe('/api/appointments', () => {
 
                 beforeEach(async () => {
                     removeFact.mockImplementation(() => Promise.reject());
-                    jest.spyOn(Appointment, 'findByPk').mockResolvedValue({ removeFact } as unknown as Appointment);
-                    jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue({ id: factId } as AppointmentFact);
-                    jest.spyOn(HealthSurvey, 'findOne').mockResolvedValue({} as HealthSurvey);
+                    jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({ removeFact } as unknown as m.Appointment);
+                    jest.spyOn(m.AppointmentFact, 'findByPk').mockResolvedValue({ id: factId } as m.AppointmentFact);
+                    jest.spyOn(m.HealthSurvey, 'findOne').mockResolvedValue({} as m.HealthSurvey);
 
                     response = await supertest(app).delete(url).set('Cookie', cookieHeader);
                 });
@@ -828,9 +836,9 @@ describe('/api/appointments', () => {
 
         describe('if requested appointment does not exist', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'findByPk').mockResolvedValue(null);
-                jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue({} as AppointmentFact);
-                jest.spyOn(HealthSurvey, 'findOne').mockResolvedValue({} as HealthSurvey);
+                jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue(null);
+                jest.spyOn(m.AppointmentFact, 'findByPk').mockResolvedValue({} as m.AppointmentFact);
+                jest.spyOn(m.HealthSurvey, 'findOne').mockResolvedValue({} as m.HealthSurvey);
 
                 response = await supertest(app).delete(url).set('Cookie', cookieHeader);
             });
@@ -842,9 +850,9 @@ describe('/api/appointments', () => {
 
         describe('if requested fact does not exist', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue(null);
-                jest.spyOn(HealthSurvey, 'findOne').mockResolvedValue({} as HealthSurvey);
+                jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                jest.spyOn(m.AppointmentFact, 'findByPk').mockResolvedValue(null);
+                jest.spyOn(m.HealthSurvey, 'findOne').mockResolvedValue({} as m.HealthSurvey);
 
                 response = await supertest(app).delete(url).set('Cookie', cookieHeader);
             });
@@ -856,9 +864,9 @@ describe('/api/appointments', () => {
 
         describe('if appointment and fact are not associated', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'findByPk').mockResolvedValue({} as Appointment);
-                jest.spyOn(AppointmentFact, 'findByPk').mockResolvedValue({} as AppointmentFact);
-                jest.spyOn(HealthSurvey, 'findOne').mockResolvedValue(null);
+                jest.spyOn(m.Appointment, 'findByPk').mockResolvedValue({} as m.Appointment);
+                jest.spyOn(m.AppointmentFact, 'findByPk').mockResolvedValue({} as m.AppointmentFact);
+                jest.spyOn(m.HealthSurvey, 'findOne').mockResolvedValue(null);
 
                 response = await supertest(app).delete(url).set('Cookie', cookieHeader);
             });
@@ -871,23 +879,26 @@ describe('/api/appointments', () => {
             itShouldReturnErrorCodeAndErrorMessageInBody(400, 'Appointment and fact not associated');
 
             it('should call HealthSurvey.findOne once', () => {
-                expect(HealthSurvey.findOne).toHaveBeenCalledTimes(1);
+                expect(m.HealthSurvey.findOne).toHaveBeenCalledTimes(1);
             });
 
             it('should call HealthSurvey.findOne with correct argument', () => {
-                expect(HealthSurvey.findOne).toHaveBeenCalledWith({ where: { appointmentId, factId } });
+                expect(m.HealthSurvey.findOne).toHaveBeenCalledWith({ where: { appointmentId, factId } });
             });
         });
 
         describe('if fact can be removed from appointment', () => {
-            let appointment: Appointment;
-            let fact: AppointmentFact;
+            let appointment: m.Appointment;
+            let fact: m.AppointmentFact;
 
             beforeEach(async () => {
-                [appointment, fact] = await Promise.all([Appointment.create(), AppointmentFact.create({ value: '' })]);
+                [appointment, fact] = await Promise.all([
+                    m.Appointment.create(),
+                    m.AppointmentFact.create({ value: '' }),
+                ]);
                 await appointment.addFact(fact);
 
-                jest.spyOn(Appointment.prototype, 'removeFact');
+                jest.spyOn(m.Appointment.prototype, 'removeFact');
 
                 const url = `/api/appointments/${appointment.id}/facts/${fact.id}`;
                 response = await supertest(app).delete(url).set('Cookie', cookieHeader);
@@ -903,11 +914,11 @@ describe('/api/appointments', () => {
             });
 
             it('should call Appointment.prototype.removeFact once', () => {
-                expect(Appointment.prototype.removeFact).toHaveBeenCalledTimes(1);
+                expect(m.Appointment.prototype.removeFact).toHaveBeenCalledTimes(1);
             });
 
             it('should call Appointment.prototype.removeFact with correct fact id', () => {
-                expect(Appointment.prototype.removeFact).toHaveBeenCalledWith(fact.id);
+                expect(m.Appointment.prototype.removeFact).toHaveBeenCalledWith(fact.id);
             });
         });
     });
@@ -923,18 +934,18 @@ describe('/api/appointments', () => {
 
         describe('if there is unexpected error during updating', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'update').mockImplementation(() => Promise.reject());
+                jest.spyOn(m.Appointment, 'update').mockImplementation(() => Promise.reject());
 
                 response = await supertest(app).patch(url).set('Cookie', cookieHeader).send({ startsAt });
             });
             itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
 
             it('should call Appointment.update once', () => {
-                expect(Appointment.update).toHaveBeenCalledTimes(1);
+                expect(m.Appointment.update).toHaveBeenCalledTimes(1);
             });
 
             it('should call Appointment.update with correct arguments', () => {
-                expect(Appointment.update).toHaveBeenCalledWith(
+                expect(m.Appointment.update).toHaveBeenCalledWith(
                     { startsAt },
                     { where: { id: appointmentId }, returning: true }
                 );
@@ -943,18 +954,18 @@ describe('/api/appointments', () => {
 
         describe('if requested appointment has not been found', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'update');
+                jest.spyOn(m.Appointment, 'update');
                 response = await supertest(app).patch(url).set('Cookie', cookieHeader).send({ startsAt });
             });
 
             itShouldReturnErrorCodeAndErrorMessageInBody(404, 'Appointment not found');
 
             it('should call Appointment.update once', () => {
-                expect(Appointment.update).toHaveBeenCalledTimes(1);
+                expect(m.Appointment.update).toHaveBeenCalledTimes(1);
             });
 
             it('should call Appointment.update with correct arguments', () => {
-                expect(Appointment.update).toHaveBeenCalledWith(
+                expect(m.Appointment.update).toHaveBeenCalledWith(
                     { startsAt },
                     { where: { id: appointmentId }, returning: true }
                 );
@@ -962,12 +973,12 @@ describe('/api/appointments', () => {
         });
 
         describe('if requested appointment exists', () => {
-            let appointment: Appointment;
+            let appointment: m.Appointment;
 
             beforeEach(async () => {
-                const user = await User.findOne({ where: { googleId: '381902381093' } });
+                const user = await m.User.findOne({ where: { googleId: '381902381093' } });
                 appointment = await user!.createAppointment();
-                jest.spyOn(Appointment, 'update');
+                jest.spyOn(m.Appointment, 'update');
 
                 response = await supertest(app)
                     .patch(`/api/appointments/${appointment.id}/starts-at`)
@@ -980,11 +991,11 @@ describe('/api/appointments', () => {
             });
 
             it('should call Appointment.update once', () => {
-                expect(Appointment.update).toHaveBeenCalledTimes(1);
+                expect(m.Appointment.update).toHaveBeenCalledTimes(1);
             });
 
             it('should call Appointment.update with correct arguments', () => {
-                expect(Appointment.update).toHaveBeenCalledWith(
+                expect(m.Appointment.update).toHaveBeenCalledWith(
                     { startsAt },
                     { where: { id: appointment.id }, returning: true }
                 );
@@ -1015,7 +1026,7 @@ describe('/api/appointments', () => {
 
         describe('if there is unexpected error during update', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'update').mockImplementation(() => Promise.reject());
+                jest.spyOn(m.Appointment, 'update').mockImplementation(() => Promise.reject());
                 response = await makeRequest(appointmentId);
             });
 
@@ -1026,11 +1037,11 @@ describe('/api/appointments', () => {
             itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
 
             it('should call Appointment.update once', () => {
-                expect(Appointment.update).toHaveBeenCalledTimes(1);
+                expect(m.Appointment.update).toHaveBeenCalledTimes(1);
             });
 
             it('should call Appointment.update with correct arguments', () => {
-                expect(Appointment.update).toHaveBeenCalledWith(
+                expect(m.Appointment.update).toHaveBeenCalledWith(
                     { confirmed },
                     { where: { id: appointmentId }, returning: true }
                 );
@@ -1039,7 +1050,7 @@ describe('/api/appointments', () => {
 
         describe('if requested appointment has not been found', () => {
             beforeEach(async () => {
-                jest.spyOn(Appointment, 'update');
+                jest.spyOn(m.Appointment, 'update');
                 response = await makeRequest(appointmentId);
             });
 
@@ -1050,11 +1061,11 @@ describe('/api/appointments', () => {
             itShouldReturnErrorCodeAndErrorMessageInBody(404, 'Appointment not found');
 
             it('should call Appointment.update once', () => {
-                expect(Appointment.update).toHaveBeenCalledTimes(1);
+                expect(m.Appointment.update).toHaveBeenCalledTimes(1);
             });
 
             it('should call Appointment.update with correct arguments', () => {
-                expect(Appointment.update).toHaveBeenCalledWith(
+                expect(m.Appointment.update).toHaveBeenCalledWith(
                     { confirmed },
                     { where: { id: appointmentId }, returning: true }
                 );
@@ -1062,11 +1073,13 @@ describe('/api/appointments', () => {
         });
 
         describe('if requested appointment exists', () => {
-            let appointment: Appointment;
+            let appointment: m.Appointment;
 
             beforeEach(async () => {
-                appointment = await (await User.findOne({ where: { googleId: '381902381093' } }))!.createAppointment();
-                jest.spyOn(Appointment, 'update');
+                appointment = await (await m.User.findOne({
+                    where: { googleId: '381902381093' },
+                }))!.createAppointment();
+                jest.spyOn(m.Appointment, 'update');
                 response = await makeRequest(appointment.id);
             });
 
@@ -1084,14 +1097,229 @@ describe('/api/appointments', () => {
             });
 
             it('should call Appointment.update once', () => {
-                expect(Appointment.update).toHaveBeenCalledTimes(1);
+                expect(m.Appointment.update).toHaveBeenCalledTimes(1);
             });
 
             it('should call Appointment.update with correct arguments', () => {
-                expect(Appointment.update).toHaveBeenCalledWith(
+                expect(m.Appointment.update).toHaveBeenCalledWith(
                     { confirmed },
                     { where: { id: appointment.id }, returning: true }
                 );
+            });
+        });
+    });
+
+    describe('/ GET', () => {
+        let appointments: m.Appointment[];
+
+        const records: Partial<m.Appointment>[] = [
+            { startsAt: new Date('2022-11-12'), confirmed: true },
+            { startsAt: null, confirmed: false },
+            { startsAt: new Date('2022-11-14'), confirmed: true },
+            { startsAt: new Date('2022-11-15'), confirmed: false },
+        ];
+
+        const expectedArgument = {
+            include: [m.Service],
+            order: [['startsAt', 'ASC']],
+            attributes: ['id', 'startsAt'],
+        };
+
+        // eslint-disable-next-line no-unused-vars
+        function itShouldReturnAllMatchingTestAppointments(filterFn: (appointment: m.Appointment) => boolean) {
+            it('should return matching all test appointments', () => {
+                const expectedIds = appointments.filter(filterFn).map(mapAppointmentToId);
+
+                const actualIds = (response.body as m.Appointment[]).map(mapAppointmentToId);
+
+                expect(expectedIds.every((id) => actualIds.includes(id))).toBe(true);
+            });
+        }
+
+        function mapAppointmentToId(appointment: m.Appointment): string {
+            return appointment.id;
+        }
+
+        function itShouldReturnObjectsWithNonNullishStartsAt() {
+            it('should return objects with non-nullish `startsAt`', () => {
+                expect((response.body as m.Appointment[]).every(({ startsAt }) => startsAt)).toBe(true);
+            });
+        }
+
+        afterEach(() => {
+            jest.clearAllMocks();
+        });
+
+        describe('if there is unexpected error during appointments querying', () => {
+            beforeEach(async () => {
+                jest.spyOn(m.Appointment, 'findAll').mockImplementation(() => Promise.reject());
+
+                response = await supertest(app).get('/api/appointments').set('Cookie', cookieHeader);
+            });
+
+            afterEach(() => {
+                jest.restoreAllMocks();
+            });
+
+            itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
+
+            it('should call Appointment.findAll once', () => {
+                expect(m.Appointment.findAll).toHaveBeenCalledTimes(1);
+            });
+
+            it('should call Appointment.findAll with correct argument', () => {
+                expect(m.Appointment.findAll).toHaveBeenCalledWith({
+                    ...expectedArgument,
+                    where: { confirmed: true, startsAt: { [Op.ne]: null } },
+                });
+            });
+        });
+
+        describe('if there are no query parameters', () => {
+            beforeEach(async () => {
+                jest.spyOn(m.Appointment, 'findAll');
+                appointments = await m.Appointment.bulkCreate(records);
+                response = await supertest(app).get('/api/appointments').set('Cookie', cookieHeader);
+            });
+
+            afterEach(async () => {
+                for (const a of appointments) {
+                    await a.destroy();
+                }
+            });
+
+            itShouldReturn(200);
+
+            itShouldReturnArrayOfObjects();
+
+            itShouldReturnAllMatchingTestAppointments(({ startsAt, confirmed }) => startsAt !== null && confirmed);
+
+            itShouldReturnObjectsWithNonNullishStartsAt();
+
+            it('should call Appointment.findAll once', () => {
+                expect(m.Appointment.findAll).toHaveBeenCalledTimes(1);
+            });
+
+            it('should call Appointment.findAll with correct argument', () => {
+                expect(m.Appointment.findAll).toHaveBeenCalledWith({
+                    ...expectedArgument,
+                    where: { confirmed: true, startsAt: { [Op.ne]: null } },
+                });
+            });
+        });
+
+        describe('if only `before` query parameter is present', () => {
+            beforeEach(async () => {
+                jest.spyOn(m.Appointment, 'findAll');
+                appointments = await m.Appointment.bulkCreate(records);
+                response = await supertest(app).get('/api/appointments?before=2022-11-13').set('Cookie', cookieHeader);
+            });
+
+            afterEach(async () => {
+                for (const a of appointments) {
+                    await a.destroy();
+                }
+            });
+
+            itShouldReturn(200);
+
+            itShouldReturnArrayOfObjects();
+
+            itShouldReturnAllMatchingTestAppointments(
+                ({ startsAt, confirmed }) => confirmed && startsAt !== null && startsAt < new Date('2022-11-13')
+            );
+
+            itShouldReturnObjectsWithNonNullishStartsAt();
+
+            it('should call Appointment.findAll once', () => {
+                expect(m.Appointment.findAll).toHaveBeenCalledTimes(1);
+            });
+
+            it('should call Appointment.findAll with correct argument', () => {
+                expect(m.Appointment.findAll).toHaveBeenCalledWith({
+                    ...expectedArgument,
+                    where: { confirmed: true, startsAt: { [Op.lt]: '2022-11-13' } },
+                });
+            });
+
+            it('should return objects with `startsAt` set to value earlier than given query parameter', () => {
+                expect((response.body as m.Appointment[]).every(({ startsAt }) => startsAt! < new Date('2022-11-13')));
+            });
+        });
+
+        describe('if only `after` query parameter is present', () => {
+            beforeEach(async () => {
+                jest.spyOn(m.Appointment, 'findAll');
+                appointments = await m.Appointment.bulkCreate(records);
+                response = await supertest(app).get('/api/appointments?after=2022-11-12').set('Cookie', cookieHeader);
+            });
+
+            afterEach(async () => {
+                for (const a of appointments) {
+                    await a.destroy();
+                }
+            });
+
+            itShouldReturn(200);
+
+            itShouldReturnArrayOfObjects();
+
+            itShouldReturnObjectsWithNonNullishStartsAt();
+
+            itShouldReturnAllMatchingTestAppointments(
+                ({ startsAt, confirmed }) => confirmed && startsAt !== null && startsAt > new Date('2022-11-12')
+            );
+
+            it('should call Appointment.findAll once', () => {
+                expect(m.Appointment.findAll).toHaveBeenCalledTimes(1);
+            });
+
+            it('should call Appointment.findAll with correct argument', () => {
+                expect(m.Appointment.findAll).toHaveBeenCalledWith({
+                    ...expectedArgument,
+                    where: { confirmed: true, startsAt: { [Op.gt]: '2022-11-12' } },
+                });
+            });
+        });
+
+        describe('if `after` and `before` query parameter are present', () => {
+            beforeEach(async () => {
+                jest.spyOn(m.Appointment, 'findAll');
+                appointments = await m.Appointment.bulkCreate(records);
+                response = await supertest(app)
+                    .get('/api/appointments?after=2022-11-12&before=2022-11-13')
+                    .set('Cookie', cookieHeader);
+            });
+
+            afterEach(async () => {
+                for (const a of appointments) {
+                    await a.destroy();
+                }
+            });
+
+            itShouldReturn(200);
+
+            itShouldReturnArrayOfObjects();
+
+            itShouldReturnObjectsWithNonNullishStartsAt();
+
+            itShouldReturnAllMatchingTestAppointments(
+                ({ confirmed, startsAt }) =>
+                    confirmed &&
+                    startsAt !== null &&
+                    startsAt > new Date('2022-11-12') &&
+                    startsAt < new Date('2022-11-13')
+            );
+
+            it('should call Appointment.findAll once', () => {
+                expect(m.Appointment.findAll).toHaveBeenCalledTimes(1);
+            });
+
+            it('should call Appointment.findAll with correct argument', () => {
+                expect(m.Appointment.findAll).toHaveBeenCalledWith({
+                    ...expectedArgument,
+                    where: { confirmed: true, startsAt: { [Op.between]: ['2022-11-12', '2022-11-13'] } },
+                });
             });
         });
     });
