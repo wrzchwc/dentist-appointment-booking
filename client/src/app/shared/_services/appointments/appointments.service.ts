@@ -11,6 +11,13 @@ interface Appointment {
     services: AssociatedService[];
 }
 
+interface ConfirmAppointmentResponse {
+    id: string;
+    confirmed: true;
+    startsAt: Date;
+    userId: string;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -25,5 +32,15 @@ export class AppointmentsService {
 
     createAppointment() {
         return this.client.post<Appointment>(this.baseUrl, {});
+    }
+
+    confirmAppointment() {
+        return this.client.patch<ConfirmAppointmentResponse>(`${this.baseUrl}/${this.currentAppointment?.id}/confirm`, {
+            confirmed: true,
+        });
+    }
+
+    clear() {
+        this.currentAppointment = undefined;
     }
 }

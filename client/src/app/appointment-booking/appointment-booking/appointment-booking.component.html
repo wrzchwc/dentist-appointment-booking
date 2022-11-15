@@ -31,7 +31,14 @@
             <ng-template matStepContent>
                 <app-summary></app-summary>
                 <section class="step-buttons-container">
-                    <button mat-raised-button color="primary" class="step-button">REZERWUJ</button>
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        class="step-button"
+                        (click)="handleBookAppointmentClick()"
+                    >
+                        REZERWUJ
+                    </button>
                     <button mat-raised-button color="accent" matStepperPrevious class="step-button">POWRÓT</button>
                     <button mat-raised-button color="accent" routerLink="/client" class="step-button">ANULUJ</button>
                 </section>

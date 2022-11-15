@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Service } from '../../shared/_services/appointments/services.service';
 import { AppointmentQuestion } from '../_services/appointment-questions/appointment-questions.service';
 import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
@@ -20,7 +20,9 @@ export class AppointmentBookingComponent implements OnDestroy {
         private route: ActivatedRoute,
         // eslint-disable-next-line no-unused-vars
         private time: AppointmentTimeService,
-        private appointments: AppointmentsService
+        private appointments: AppointmentsService,
+        // eslint-disable-next-line no-unused-vars
+        private router: Router
     ) {
         this.services = route.snapshot.data['services'];
         this.questions = route.snapshot.data['appointmentQuestions'];
@@ -34,5 +36,15 @@ export class AppointmentBookingComponent implements OnDestroy {
     ngOnDestroy(): void {
         this.time.selectedTime$.next(null);
         this.onDestroy.next(null);
+        this.appointments.clear();
+    }
+
+    handleBookAppointmentClick() {
+        this.appointments
+            .confirmAppointment()
+            .pipe(takeUntil(this.onDestroy))
+            .subscribe(async () => {
+                await this.router.navigateByUrl('/client');
+            });
     }
 }
