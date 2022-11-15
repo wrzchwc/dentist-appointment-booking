@@ -46,8 +46,14 @@ export class AppointmentCartService {
     }
 
     getItems(): PriceItem[] {
-        return Array.from(this.cart.values())
-            .filter(([{ value }, { price }]) => value > 0 && price !== null)
-            .map(([{ value }, { price }]) => ({ price: price || 0, quantity: value }));
+        return Array.from(this.cart.values()).filter(this.filterForPositiveSubjectValue).map(this.mapToPriceItem);
+    }
+
+    private filterForPositiveSubjectValue([{ value }]: [BehaviorSubject<number>, Service]): boolean {
+        return value > 0;
+    }
+
+    private mapToPriceItem([{ value }, { price, detail }]: [BehaviorSubject<number>, Service]): PriceItem {
+        return { quantity: value, price, detail };
     }
 }
