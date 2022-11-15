@@ -5,6 +5,7 @@ import { AppointmentQuestion } from '../_services/appointment-questions/appointm
 import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
 import { AppointmentsService } from '../../shared/_services/appointments/appointments.service';
 import { Subject, takeUntil } from 'rxjs';
+import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
 
 @Component({
     selector: 'app-appointment-booking',
@@ -22,7 +23,8 @@ export class AppointmentBookingComponent implements OnDestroy {
         private time: AppointmentTimeService,
         private appointments: AppointmentsService,
         // eslint-disable-next-line no-unused-vars
-        private router: Router
+        private router: Router,
+        private cart: AppointmentCartService
     ) {
         this.services = route.snapshot.data['services'];
         this.questions = route.snapshot.data['appointmentQuestions'];
@@ -31,6 +33,7 @@ export class AppointmentBookingComponent implements OnDestroy {
             .createAppointment()
             .pipe(takeUntil(this.onDestroy))
             .subscribe((appointment) => (appointments.currentAppointment = appointment));
+        cart.initialize(route.snapshot.data['services']);
     }
 
     ngOnDestroy(): void {
