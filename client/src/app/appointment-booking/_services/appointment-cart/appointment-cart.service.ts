@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Service } from 'src/app/shared/_services/appointments/services.service';
 import { BehaviorSubject } from 'rxjs';
+import { PriceItem } from 'src/app/shared/_services/appointments/price.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AppointmentCartService {
     private readonly cart: Map<string, [BehaviorSubject<number>, Service]>;
-    private readonly cost: BehaviorSubject<number>;
 
     constructor() {
         this.cart = new Map<string, [BehaviorSubject<number>, Service]>();
-        this.cost = new BehaviorSubject<number>(0);
     }
 
     initialize(services: Service[]) {
@@ -33,7 +32,6 @@ export class AppointmentCartService {
 
         const quantity = entry[0];
         quantity.next(quantity.value + 1);
-        this.cost.next(this.cost.value + (service.price || 0));
     }
 
     remove(service: Service) {
@@ -45,10 +43,11 @@ export class AppointmentCartService {
 
         const quantity = entry[0];
         quantity.next(quantity.value === 1 ? 0 : quantity.value - 1);
-        this.cost.next(this.cost.value - (service.price || 0));
     }
 
-    getTotalCost() {
-        return this.cost;
+    getItems(): PriceItem[] {
+        return Array.from(this.cart.values())
+            .filter(([{ value }, { price }]) => value > 0 && price !== null)
+            .map(([{ value }, { price }]) => ({ price: price || 0, quantity: value }));
     }
 }

@@ -31,7 +31,7 @@
                 <mat-card class="card">
                     <mat-icon color="primary">payments</mat-icon>
                     <h2 class="styles-color-accent card-header">Szacowana cena wizyty</h2>
-                    <h3 class="styles-color-warn card-content">{{ cart.getTotalCost() | async }} PLN</h3>
+                    <h3 class="styles-color-warn card-content">{{ price.calculateTotalPrice(cart.getItems()) }} PLN</h3>
                 </mat-card>
             </div>
         </section>
