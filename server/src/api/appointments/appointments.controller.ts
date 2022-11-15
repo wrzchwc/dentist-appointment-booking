@@ -145,7 +145,7 @@ export async function getAppointments({ query }: r.GetAppointments, response: Re
     try {
         appointments = await Appointment.findAll({
             where: { confirmed: true, startsAt: getStartsAtCondition(query) },
-            include: [m.Service],
+            include: [{ model: m.Service, through: { attributes: ['quantity'] } }],
             order: [['startsAt', 'ASC']],
             attributes: ['id', 'startsAt'],
         });

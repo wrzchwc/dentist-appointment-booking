@@ -1120,7 +1120,7 @@ describe('/api/appointments', () => {
         ];
 
         const expectedArgument = {
-            include: [m.Service],
+            include: [{ model: m.Service, through: { attributes: ['quantity'] } }],
             order: [['startsAt', 'ASC']],
             attributes: ['id', 'startsAt'],
         };
