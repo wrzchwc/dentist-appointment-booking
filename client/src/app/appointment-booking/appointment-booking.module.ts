@@ -22,6 +22,7 @@ import { TimeCardComponent } from './time-card/time-card.component';
 import { AppointmentBookingRoutingModule } from './appointment-booking-routing.module';
 import { SummaryComponent } from './summary/summary.component';
 import { MatTableModule } from '@angular/material/table';
+import { RowDefPipe } from './summary/row-def.pipe';
 
 @NgModule({
     declarations: [
@@ -34,6 +35,7 @@ import { MatTableModule } from '@angular/material/table';
         DateComponent,
         TimeCardComponent,
         SummaryComponent,
+        RowDefPipe,
     ],
     imports: [
         CommonModule,

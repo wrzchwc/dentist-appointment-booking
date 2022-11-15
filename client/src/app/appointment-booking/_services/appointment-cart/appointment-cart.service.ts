@@ -53,7 +53,7 @@ export class AppointmentCartService {
         return value > 0;
     }
 
-    private mapToPriceItem([{ value }, { price, detail }]: [BehaviorSubject<number>, Service]): PriceItem {
-        return { quantity: value, price, detail };
+    private mapToPriceItem([{ value }, { price, detail, name }]: [BehaviorSubject<number>, Service]): PriceItem {
+        return { quantity: value, price, detail, name };
     }
 }

@@ -4,6 +4,7 @@ import { AuthenticationService } from '../../shared/_services/authentication/aut
 import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
 import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
 import { PriceService } from '../../shared/_services/appointments/price.service';
+import { ColumnDef } from './row-def.pipe';
 
 @Component({
     selector: 'app-summary',
@@ -11,10 +12,18 @@ import { PriceService } from '../../shared/_services/appointments/price.service'
     styleUrls: ['./summary.component.scss'],
 })
 export class SummaryComponent {
+    readonly displayedColumns: ColumnDef[];
+
     constructor(
         public auth: AuthenticationService,
         public time: AppointmentTimeService,
         public cart: AppointmentCartService,
         public price: PriceService
-    ) {}
+    ) {
+        this.displayedColumns = [
+            { label: 'usługa', property: 'name' },
+            { label: 'liczba', property: 'quantity' },
+            { label: 'wartość', property: 'price' },
+        ];
+    }
 }

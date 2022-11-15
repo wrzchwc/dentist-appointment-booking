@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 export interface PriceItem {
     price: number | null;
     quantity: number;
+    name: string;
     detail: 'A' | 'B' | 'C' | null;
 }
 
