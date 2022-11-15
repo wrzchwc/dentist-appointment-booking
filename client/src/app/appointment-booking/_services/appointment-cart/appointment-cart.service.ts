@@ -7,9 +7,11 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AppointmentCartService {
     private readonly cart: Map<string, [BehaviorSubject<number>, Service]>;
+    private readonly cost: BehaviorSubject<number>;
 
     constructor() {
         this.cart = new Map<string, [BehaviorSubject<number>, Service]>();
+        this.cost = new BehaviorSubject<number>(0);
     }
 
     initialize(services: Service[]) {
@@ -31,6 +33,7 @@ export class AppointmentCartService {
 
         const quantity = entry[0];
         quantity.next(quantity.value + 1);
+        this.cost.next(this.cost.value + (service.price || 0));
     }
 
     remove(service: Service) {
@@ -42,5 +45,10 @@ export class AppointmentCartService {
 
         const quantity = entry[0];
         quantity.next(quantity.value === 1 ? 0 : quantity.value - 1);
+        this.cost.next(this.cost.value - (service.price || 0));
+    }
+
+    getTotalCost() {
+        return this.cost;
     }
 }

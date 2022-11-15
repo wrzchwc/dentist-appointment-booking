@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthenticationService } from '../../shared/_services/authentication/authentication.service';
 import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
+import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
 
 @Component({
     selector: 'app-summary',
@@ -8,6 +9,12 @@ import { AppointmentTimeService } from '../_services/appointment-time/appointmen
     styleUrls: ['./summary.component.scss'],
 })
 export class SummaryComponent {
-    // eslint-disable-next-line no-unused-vars
-    constructor(public auth: AuthenticationService, public time: AppointmentTimeService) {}
+    constructor(
+        // eslint-disable-next-line no-unused-vars
+        public auth: AuthenticationService,
+        // eslint-disable-next-line no-unused-vars
+        public time: AppointmentTimeService,
+        // eslint-disable-next-line no-unused-vars
+        public cart: AppointmentCartService
+    ) {}
 }
