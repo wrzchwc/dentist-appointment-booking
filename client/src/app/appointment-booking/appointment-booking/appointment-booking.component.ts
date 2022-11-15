@@ -14,7 +14,7 @@ import { Subject, takeUntil } from 'rxjs';
 export class AppointmentBookingComponent implements OnDestroy {
     readonly services: Service[];
     readonly questions: AppointmentQuestion[];
-    private readonly onDestroy: Subject<null>;
+    private readonly onDestroy: Subject<void>;
 
     constructor(
         private route: ActivatedRoute,
@@ -26,7 +26,7 @@ export class AppointmentBookingComponent implements OnDestroy {
     ) {
         this.services = route.snapshot.data['services'];
         this.questions = route.snapshot.data['appointmentQuestions'];
-        this.onDestroy = new Subject<null>();
+        this.onDestroy = new Subject<void>();
         appointments
             .createAppointment()
             .pipe(takeUntil(this.onDestroy))
@@ -35,16 +35,14 @@ export class AppointmentBookingComponent implements OnDestroy {
 
     ngOnDestroy(): void {
         this.time.selectedTime$.next(null);
-        this.onDestroy.next(null);
+        this.onDestroy.next();
         this.appointments.clear();
     }
 
-    handleBookAppointmentClick() {
-        this.appointments
-            .confirmAppointment()
-            .pipe(takeUntil(this.onDestroy))
-            .subscribe(async () => {
-                await this.router.navigateByUrl('/client');
-            });
+    handleBookAppointmentClick(event: MouseEvent) {
+        event.stopPropagation();
+        this.appointments.confirmAppointment().subscribe(async () => {
+            await this.router.navigateByUrl('/client');
+        });
     }
 }

@@ -43,4 +43,18 @@ export class AppointmentsService {
     clear() {
         this.currentAppointment = undefined;
     }
+
+    addServiceToAppointment(serviceId: string) {
+        return this.client.post(
+            `${this.baseUrl}/${this.currentAppointment?.id}/services`,
+            { serviceId },
+            { responseType: 'text' }
+        );
+    }
+
+    removeServiceFromAppointment(serviceId: string) {
+        return this.client.delete(`${this.baseUrl}/${this.currentAppointment?.id}/services/${serviceId}`, {
+            responseType: 'text',
+        });
+    }
 }
