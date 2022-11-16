@@ -12,9 +12,7 @@
     "test": "jest --config jest.config.ts",
     "build": "npm run format && tsc",
     "dev": "concurrently \"tsc -w\" \"nodemon dist/src/server.js\"",
-    "start": "npm run build && node dist/src/server.js",
-    "load:services": "npm run build && node dist/scripts/data/services.js",
-    "load:appointments": "npm run build && node dist/scripts/data/appointments.js"
+    "start": "npm run build && node dist/src/server.js"
   },
   "author": "Jakub Wierzchowiec",
   "license": "ISC",
