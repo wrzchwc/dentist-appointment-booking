@@ -64,7 +64,7 @@ describe('/api/appointments', () => {
         });
 
         test('should return questions including facts associated with them', () => {
-            expect(response.body.every(({ fact }: m.AppointmentQuestion) => fact?.id && fact.value)).toBe(true);
+            expect(response.body.every(({ fact }: m.AppointmentQuestion) => fact?.value)).toBe(true);
         });
     });
 
