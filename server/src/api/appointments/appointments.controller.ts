@@ -22,15 +22,7 @@ export async function createAppointment(request: r.CreateAppointment, response: 
 
     const createdAppointment = await user.createAppointment({ startsAt: request.body.startsAt });
 
-    for (const { id, quantity } of request.body.services) {
-        await createdAppointment.addService(id, { through: { quantity } });
-    }
-
-    if (request.body.facts) {
-        for (const { id, additionalInfo } of request.body.facts) {
-            await createdAppointment.addFact(id, { through: { additionalInfo } });
-        }
-    }
+    await addResourcesToAppointment(createdAppointment, request.body);
 
     const appointment = await Appointment.findByPk(createdAppointment.id, {
         attributes: ['id', 'startsAt'],
@@ -51,14 +43,15 @@ export async function createAppointment(request: r.CreateAppointment, response: 
     response.status(201).json(appointment);
 }
 
-async function addServicesToAppointment(
-    appointment: Appointment,
-    attributes: r.ServiceAssociationCreationAttributes[]
-) {
+async function addResourcesToAppointment(appointment: Appointment, { services, facts }: r.CreateAppointmentBody) {
+    return Promise.all([addServicesToAppointment(appointment, services), addFactsToAppointment(appointment, facts)]);
+}
+
+async function addServicesToAppointment(appointment: Appointment, attributes: r.ServiceAssociationCreationAttribute[]) {
     return attributes.map(({ id, quantity }) => appointment.addService(id, { through: { quantity } }));
 }
 
-async function addFactsToAppointment(appointment: Appointment, attributes?: r.FactAssociationCreationAttributes[]) {
+async function addFactsToAppointment(appointment: Appointment, attributes?: r.FactAssociationCreationAttribute[]) {
     if (attributes) {
         return attributes.map(({ id, additionalInfo }) => appointment.addFact(id, { through: { additionalInfo } }));
     }

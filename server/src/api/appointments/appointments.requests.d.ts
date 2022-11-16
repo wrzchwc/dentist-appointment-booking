@@ -21,13 +21,13 @@ export interface CreateAppointment extends Request {
 }
 
 interface CreateAppointmentBody extends CreationAttributes<Appointment> {
-    services: ServiceAssociationCreationAttributes[];
-    facts?: FactAssociationCreationAttributes[];
+    services: ServiceAssociationCreationAttribute[];
+    facts?: FactAssociationCreationAttribute[];
 }
 
-export interface ServiceAssociationCreationAttributes extends Identifiable, CreationAttributes<AppointmentsServices> {}
+export interface ServiceAssociationCreationAttribute extends Identifiable, CreationAttributes<AppointmentsServices> {}
 
-export interface FactAssociationCreationAttributes extends Identifiable, CreationAttributes<HealthSurvey> {}
+export interface FactAssociationCreationAttribute extends Identifiable, CreationAttributes<HealthSurvey> {}
 
 interface Identifiable {
     id: string;
