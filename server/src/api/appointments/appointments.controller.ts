@@ -14,16 +14,17 @@ export async function getQuestions(request: Request, response: Response) {
 }
 
 export async function createAppointment(request: r.CreateAppointment, response: Response) {
-    const user = await m.User.findByPk((request.user as m.User).id);
-    if (!user) {
-        return response.sendStatus(404);
+    let appointment: m.Appointment | null;
+
+    try {
+        const user = await m.User.find((request.user as m.User).id);
+        const createdAppointment = await user.createAppointment({ startsAt: request.body.startsAt });
+        await addResourcesToAppointment(createdAppointment, request.body);
+        appointment = await getAppointment(createdAppointment.id);
+    } catch (e) {
+        const [code, error] = getErrorData(e);
+        return response.status(code).json({ error });
     }
-
-    const createdAppointment = await user.createAppointment({ startsAt: request.body.startsAt });
-
-    await addResourcesToAppointment(createdAppointment, request.body);
-
-    const appointment = await getAppointment(createdAppointment.id);
 
     response.status(201).json(appointment);
 }
