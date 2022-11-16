@@ -1,6 +1,12 @@
+/*eslint no-unused-vars: 0*/
 import { Injectable } from '@angular/core';
 
-type DayOffset = 3 | 1;
+const ONE_DAY_IN_MILLISECONDS = 86_400_000;
+
+enum Weekday {
+    MONDAY = 1,
+    FRIDAY = 5,
+}
 
 @Injectable({
     providedIn: 'root',
@@ -12,27 +18,13 @@ export class DateService {
         return new Date();
     }
 
-    getPreviousWorkday(current: Date): Date {
-        const date = new Date(current);
-        const offset = this.getPreviousOffset(current.getDay());
-        date.setDate(current.getDate() - offset);
-        return date;
+    getPreviousWorkday(date: Date): Date {
+        const offset = date.getDay() === Weekday.MONDAY ? 3 * ONE_DAY_IN_MILLISECONDS : ONE_DAY_IN_MILLISECONDS;
+        return new Date(date.getTime() - offset);
     }
 
-    getNextWorkday(current: Date): Date {
-        const date = new Date(current);
-        const offset = this.getNextOffset(current.getDay());
-        date.setDate(current.getDate() + offset);
-        return date;
-    }
-
-    private getPreviousOffset(day: number): DayOffset {
-        const MONDAY = 1;
-        return day === MONDAY ? 3 : 1;
-    }
-
-    private getNextOffset(day: number): DayOffset {
-        const FRIDAY = 5;
-        return day === FRIDAY ? 3 : 1;
+    getNextWorkday(date: Date): Date {
+        const offset = date.getDay() === Weekday.FRIDAY ? 3 * ONE_DAY_IN_MILLISECONDS : ONE_DAY_IN_MILLISECONDS;
+        return new Date(date.getTime() + offset);
     }
 }
