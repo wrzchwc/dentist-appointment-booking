@@ -31,71 +31,6 @@ export async function createAppointment(request: Request, response: Response) {
     response.status(201).json(appointment);
 }
 
-export async function addServiceToAppointment(request: r.AddServiceToAppointment, response: Response) {
-    const { appointmentId } = request.params;
-    const { serviceId } = request.body;
-
-    try {
-        const [[appointment, service], areAssociated] = await Promise.all([
-            findAppointmentAndService(appointmentId, serviceId),
-            m.AppointmentsServices.findOne({ where: { appointmentId, serviceId } }),
-        ]);
-
-        await (areAssociated ? increaseServiceQuantity(appointment, service) : appointment.addService(serviceId));
-    } catch (e) {
-        const [code, error] = getErrorData(e);
-        return response.status(code).json({ error });
-    }
-
-    response.sendStatus(200);
-}
-
-export async function removeServiceFromAppointment(request: r.RemoveServiceFromAppointment, response: Response) {
-    const { appointmentId, serviceId } = request.params;
-
-    try {
-        const [[appointment, service], { quantity }] = await Promise.all([
-            findAppointmentAndService(appointmentId, serviceId),
-            findAppointmentServiceAssociation(appointmentId, serviceId),
-        ]);
-
-        await (quantity === 1 ? appointment.removeService(serviceId) : decreaseServiceQuantity(appointment, service));
-    } catch (e) {
-        const [code, error] = getErrorData(e);
-        return response.status(code).json({ error });
-    }
-
-    response.sendStatus(200);
-}
-
-export async function addFactToAppointment({ params, body }: r.AddFactToAppointment, response: Response) {
-    try {
-        const [appointment, fact] = await findAppointmentAndFact(params.appointmentId, body.factId);
-        await appointment.addFact(fact.id, { through: { additionalInfo: body.additionalInfo } });
-    } catch (e) {
-        const [code, error] = getErrorData(e);
-        return response.status(code).json({ error });
-    }
-
-    response.sendStatus(200);
-}
-
-export async function removeFactFromAppointment({ params }: r.RemoveAppointmentFactor, response: Response) {
-    try {
-        const [[appointment, fact]] = await Promise.all([
-            findAppointmentAndFact(params.appointmentId, params.factId),
-            m.HealthSurvey.find(params.appointmentId, params.factId),
-        ]);
-
-        await appointment.removeFact(fact.id);
-    } catch (e) {
-        const [code, message] = getErrorData(e);
-        return response.status(code).json({ error: message });
-    }
-
-    response.sendStatus(200);
-}
-
 export async function updateAppointmentStartDate(request: r.UpdateAppointmentStartDate, response: Response) {
     let updatedAppointments: Appointment[];
 
@@ -114,29 +49,6 @@ export async function updateAppointmentStartDate(request: r.UpdateAppointmentSta
     }
 
     response.status(200).json(updatedAppointments[0]);
-}
-
-export async function updateAppointmentConfirmedStatus(
-    request: r.UpdateAppointmentConfirmedStatus,
-    response: Response
-) {
-    let updatedAppointments: Appointment[];
-
-    try {
-        [, updatedAppointments] = await Appointment.update(
-            { confirmed: request.body.confirmed },
-            { where: { id: request.params.appointmentId }, returning: true }
-        );
-    } catch (e) {
-        const [code, message] = getErrorData(e);
-        return response.status(code).json({ error: message });
-    }
-
-    if (updatedAppointments.length !== 1) {
-        return response.status(404).json({ error: 'Appointment not found' });
-    }
-
-    return response.status(200).json(updatedAppointments[0]);
 }
 
 export async function getAppointments({ query }: r.GetAppointments, response: Response) {
@@ -165,43 +77,6 @@ function getStartsAtCondition({ before, after }: GetAppointmentsQuery) {
         return { [Op.lt]: before };
     }
     return { [Op.ne]: null };
-}
-
-async function increaseServiceQuantity(appointment: m.Appointment, service: m.Service) {
-    return updateServiceQuantity(true, appointment.id, service.id);
-}
-
-async function findAppointmentServiceAssociation(appointmentId: string, serviceId: string) {
-    const association = await m.AppointmentsServices.findOne({ where: { appointmentId, serviceId } });
-
-    if (!association) {
-        throw new m.ModelError('Appointment and service not associated', 400);
-    }
-
-    return association;
-}
-
-async function decreaseServiceQuantity(appointment: m.Appointment, service: m.Service) {
-    return updateServiceQuantity(false, appointment.id, service.id);
-}
-
-async function updateServiceQuantity(increment: boolean, appointmentId: string, serviceId: string) {
-    const where = { appointmentId, serviceId };
-    await m.AppointmentsServices.increment({ quantity: increment ? 1 : -1 }, { where });
-}
-
-async function findAppointmentAndService(
-    appointmentId: string,
-    serviceId: string
-): Promise<[m.Appointment, m.Service]> {
-    return await Promise.all([m.Appointment.find(appointmentId), m.Service.find(serviceId)]);
-}
-
-async function findAppointmentAndFact(
-    appointmentId: string,
-    factId: string
-): Promise<[m.Appointment, m.AppointmentFact]> {
-    return Promise.all([m.Appointment.find(appointmentId), m.AppointmentFact.find(factId)]);
 }
 
 function getErrorData(e: unknown | m.ModelError): [number, string] {
