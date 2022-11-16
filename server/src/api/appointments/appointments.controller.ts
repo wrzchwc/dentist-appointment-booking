@@ -23,21 +23,7 @@ export async function createAppointment(request: r.CreateAppointment, response: 
 
     await addResourcesToAppointment(createdAppointment, request.body);
 
-    const appointment = await m.Appointment.findByPk(createdAppointment.id, {
-        attributes: ['id', 'startsAt'],
-        include: [
-            {
-                model: m.Service,
-                attributes: ['name', 'price', 'count', 'detail', 'length'],
-                through: { attributes: ['quantity'] },
-            },
-            {
-                model: m.AppointmentFact,
-                attributes: ['value'],
-                through: { attributes: ['additionalInfo'] },
-            },
-        ],
-    });
+    const appointment = await getAppointment(createdAppointment.id);
 
     response.status(201).json(appointment);
 }
@@ -55,6 +41,14 @@ async function addFactsToAppointment(appointment: m.Appointment, attributes?: r.
         return attributes.map(({ id, options }) => appointment.addFact(id, options));
     }
     return Promise.resolve();
+}
+
+async function getAppointment(id: string) {
+    const serviceAttributes = ['name', 'price', 'count', 'detail', 'length'];
+    const services = { model: m.Service, attributes: serviceAttributes, through: { attributes: ['quantity'] } };
+    const facts = { model: m.AppointmentFact, attributes: ['value'], through: { attributes: ['additionalInfo'] } };
+
+    return m.Appointment.findByPk(id, { attributes: ['id', 'startsAt'], include: [services, facts] });
 }
 
 export async function updateAppointmentStartDate(request: r.UpdateAppointmentStartDate, response: Response) {

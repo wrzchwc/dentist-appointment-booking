@@ -48,8 +48,9 @@ User.init(
         timestamps: false,
         sequelize: sequelizeInstance,
         tableName: 'users',
+        modelName: 'user',
     }
 );
 
-User.hasMany(Appointment, { foreignKey: 'userId' });
-Appointment.belongsTo(User, { foreignKey: 'userId' });
+User.hasMany(Appointment);
+Appointment.belongsTo(User);
