@@ -13,7 +13,7 @@ export class AppointmentsServices extends Model<
 
 AppointmentsServices.init(
     {
-        quantity: { type: DataTypes.INTEGER, allowNull: false, defaultValue: 1 },
+        quantity: { type: DataTypes.INTEGER, allowNull: false },
     },
     {
         timestamps: false,

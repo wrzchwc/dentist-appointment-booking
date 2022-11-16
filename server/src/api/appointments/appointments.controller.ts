@@ -1,8 +1,7 @@
 import * as m from '../../models';
 import * as r from './appointments.requests';
+import { Appointment, AppointmentFact, Service, User } from '../../models';
 import { Request, Response } from 'express';
-import { Appointment } from '../../models';
-import { GetAppointmentsQuery } from './appointments.requests';
 import { Op } from 'sequelize';
 
 export async function getQuestions(request: Request, response: Response) {
@@ -15,20 +14,55 @@ export async function getQuestions(request: Request, response: Response) {
     response.status(200).json(questions);
 }
 
-export async function createAppointment(request: Request, response: Response) {
-    let appointment: m.Appointment | null = null;
-
-    try {
-        const { id } = await m.Appointment.create({ userId: (request.user as m.User).id });
-        appointment = await m.Appointment.findByPk(id, {
-            include: [m.Service, m.AppointmentFact],
-            attributes: ['id', 'confirmed', 'startsAt'],
-        });
-    } catch (e) {
-        return response.status(500).json({ error: 'Operation failed!' });
+export async function createAppointment(request: r.CreateAppointment, response: Response) {
+    const user = await User.findByPk((request.user as User).id);
+    if (!user) {
+        return response.sendStatus(404);
     }
 
+    const createdAppointment = await user.createAppointment({ startsAt: request.body.startsAt });
+
+    for (const { id, quantity } of request.body.services) {
+        await createdAppointment.addService(id, { through: { quantity } });
+    }
+
+    if (request.body.facts) {
+        for (const { id, additionalInfo } of request.body.facts) {
+            await createdAppointment.addFact(id, { through: { additionalInfo } });
+        }
+    }
+
+    const appointment = await Appointment.findByPk(createdAppointment.id, {
+        attributes: ['id', 'startsAt'],
+        include: [
+            {
+                model: Service,
+                attributes: ['name', 'price', 'count', 'detail', 'length'],
+                through: { attributes: ['quantity'] },
+            },
+            {
+                model: AppointmentFact,
+                attributes: ['value'],
+                through: { attributes: ['additionalInfo'] },
+            },
+        ],
+    });
+
     response.status(201).json(appointment);
+}
+
+async function addServicesToAppointment(
+    appointment: Appointment,
+    attributes: r.ServiceAssociationCreationAttributes[]
+) {
+    return attributes.map(({ id, quantity }) => appointment.addService(id, { through: { quantity } }));
+}
+
+async function addFactsToAppointment(appointment: Appointment, attributes?: r.FactAssociationCreationAttributes[]) {
+    if (attributes) {
+        return attributes.map(({ id, additionalInfo }) => appointment.addFact(id, { through: { additionalInfo } }));
+    }
+    return Promise.resolve();
 }
 
 export async function updateAppointmentStartDate(request: r.UpdateAppointmentStartDate, response: Response) {
@@ -56,7 +90,7 @@ export async function getAppointments({ query }: r.GetAppointments, response: Re
 
     try {
         appointments = await Appointment.findAll({
-            where: { confirmed: true, startsAt: getStartsAtCondition(query) },
+            where: { startsAt: getStartsAtCondition(query) },
             include: [{ model: m.Service, through: { attributes: ['quantity'] } }],
             order: [['startsAt', 'ASC']],
             attributes: ['id', 'startsAt'],
@@ -68,7 +102,7 @@ export async function getAppointments({ query }: r.GetAppointments, response: Re
     response.status(200).json(appointments);
 }
 
-function getStartsAtCondition({ before, after }: GetAppointmentsQuery) {
+function getStartsAtCondition({ before, after }: r.GetAppointmentsQuery) {
     if (after && before) {
         return { [Op.between]: [after, before] };
     } else if (after) {

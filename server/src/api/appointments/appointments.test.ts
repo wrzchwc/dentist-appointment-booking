@@ -83,7 +83,7 @@ describe('/api/appointments', () => {
 
         it('should return correct body response', () => {
             const { id } = response.body;
-            const expected: Partial<m.Appointment> = { id, confirmed: false, startsAt: null, services: [], facts: [] };
+            const expected: Partial<m.Appointment> = { id, startsAt: new Date(), services: [], facts: [] };
 
             expect(response.body).toMatchObject(expected);
         });
@@ -180,11 +180,11 @@ describe('/api/appointments', () => {
     describe('/ GET', () => {
         let appointments: m.Appointment[];
 
-        const records: Partial<m.Appointment>[] = [
-            { startsAt: new Date('2022-11-12'), confirmed: true },
-            { startsAt: null, confirmed: false },
-            { startsAt: new Date('2022-11-14'), confirmed: true },
-            { startsAt: new Date('2022-11-15'), confirmed: false },
+        const records = [
+            { startsAt: new Date('2022-11-12') },
+            { startsAt: new Date('2022-11-12') },
+            { startsAt: new Date('2022-11-14') },
+            { startsAt: new Date('2022-11-15') },
         ];
 
         const expectedArgument = {
@@ -238,7 +238,7 @@ describe('/api/appointments', () => {
             it('should call Appointment.findAll with correct argument', () => {
                 expect(m.Appointment.findAll).toHaveBeenCalledWith({
                     ...expectedArgument,
-                    where: { confirmed: true, startsAt: { [Op.ne]: null } },
+                    where: { startsAt: { [Op.ne]: null } },
                 });
             });
         });
@@ -260,7 +260,7 @@ describe('/api/appointments', () => {
 
             itShouldReturnArrayOfObjects();
 
-            itShouldReturnAllMatchingTestAppointments(({ startsAt, confirmed }) => startsAt !== null && confirmed);
+            itShouldReturnAllMatchingTestAppointments(({ startsAt }) => startsAt !== null);
 
             itShouldReturnObjectsWithNonNullishStartsAt();
 
@@ -271,7 +271,7 @@ describe('/api/appointments', () => {
             it('should call Appointment.findAll with correct argument', () => {
                 expect(m.Appointment.findAll).toHaveBeenCalledWith({
                     ...expectedArgument,
-                    where: { confirmed: true, startsAt: { [Op.ne]: null } },
+                    where: { startsAt: { [Op.ne]: null } },
                 });
             });
         });
@@ -293,9 +293,7 @@ describe('/api/appointments', () => {
 
             itShouldReturnArrayOfObjects();
 
-            itShouldReturnAllMatchingTestAppointments(
-                ({ startsAt, confirmed }) => confirmed && startsAt !== null && startsAt < new Date('2022-11-13')
-            );
+            itShouldReturnAllMatchingTestAppointments(({ startsAt }) => startsAt < new Date('2022-11-13'));
 
             itShouldReturnObjectsWithNonNullishStartsAt();
 
@@ -306,12 +304,12 @@ describe('/api/appointments', () => {
             it('should call Appointment.findAll with correct argument', () => {
                 expect(m.Appointment.findAll).toHaveBeenCalledWith({
                     ...expectedArgument,
-                    where: { confirmed: true, startsAt: { [Op.lt]: '2022-11-13' } },
+                    where: { startsAt: { [Op.lt]: '2022-11-13' } },
                 });
             });
 
             it('should return objects with `startsAt` set to value earlier than given query parameter', () => {
-                expect((response.body as m.Appointment[]).every(({ startsAt }) => startsAt! < new Date('2022-11-13')));
+                expect((response.body as m.Appointment[]).every(({ startsAt }) => startsAt < new Date('2022-11-13')));
             });
         });
 
@@ -334,9 +332,7 @@ describe('/api/appointments', () => {
 
             itShouldReturnObjectsWithNonNullishStartsAt();
 
-            itShouldReturnAllMatchingTestAppointments(
-                ({ startsAt, confirmed }) => confirmed && startsAt !== null && startsAt > new Date('2022-11-12')
-            );
+            itShouldReturnAllMatchingTestAppointments(({ startsAt }) => startsAt > new Date('2022-11-12'));
 
             it('should call Appointment.findAll once', () => {
                 expect(m.Appointment.findAll).toHaveBeenCalledTimes(1);
@@ -345,7 +341,7 @@ describe('/api/appointments', () => {
             it('should call Appointment.findAll with correct argument', () => {
                 expect(m.Appointment.findAll).toHaveBeenCalledWith({
                     ...expectedArgument,
-                    where: { confirmed: true, startsAt: { [Op.gt]: '2022-11-12' } },
+                    where: { startsAt: { [Op.gt]: '2022-11-12' } },
                 });
             });
         });
@@ -372,11 +368,7 @@ describe('/api/appointments', () => {
             itShouldReturnObjectsWithNonNullishStartsAt();
 
             itShouldReturnAllMatchingTestAppointments(
-                ({ confirmed, startsAt }) =>
-                    confirmed &&
-                    startsAt !== null &&
-                    startsAt > new Date('2022-11-12') &&
-                    startsAt < new Date('2022-11-13')
+                ({ startsAt }) => startsAt > new Date('2022-11-12') && startsAt < new Date('2022-11-13')
             );
 
             it('should call Appointment.findAll once', () => {
@@ -386,7 +378,7 @@ describe('/api/appointments', () => {
             it('should call Appointment.findAll with correct argument', () => {
                 expect(m.Appointment.findAll).toHaveBeenCalledWith({
                     ...expectedArgument,
-                    where: { confirmed: true, startsAt: { [Op.between]: ['2022-11-12', '2022-11-13'] } },
+                    where: { startsAt: { [Op.between]: ['2022-11-12', '2022-11-13'] } },
                 });
             });
         });

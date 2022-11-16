@@ -9,13 +9,17 @@ import { sequelizeInstance } from '../services';
 
 export class Appointment extends s.Model<s.InferAttributes<Appointment>, s.InferCreationAttributes<Appointment>> {
     declare id: s.CreationOptional<string>;
-    declare confirmed: s.CreationOptional<boolean>;
-    declare startsAt: Date | null;
+    declare startsAt: Date;
 
     declare userId: s.ForeignKey<User['id']>;
 
     declare services: s.NonAttribute<Service[]>;
     declare facts: s.NonAttribute<AppointmentFact[]>;
+
+    declare createAppointment: s.HasManyCreateAssociationMixin<Appointment>;
+
+    declare addFact: s.BelongsToManyAddAssociationMixin<AppointmentFact, string>;
+    declare addService: s.BelongsToManyAddAssociationMixin<Service, string>;
 
     static async find(id: string) {
         const appointment = await Appointment.findByPk(id);
@@ -29,8 +33,7 @@ export class Appointment extends s.Model<s.InferAttributes<Appointment>, s.Infer
 Appointment.init(
     {
         id: { type: s.DataTypes.UUID, primaryKey: true, allowNull: false, defaultValue: s.DataTypes.UUIDV4 },
-        confirmed: { type: s.DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
-        startsAt: { type: s.DataTypes.DATE },
+        startsAt: { type: s.DataTypes.DATE, allowNull: false },
     },
     { sequelize: sequelizeInstance, tableName: 'appointments', timestamps: false, modelName: 'appointment' }
 );
