@@ -17,12 +17,6 @@ export class Appointment extends s.Model<s.InferAttributes<Appointment>, s.Infer
     declare services: s.NonAttribute<Service[]>;
     declare facts: s.NonAttribute<AppointmentFact[]>;
 
-    declare addService: s.BelongsToManyAddAssociationMixin<Service, string>;
-    declare addFact: s.BelongsToManyAddAssociationMixin<AppointmentFact, string>;
-    declare hasService: s.BelongsToManyHasAssociationMixin<Service, string>;
-    declare removeService: s.BelongsToManyRemoveAssociationMixin<Service, string>;
-    declare removeFact: s.BelongsToManyRemoveAssociationMixin<AppointmentFact, string>;
-
     static async find(id: string) {
         const appointment = await Appointment.findByPk(id);
         if (!appointment) {

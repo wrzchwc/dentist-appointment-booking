@@ -1,14 +1,4 @@
-import {
-    CreationOptional,
-    DataTypes,
-    HasOneCreateAssociationMixin,
-    HasOneGetAssociationMixin,
-    HasOneSetAssociationMixin,
-    InferAttributes,
-    InferCreationAttributes,
-    Model,
-    NonAttribute,
-} from 'sequelize';
+import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model, NonAttribute } from 'sequelize';
 import { AppointmentFact } from './appointment-fact.model';
 import { sequelizeInstance } from '../services';
 
@@ -22,10 +12,6 @@ export class AppointmentQuestion extends Model<
     declare womenOnly: boolean;
 
     declare fact?: NonAttribute<AppointmentFact>;
-
-    declare getAppointmentFact: HasOneGetAssociationMixin<AppointmentFact>;
-    declare setAppointmentFact: HasOneSetAssociationMixin<AppointmentFact, 'question'>;
-    declare createAppointmentFact: HasOneCreateAssociationMixin<AppointmentFact>;
 }
 
 AppointmentQuestion.init(
