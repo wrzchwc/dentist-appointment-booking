@@ -1,6 +1,5 @@
 import * as m from '../../models';
 import * as r from './appointments.requests';
-import { Appointment, AppointmentFact, Service, User } from '../../models';
 import { Request, Response } from 'express';
 import { Op } from 'sequelize';
 
@@ -15,7 +14,7 @@ export async function getQuestions(request: Request, response: Response) {
 }
 
 export async function createAppointment(request: r.CreateAppointment, response: Response) {
-    const user = await User.findByPk((request.user as User).id);
+    const user = await m.User.findByPk((request.user as m.User).id);
     if (!user) {
         return response.sendStatus(404);
     }
@@ -24,16 +23,16 @@ export async function createAppointment(request: r.CreateAppointment, response: 
 
     await addResourcesToAppointment(createdAppointment, request.body);
 
-    const appointment = await Appointment.findByPk(createdAppointment.id, {
+    const appointment = await m.Appointment.findByPk(createdAppointment.id, {
         attributes: ['id', 'startsAt'],
         include: [
             {
-                model: Service,
+                model: m.Service,
                 attributes: ['name', 'price', 'count', 'detail', 'length'],
                 through: { attributes: ['quantity'] },
             },
             {
-                model: AppointmentFact,
+                model: m.AppointmentFact,
                 attributes: ['value'],
                 through: { attributes: ['additionalInfo'] },
             },
@@ -43,26 +42,26 @@ export async function createAppointment(request: r.CreateAppointment, response: 
     response.status(201).json(appointment);
 }
 
-async function addResourcesToAppointment(appointment: Appointment, { services, facts }: r.CreateAppointmentBody) {
+async function addResourcesToAppointment(appointment: m.Appointment, { services, facts }: r.CreateAppointmentBody) {
     return Promise.all([addServicesToAppointment(appointment, services), addFactsToAppointment(appointment, facts)]);
 }
 
-async function addServicesToAppointment(appointment: Appointment, attributes: r.ServiceAssociationCreationAttribute[]) {
-    return attributes.map(({ id, quantity }) => appointment.addService(id, { through: { quantity } }));
+async function addServicesToAppointment(appointment: m.Appointment, attributes: r.AssociationCreationAttribute[]) {
+    return attributes.map(({ id, options }) => appointment.addService(id, options));
 }
 
-async function addFactsToAppointment(appointment: Appointment, attributes?: r.FactAssociationCreationAttribute[]) {
+async function addFactsToAppointment(appointment: m.Appointment, attributes?: r.AssociationCreationAttribute[]) {
     if (attributes) {
-        return attributes.map(({ id, additionalInfo }) => appointment.addFact(id, { through: { additionalInfo } }));
+        return attributes.map(({ id, options }) => appointment.addFact(id, options));
     }
     return Promise.resolve();
 }
 
 export async function updateAppointmentStartDate(request: r.UpdateAppointmentStartDate, response: Response) {
-    let updatedAppointments: Appointment[];
+    let updatedAppointments: m.Appointment[];
 
     try {
-        [, updatedAppointments] = await Appointment.update(
+        [, updatedAppointments] = await m.Appointment.update(
             { startsAt: request.body.startsAt },
             { where: { id: request.params.appointmentId }, returning: true }
         );
@@ -79,10 +78,10 @@ export async function updateAppointmentStartDate(request: r.UpdateAppointmentSta
 }
 
 export async function getAppointments({ query }: r.GetAppointments, response: Response) {
-    let appointments: Appointment[];
+    let appointments: m.Appointment[];
 
     try {
-        appointments = await Appointment.findAll({
+        appointments = await m.Appointment.findAll({
             where: { startsAt: getStartsAtCondition(query) },
             include: [{ model: m.Service, through: { attributes: ['quantity'] } }],
             order: [['startsAt', 'ASC']],
