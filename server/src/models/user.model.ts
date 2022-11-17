@@ -51,5 +51,5 @@ User.init(
     { timestamps: false, sequelize: sequelizeInstance, tableName: 'users', modelName: 'user' }
 );
 
-User.hasMany(Appointment);
+User.hasMany(Appointment, { onDelete: 'CASCADE' });
 Appointment.belongsTo(User);
