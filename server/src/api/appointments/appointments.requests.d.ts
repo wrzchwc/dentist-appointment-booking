@@ -1,5 +1,5 @@
 import { Appointment, AppointmentsServices, HealthSurvey } from '../../models';
-import { BelongsToManyAddAssociationMixinOptions, CreationAttributes } from 'sequelize';
+import { CreationAttributes } from 'sequelize';
 import { Request } from 'express';
 
 export interface UpdateAppointmentStartDate extends Request {
@@ -21,13 +21,13 @@ export interface CreateAppointment extends Request {
 }
 
 interface CreateAppointmentBody extends CreationAttributes<Appointment> {
-    services: AssociationCreationAttribute<AppointmentsServices>[];
-    facts?: AssociationCreationAttribute<HealthSurvey>[];
+    services: ServiceAssociationCreationAttribute[];
+    facts?: FactAssociationCreationAttribute[];
 }
 
-export interface AssociationCreationAttribute extends Identifiable {
-    options: BelongsToManyAddAssociationMixinOptions;
-}
+export interface ServiceAssociationCreationAttribute extends Identifiable, CreationAttributes<AppointmentsServices> {}
+
+export interface FactAssociationCreationAttribute extends Identifiable, CreationAttributes<HealthSurvey> {}
 
 interface Identifiable {
     id: string;

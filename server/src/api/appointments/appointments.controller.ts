@@ -33,13 +33,16 @@ async function addResourcesToAppointment(appointment: m.Appointment, { services,
     return Promise.all([addServicesToAppointment(appointment, services), addFactsToAppointment(appointment, facts)]);
 }
 
-async function addServicesToAppointment(appointment: m.Appointment, attributes: r.AssociationCreationAttribute[]) {
-    return attributes.map(({ id, options }) => appointment.addService(id, options));
+async function addServicesToAppointment(
+    appointment: m.Appointment,
+    attributes: r.ServiceAssociationCreationAttribute[]
+) {
+    return attributes.map(({ id, quantity }) => appointment.addService(id, { through: { quantity } }));
 }
 
-async function addFactsToAppointment(appointment: m.Appointment, attributes?: r.AssociationCreationAttribute[]) {
+async function addFactsToAppointment(appointment: m.Appointment, attributes?: r.FactAssociationCreationAttribute[]) {
     if (attributes) {
-        return attributes.map(({ id, options }) => appointment.addFact(id, options));
+        return attributes.map(({ id, additionalInfo }) => appointment.addFact(id, { through: { additionalInfo } }));
     }
     return Promise.resolve();
 }
