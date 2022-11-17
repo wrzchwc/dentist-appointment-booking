@@ -1,6 +1,6 @@
 import * as m from '../../models';
+import { CreateAppointmentBody, ServiceAssociationCreationAttribute } from './appointments.requests';
 import { checkConnection, createCookie, createCookieHeader, createSignature, disconnect } from '../../services';
-import { CreateAppointmentBody } from './appointments.requests';
 import { Op } from 'sequelize';
 import { Response } from 'superagent';
 import { app } from '../../config';
@@ -459,7 +459,19 @@ describe('/api/appointments', () => {
             let services: m.Service[];
 
             function mapToIds(models: m.AppointmentFact[] | m.Service[]) {
-                return models.map(({ id }) => id);
+                return models.map(mapToId);
+            }
+
+            function mapToId({ id }: m.AppointmentFact | m.Service) {
+                return id;
+            }
+
+            function mapToCreationAttributes(models: m.Service[]): ServiceAssociationCreationAttribute[] {
+                return models.map(mapToCreationAttribute);
+            }
+
+            function mapToCreationAttribute({ id }: m.Service): ServiceAssociationCreationAttribute {
+                return { id, quantity: 1 };
             }
 
             beforeEach(async () => {
@@ -480,8 +492,7 @@ describe('/api/appointments', () => {
 
             describe('not sent in body', () => {
                 beforeEach(async () => {
-                    const body = { startsAt, services: services.map(({ id }) => ({ id, quantity: 1 })) };
-                    response = await makeRequest(body);
+                    response = await makeRequest({ startsAt, services: mapToCreationAttributes(services) });
                 });
 
                 it('should call User.findByPk once', () => {
@@ -516,13 +527,7 @@ describe('/api/appointments', () => {
                 ];
 
                 beforeEach(async () => {
-                    const body: CreateAppointmentBody = {
-                        startsAt,
-                        services: services.map(({ id }) => ({ id, quantity: 1 })),
-                        facts,
-                    };
-
-                    response = await makeRequest(body);
+                    response = await makeRequest({ startsAt, services: mapToCreationAttributes(services), facts });
                 });
 
                 it('should call User.findByPk once', () => {
