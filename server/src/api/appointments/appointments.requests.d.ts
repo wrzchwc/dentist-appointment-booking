@@ -30,7 +30,7 @@ export interface ServiceAssociationCreationAttribute extends Identifiable {
 }
 
 export interface FactAssociationCreationAttribute extends Identifiable {
-    additionalInfo: string;
+    additionalInfo?: string;
 }
 
 interface Identifiable {
