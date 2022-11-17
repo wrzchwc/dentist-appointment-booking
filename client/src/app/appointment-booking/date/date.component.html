@@ -15,7 +15,7 @@
             color="accent"
             (click)="handlePreviousDate()"
             class="button"
-            [disabled]="current.getDate() === date.getCurrentDate().getDate()"
+            [disabled]="current.getDate() === date.getCurrentWorkdayDate().getDate()"
         >
             Terminy w dniu {{ previous | date: 'dd.MM.yyyy' }}
         </button>

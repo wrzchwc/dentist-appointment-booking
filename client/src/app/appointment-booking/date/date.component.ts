@@ -15,7 +15,7 @@ export class DateComponent {
 
     // eslint-disable-next-line no-unused-vars
     constructor(public date: DateService, private time: AppointmentTimeService) {
-        this.current = date.getCurrentDate();
+        this.current = date.getCurrentWorkdayDate();
         this.next = date.getNextWorkday(this.current);
         this.previous = date.getPreviousWorkday(this.current);
         this.availableTimes = this.time.getAvailableTimes(this.current);
