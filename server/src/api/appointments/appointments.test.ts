@@ -458,6 +458,10 @@ describe('/api/appointments', () => {
         describe('if facts were', () => {
             let services: m.Service[];
 
+            function mapToIds(models: m.AppointmentFact[] | m.Service[]) {
+                return models.map(({ id }) => id);
+            }
+
             beforeEach(async () => {
                 jest.spyOn(m.User, 'findByPk');
                 jest.spyOn(m.User.prototype, 'createAppointment');
@@ -469,7 +473,7 @@ describe('/api/appointments', () => {
             });
 
             afterEach(async () => {
-                await m.Service.destroy({ where: { id: services.map(({ id }) => id) } });
+                await m.Service.destroy({ where: { id: mapToIds(services) } });
 
                 jest.clearAllMocks();
             });
@@ -506,23 +510,19 @@ describe('/api/appointments', () => {
             });
 
             describe('sent in body', () => {
-                const factRecords = [{ value: 'a' }, { value: 'b' }];
-                let facts: m.AppointmentFact[];
+                const facts = [
+                    { id: '51bb9bb6-1a19-48dd-8c2a-2f28153ffd85' },
+                    { id: '863a4e7a-eac2-4acf-9439-74a85c1fcd48' },
+                ];
 
                 beforeEach(async () => {
-                    facts = await m.AppointmentFact.bulkCreate(factRecords);
-
                     const body: CreateAppointmentBody = {
                         startsAt,
                         services: services.map(({ id }) => ({ id, quantity: 1 })),
-                        facts: facts.map(({ id }) => ({ id })),
+                        facts,
                     };
 
                     response = await makeRequest(body);
-                });
-
-                afterEach(async () => {
-                    await m.AppointmentFact.destroy({ where: { id: facts.map(({ id }) => id) } });
                 });
 
                 it('should call User.findByPk once', () => {
@@ -541,8 +541,8 @@ describe('/api/appointments', () => {
                     expect(m.Appointment.prototype.addService).toHaveBeenCalledTimes(serviceRecords.length);
                 });
 
-                it(`should call Appointment.prototype.addFact ${factRecords.length} times`, () => {
-                    expect(m.Appointment.prototype.addFact).toHaveBeenCalledTimes(factRecords.length);
+                it(`should call Appointment.prototype.addFact ${facts.length} times`, () => {
+                    expect(m.Appointment.prototype.addFact).toHaveBeenCalledTimes(facts.length);
                 });
 
                 it('should call Appointment.findByPk once', () => {
