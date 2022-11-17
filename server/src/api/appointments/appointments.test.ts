@@ -1,5 +1,6 @@
 import * as m from '../../models';
 import { checkConnection, createCookie, createCookieHeader, createSignature, disconnect } from '../../services';
+import { CreateAppointmentBody } from './appointments.requests';
 import { Op } from 'sequelize';
 import { Response } from 'superagent';
 import { app } from '../../config';
@@ -12,7 +13,7 @@ describe('/api/appointments', () => {
     let cookieHeader: [string];
     let response: Response;
 
-    function itShouldReturnErrorCodeAndErrorMessageInBody(code: number, message: string) {
+    function itShouldReturnErrorCodeAndErrorMessageInBody(code = 500, message = 'Operation failed') {
         it(`should return ${code}`, () => {
             expect(response.status).toBe(code);
         });
@@ -65,27 +66,6 @@ describe('/api/appointments', () => {
 
         test('should return questions including facts associated with them', () => {
             expect(response.body.every(({ fact }: m.AppointmentQuestion) => fact?.value)).toBe(true);
-        });
-    });
-
-    describe('/ POST', () => {
-        beforeEach(async () => {
-            response = await supertest(app).post('/api/appointments').set('Cookie', cookieHeader);
-        });
-
-        afterEach(async () => {
-            await m.Appointment.destroy({ where: { id: response.body.id } });
-        });
-
-        it('should return 201 on successful creation', () => {
-            expect(response.status).toBe(201);
-        });
-
-        it('should return correct body response', () => {
-            const { id } = response.body;
-            const expected: Partial<m.Appointment> = { id, startsAt: new Date(), services: [], facts: [] };
-
-            expect(response.body).toMatchObject(expected);
         });
     });
 
@@ -379,6 +359,194 @@ describe('/api/appointments', () => {
                 expect(m.Appointment.findAll).toHaveBeenCalledWith({
                     ...expectedArgument,
                     where: { startsAt: { [Op.between]: ['2022-11-12', '2022-11-13'] } },
+                });
+            });
+        });
+    });
+
+    describe('/ POST', () => {
+        const startsAt = new Date();
+        const serviceRecords = [
+            { name: 'a', count: 1 },
+            { name: 'b', count: 2 },
+        ];
+
+        async function makeRequest(body?: CreateAppointmentBody) {
+            return supertest(app).post('/api/appointments').set('Cookie', cookieHeader).send(body);
+        }
+
+        describe('if there is error during', () => {
+            afterEach(() => {
+                jest.restoreAllMocks();
+            });
+
+            describe('user lookup', () => {
+                beforeEach(async () => {
+                    jest.spyOn(m.User, 'findByPk').mockImplementation(() => Promise.reject());
+                    response = await makeRequest();
+                });
+
+                itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
+            });
+
+            describe('appointment creation', () => {
+                beforeEach(async () => {
+                    const createAppointments = jest.fn(() => Promise.reject());
+                    jest.spyOn(m.User, 'findByPk').mockResolvedValue({ createAppointments } as unknown as m.User);
+                    jest.spyOn(m.User.prototype, 'createAppointment').mockImplementation(() => Promise.reject());
+                    response = await makeRequest();
+                });
+
+                itShouldReturnErrorCodeAndErrorMessageInBody(500, 'Operation failed');
+            });
+
+            describe('adding', () => {
+                beforeEach(() => {
+                    const createAppointment = { addService: jest.fn(), addFact: jest.fn() };
+                    jest.spyOn(m.User, 'findByPk').mockResolvedValue({ createAppointment } as unknown as m.User);
+                });
+
+                describe('services to appointment', () => {
+                    beforeEach(async () => {
+                        jest.spyOn(m.Appointment.prototype, 'addFact').mockReturnValue(Promise.resolve());
+                        jest.spyOn(m.Appointment.prototype, 'addService').mockImplementation(() => Promise.reject());
+                        response = await makeRequest({ startsAt: new Date(), services: [{ id: '', quantity: 0 }] });
+                    });
+
+                    itShouldReturnErrorCodeAndErrorMessageInBody();
+                });
+
+                describe('facts to appointment', () => {
+                    beforeEach(async () => {
+                        jest.spyOn(m.Appointment.prototype, 'addFact').mockImplementation(() => Promise.reject());
+                        jest.spyOn(m.Appointment.prototype, 'addService').mockReturnValue(Promise.resolve());
+                        const body = { startsAt: new Date(), services: [{ id: '', quantity: 0 }], facts: [{ id: '' }] };
+                        response = await makeRequest(body);
+                    });
+
+                    itShouldReturnErrorCodeAndErrorMessageInBody();
+                });
+            });
+
+            describe('fetching appointment meant to be returned', () => {
+                beforeEach(async () => {
+                    const addService = jest.fn(() => Promise.resolve());
+                    const addFact = jest.fn(() => Promise.resolve());
+                    const createAppointment = { addFact, addService };
+                    jest.spyOn(m.User, 'findByPk').mockResolvedValue({ createAppointment } as unknown as m.User);
+                    jest.spyOn(m.Appointment, 'findByPk').mockImplementation(() => Promise.reject());
+                    response = await makeRequest();
+                });
+
+                itShouldReturnErrorCodeAndErrorMessageInBody();
+            });
+        });
+
+        describe('if user does not exist in database', () => {
+            beforeEach(async () => {
+                jest.spyOn(m.User, 'findByPk').mockResolvedValue(null);
+                response = await makeRequest();
+            });
+
+            afterEach(() => {
+                jest.restoreAllMocks();
+            });
+
+            itShouldReturnErrorCodeAndErrorMessageInBody(404, 'User not found');
+        });
+
+        describe('if facts were', () => {
+            let services: m.Service[];
+
+            beforeEach(async () => {
+                jest.spyOn(m.User, 'findByPk');
+                jest.spyOn(m.User.prototype, 'createAppointment');
+                jest.spyOn(m.Appointment.prototype, 'addService');
+                jest.spyOn(m.Appointment.prototype, 'addFact');
+                jest.spyOn(m.Appointment, 'findByPk');
+
+                services = await m.Service.bulkCreate(serviceRecords);
+            });
+
+            afterEach(async () => {
+                await m.Service.destroy({ where: { id: services.map(({ id }) => id) } });
+
+                jest.clearAllMocks();
+            });
+
+            describe('not sent in body', () => {
+                beforeEach(async () => {
+                    const body = { startsAt, services: services.map(({ id }) => ({ id, quantity: 1 })) };
+                    response = await makeRequest(body);
+                });
+
+                it('should call User.findByPk once', () => {
+                    expect(m.User.findByPk).toHaveBeenCalledTimes(1);
+                });
+
+                it(`should call User.findByPk with ${id}`, () => {
+                    expect(m.User.findByPk).toHaveBeenCalledWith(id);
+                });
+
+                it('should call User.prototype.createAppointment once', () => {
+                    expect(m.User.prototype.createAppointment).toHaveBeenCalledTimes(1);
+                });
+
+                it(`should call Appointment.prototype.addService ${serviceRecords.length} times`, () => {
+                    expect(m.Appointment.prototype.addService).toHaveBeenCalledTimes(serviceRecords.length);
+                });
+
+                it('should not call Appointment.prototype.addFact', () => {
+                    expect(m.Appointment.prototype.addFact).not.toHaveBeenCalled();
+                });
+
+                it('should call Appointment.findByPk once', () => {
+                    expect(m.Appointment.findByPk).toHaveBeenCalledTimes(1);
+                });
+            });
+
+            describe('sent in body', () => {
+                const factRecords = [{ value: 'a' }, { value: 'b' }];
+                let facts: m.AppointmentFact[];
+
+                beforeEach(async () => {
+                    facts = await m.AppointmentFact.bulkCreate(factRecords);
+
+                    const body: CreateAppointmentBody = {
+                        startsAt,
+                        services: services.map(({ id }) => ({ id, quantity: 1 })),
+                        facts: facts.map(({ id }) => ({ id })),
+                    };
+
+                    response = await makeRequest(body);
+                });
+
+                afterEach(async () => {
+                    await m.AppointmentFact.destroy({ where: { id: facts.map(({ id }) => id) } });
+                });
+
+                it('should call User.findByPk once', () => {
+                    expect(m.User.findByPk).toHaveBeenCalledTimes(1);
+                });
+
+                it(`should call User.findByPk with ${id}`, () => {
+                    expect(m.User.findByPk).toHaveBeenCalledWith(id);
+                });
+
+                it('should call User.prototype.createAppointment once', () => {
+                    expect(m.User.prototype.createAppointment).toHaveBeenCalledTimes(1);
+                });
+
+                it(`should call Appointment.prototype.addService ${serviceRecords.length} times`, () => {
+                    expect(m.Appointment.prototype.addService).toHaveBeenCalledTimes(serviceRecords.length);
+                });
+
+                it(`should call Appointment.prototype.addFact ${factRecords.length} times`, () => {
+                    expect(m.Appointment.prototype.addFact).toHaveBeenCalledTimes(factRecords.length);
+                });
+
+                it('should call Appointment.findByPk once', () => {
+                    expect(m.Appointment.findByPk).toHaveBeenCalledTimes(1);
                 });
             });
         });
