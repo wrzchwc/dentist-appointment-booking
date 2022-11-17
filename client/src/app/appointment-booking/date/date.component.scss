@@ -55,7 +55,7 @@
 .time-cards-container {
     @extend .container;
 
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 20px;
