@@ -1,4 +1,4 @@
-import { Appointment, AppointmentsServices, HealthSurvey } from '../../models';
+import { Appointment } from '../../models';
 import { CreationAttributes } from 'sequelize';
 import { Request } from 'express';
 
@@ -20,14 +20,18 @@ export interface CreateAppointment extends Request {
     body: CreateAppointmentBody;
 }
 
-interface CreateAppointmentBody extends CreationAttributes<Appointment> {
+export interface CreateAppointmentBody extends CreationAttributes<Appointment> {
     services: ServiceAssociationCreationAttribute[];
     facts?: FactAssociationCreationAttribute[];
 }
 
-export interface ServiceAssociationCreationAttribute extends Identifiable, CreationAttributes<AppointmentsServices> {}
+export interface ServiceAssociationCreationAttribute extends Identifiable {
+    quantity: number;
+}
 
-export interface FactAssociationCreationAttribute extends Identifiable, CreationAttributes<HealthSurvey> {}
+export interface FactAssociationCreationAttribute extends Identifiable {
+    additionalInfo: string;
+}
 
 interface Identifiable {
     id: string;
