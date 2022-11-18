@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component } from '@angular/core';
+import { AfterContentChecked, Component } from '@angular/core';
 import { DateService } from 'src/app/shared/_services/date.service';
 import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
 import { LengthService } from '../../shared/_services/appointments/length.service';
@@ -9,7 +9,7 @@ import { AppointmentCartService } from '../_services/appointment-cart/appointmen
     templateUrl: './date.component.html',
     styleUrls: ['./date.component.scss'],
 })
-export class DateComponent implements AfterViewChecked {
+export class DateComponent implements AfterContentChecked {
     current: Date;
     next: Date;
     previous: Date;
@@ -29,8 +29,9 @@ export class DateComponent implements AfterViewChecked {
         this.appointmentLength = length.calculateTotalLength(cart.getServiceItems());
     }
 
-    ngAfterViewChecked() {
+    ngAfterContentChecked() {
         this.appointmentLength = this.length.calculateTotalLength(this.cart.getServiceItems());
+        this.availableTimes = this.time.getAvailableTimes(this.current);
     }
 
     handlePreviousDate() {

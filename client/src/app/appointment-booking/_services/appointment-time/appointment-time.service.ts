@@ -1,6 +1,9 @@
+/*eslint no-unused-vars: 0*/
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { DateService } from '../../../shared/_services/date.service';
+import { DateService } from 'src/app/shared/_services/date.service';
+import { LengthService } from 'src/app/shared/_services/appointments/length.service';
+import { AppointmentCartService } from '../appointment-cart/appointment-cart.service';
 
 @Injectable({
     providedIn: 'root',
@@ -8,14 +11,19 @@ import { DateService } from '../../../shared/_services/date.service';
 export class AppointmentTimeService {
     readonly selectedTime$: BehaviorSubject<Date | null>;
 
-    // eslint-disable-next-line no-unused-vars
-    constructor(private dateService: DateService) {
+    constructor(
+        private dateService: DateService,
+        private lengthService: LengthService,
+        private cartService: AppointmentCartService
+    ) {
         this.selectedTime$ = new BehaviorSubject<Date | null>(null);
     }
 
     getAvailableTimes(current: Date): Date[] {
         const availableTimes: Date[] = [];
-        for (let d = this.getStartDate(current); this.dateService.isWorkingTime(d); d.setMinutes(d.getMinutes() + 15)) {
+        const plannedLength = this.lengthService.calculateTotalLength(this.cartService.getServiceItems());
+        const startDate = this.getStartDate(current);
+        for (let d = startDate; this.dateService.isWorkingTime(d, plannedLength); d.setMinutes(d.getMinutes() + 15)) {
             availableTimes.push(new Date(d));
         }
 
