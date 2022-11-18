@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Service } from './services.service';
 
-export type ServiceItem = Service & { quantity: number };
+export type Quantifiable = { quantity: number };
+
+export type ServiceItem = Service & Quantifiable;
 
 @Injectable({
     providedIn: 'root',

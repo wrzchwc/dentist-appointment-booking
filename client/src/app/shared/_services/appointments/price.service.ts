@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Quantifiable } from './length.service';
 
-export interface PriceItem {
+export type PriceItem = Quantifiable & {
     price: number | null;
-    quantity: number;
     name: string;
     detail: 'A' | 'B' | 'C' | null;
-}
+};
 
 @Injectable({
     providedIn: 'root',
