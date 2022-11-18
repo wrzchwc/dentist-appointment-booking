@@ -5,28 +5,21 @@ import { HttpClient } from '@angular/common/http';
 interface ServiceBase {
     id: string;
     name: string;
-    count: number;
+    count: 1;
+    length: number;
 }
 
 interface StandardService extends ServiceBase {
     price: number;
     detail: null;
-    length: number;
 }
 
 interface ExceptionalPriceService extends ServiceBase {
     price: null;
-    detail: 'A' | 'B';
-    length: number;
+    detail: 'A';
 }
 
-interface ExceptionalLengthService extends ServiceBase {
-    price: number;
-    detail: 'C';
-    length: null;
-}
-
-export type Service = StandardService | ExceptionalLengthService | ExceptionalPriceService;
+export type Service = StandardService | ExceptionalPriceService;
 
 @Injectable({
     providedIn: 'root',

@@ -19,7 +19,7 @@
                 <mat-card class="card">
                     <mat-icon color="primary">toc</mat-icon>
                     <h2 class="styles-color-accent card-header">Zakres leczenia</h2>
-                    <table mat-table [dataSource]="cart.getItems()" class="table">
+                    <table mat-table [dataSource]="cart.getPriceItems()" class="table">
                         <ng-container *ngFor="let column of displayedColumns">
                             <ng-container [matColumnDef]="column.property">
                                 <th mat-header-cell *matHeaderCellDef class="styles-color-primary">
@@ -43,7 +43,9 @@
                 <mat-card class="card">
                     <mat-icon color="primary">payments</mat-icon>
                     <h2 class="styles-color-accent card-header">Szacowana cena wizyty</h2>
-                    <h3 class="styles-color-warn card-content">{{ price.calculateTotalPrice(cart.getItems()) }} PLN</h3>
+                    <h3 class="styles-color-warn card-content">
+                        {{ price.calculateTotalPrice(cart.getPriceItems()) }} PLN
+                    </h3>
                 </mat-card>
             </div>
         </section>
