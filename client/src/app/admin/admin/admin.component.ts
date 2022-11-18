@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { DateService } from '../../shared/_services/appointments/date.service';
+import { DateService } from '../../shared/_services/date.service';
 
 @Component({
     selector: 'app-admin',
