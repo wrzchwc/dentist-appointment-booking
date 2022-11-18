@@ -38,7 +38,9 @@
                     <mat-icon color="primary">event_available</mat-icon>
                     <h2 class="styles-color-accent card-header">Termin wizyty</h2>
                     <h3 class="card-content">{{ time.selectedTime$ | async | date: 'dd.MM.yyyy' }} r.</h3>
-                    <h4 class="card-content">{{ time.selectedTime$ | async | date: 'HH.mm' }}</h4>
+                    <h4 class="card-content">
+                        {{ time.selectedTime$ | async | date: 'HH:mm' }} - {{ endsAt | date: 'HH:mm' }}
+                    </h4>
                 </mat-card>
                 <mat-card class="card">
                     <mat-icon color="primary">payments</mat-icon>
