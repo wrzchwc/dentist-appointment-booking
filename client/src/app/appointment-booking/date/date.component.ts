@@ -1,24 +1,36 @@
-import { Component } from '@angular/core';
+import { AfterViewChecked, Component } from '@angular/core';
 import { DateService } from 'src/app/shared/_services/date.service';
 import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
+import { LengthService } from '../../shared/_services/appointments/length.service';
+import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
 
 @Component({
     selector: 'app-date',
     templateUrl: './date.component.html',
     styleUrls: ['./date.component.scss'],
 })
-export class DateComponent {
+export class DateComponent implements AfterViewChecked {
     current: Date;
     next: Date;
     previous: Date;
     availableTimes?: Date[];
+    appointmentLength: number;
 
-    // eslint-disable-next-line no-unused-vars
-    constructor(public date: DateService, private time: AppointmentTimeService) {
+    constructor(
+        public date: DateService,
+        private time: AppointmentTimeService,
+        private length: LengthService,
+        private cart: AppointmentCartService
+    ) {
         this.current = date.getCurrentWorkdayDate();
         this.next = date.getNextWorkday(this.current);
         this.previous = date.getPreviousWorkday(this.current);
-        this.availableTimes = this.time.getAvailableTimes(this.current);
+        this.availableTimes = time.getAvailableTimes(this.current);
+        this.appointmentLength = length.calculateTotalLength(cart.getServiceItems());
+    }
+
+    ngAfterViewChecked() {
+        this.appointmentLength = this.length.calculateTotalLength(this.cart.getServiceItems());
     }
 
     handlePreviousDate() {

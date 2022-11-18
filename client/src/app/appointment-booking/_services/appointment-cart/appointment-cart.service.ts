@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Service } from 'src/app/shared/_services/appointments/services.service';
 import { BehaviorSubject } from 'rxjs';
 import { PriceItem } from 'src/app/shared/_services/appointments/price.service';
-import { LengthItem } from '../../../shared/_services/appointments/length.service';
+import { ServiceItem } from 'src/app/shared/_services/appointments/length.service';
 
 @Injectable({
     providedIn: 'root',
@@ -54,7 +54,7 @@ export class AppointmentCartService {
         return { quantity: value, price, detail, name };
     }
 
-    getLengthItems(): LengthItem[] {
+    getServiceItems(): ServiceItem[] {
         return this.getCartValuesWithPositiveSubjectValue().map(this.mapToLengthItem);
     }
 
@@ -66,7 +66,7 @@ export class AppointmentCartService {
         return value > 0;
     }
 
-    private mapToLengthItem([{ value }, { length }]: [BehaviorSubject<number>, Service]): LengthItem {
-        return { quantity: value, length };
+    private mapToLengthItem([{ value }, service]: [BehaviorSubject<number>, Service]): ServiceItem {
+        return { ...service, quantity: value };
     }
 }

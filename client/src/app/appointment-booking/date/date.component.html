@@ -1,7 +1,7 @@
 <section class="main-container" (click)="handleClick()">
     <h1 class="styles-color-primary title" (click)="ignoreClick($event)">Wybierz termin wizyty</h1>
     <p class="estimated-length" (click)="ignoreClick($event)">
-        Szacowana długość wizyty to <span class="styles-color-accent">0 min</span>
+        Szacowana długość wizyty to <span class="styles-color-accent">{{ appointmentLength }} min</span>
     </p>
     <h2 class="subtitle" (click)="ignoreClick($event)">Dostępne terminy w dniu {{ current | date: 'dd.MM.yyyy' }}</h2>
     <div class="time-cards-container">
