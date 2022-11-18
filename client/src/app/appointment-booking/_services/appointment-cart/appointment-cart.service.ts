@@ -20,6 +20,10 @@ export class AppointmentCartService {
         });
     }
 
+    get valid(): boolean {
+        return Boolean(this.getCartValuesWithPositiveSubjectValue().find(([, service]) => service));
+    }
+
     quantityOf(service: Service) {
         return this.cart.get(service.id)?.at(0) as BehaviorSubject<number>;
     }

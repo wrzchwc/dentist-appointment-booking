@@ -1,19 +1,35 @@
 <section class="main-container">
     <mat-stepper linear labelPosition="bottom" class="stepper">
-        <mat-step label="Zakres leczenia">
+        <mat-step label="Zakres leczenia" [completed]="cart.valid">
             <ng-template matStepContent>
                 <app-appointment-services [services]="services"></app-appointment-services>
                 <section class="step-buttons-container">
-                    <button mat-raised-button color="primary" matStepperNext class="step-button">DALEJ</button>
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        matStepperNext
+                        class="step-button"
+                        [disabled]="!cart.valid"
+                    >
+                        DALEJ
+                    </button>
                     <button mat-raised-button color="accent" routerLink="/client" class="step-button">ANULUJ</button>
                 </section>
             </ng-template>
         </mat-step>
-        <mat-step label="Termin wizyty">
+        <mat-step label="Termin wizyty" [completed]="(time.selectedTime$ | async) !== null">
             <ng-template matStepContent>
                 <app-date></app-date>
                 <section class="step-buttons-container">
-                    <button mat-raised-button color="primary" matStepperNext class="step-button">DALEJ</button>
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        matStepperNext
+                        class="step-button"
+                        [disabled]="(time.selectedTime$ | async) === null"
+                    >
+                        DALEJ
+                    </button>
                     <button mat-raised-button color="accent" matStepperPrevious class="step-button">POWRÓT</button>
                 </section>
             </ng-template>

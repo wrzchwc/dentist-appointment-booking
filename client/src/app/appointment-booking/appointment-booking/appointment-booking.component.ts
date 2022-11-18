@@ -16,11 +16,11 @@ export class AppointmentBookingComponent implements OnDestroy {
 
     constructor(
         // eslint-disable-next-line no-unused-vars
-        private time: AppointmentTimeService,
+        public time: AppointmentTimeService,
         // eslint-disable-next-line no-unused-vars
         private router: Router,
         private route: ActivatedRoute,
-        private cart: AppointmentCartService
+        public cart: AppointmentCartService
     ) {
         this.services = route.snapshot.data['services'];
         this.questions = route.snapshot.data['appointmentQuestions'];
