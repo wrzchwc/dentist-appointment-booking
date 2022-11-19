@@ -28,26 +28,24 @@ export class AppointmentCartService {
         return this.cart.get(service.id)?.at(0) as BehaviorSubject<number>;
     }
 
-    add(service: Service) {
-        const entry = this.cart.get(service.id);
-
-        if (!entry) {
-            throw new Error('Appointment Cart Error');
+    add({ id }: Service) {
+        const entry = this.cart.get(id);
+        if (entry) {
+            const quantity = entry[0];
+            quantity.next(quantity.value + 1);
         }
 
-        const quantity = entry[0];
-        quantity.next(quantity.value + 1);
+        throw new Error('Appointment Cart Error');
     }
 
-    remove(service: Service) {
-        const entry = this.cart.get(service.id);
-
-        if (!entry) {
-            throw new Error('Appointment Cart Error');
+    remove({ id }: Service) {
+        const entry = this.cart.get(id);
+        if (entry) {
+            const quantity = entry[0];
+            quantity.next(quantity.value === 1 ? 0 : quantity.value - 1);
         }
 
-        const quantity = entry[0];
-        quantity.next(quantity.value === 1 ? 0 : quantity.value - 1);
+        throw new Error('Appointment Cart Error');
     }
 
     getPriceItems(): PriceItem[] {
