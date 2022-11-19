@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Service } from 'src/app/shared/_services/appointments/services.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { PriceItem } from 'src/app/shared/_services/appointments/price.service';
 import { LengthItem } from 'src/app/shared/_services/appointments/length.service';
 
@@ -8,10 +8,12 @@ import { LengthItem } from 'src/app/shared/_services/appointments/length.service
     providedIn: 'root',
 })
 export class AppointmentCartService {
+    readonly change$: Subject<void>;
     private readonly cart: Map<string, [BehaviorSubject<number>, Service]>;
 
     constructor() {
         this.cart = new Map<string, [BehaviorSubject<number>, Service]>();
+        this.change$ = new Subject<void>();
     }
 
     initialize(services: Service[]) {
@@ -31,23 +33,25 @@ export class AppointmentCartService {
     add(service: Service) {
         const entry = this.cart.get(service.id);
 
-        if (!entry) {
+        if (entry) {
+            const quantity = entry[0];
+            quantity.next(quantity.value + 1);
+            this.change$.next();
+        } else {
             throw new Error('Appointment Cart Error');
         }
-
-        const quantity = entry[0];
-        quantity.next(quantity.value + 1);
     }
 
     remove(service: Service) {
         const entry = this.cart.get(service.id);
 
-        if (!entry) {
+        if (entry) {
+            const quantity = entry[0];
+            quantity.next(quantity.value === 1 ? 0 : quantity.value - 1);
+            this.change$.next();
+        } else {
             throw new Error('Appointment Cart Error');
         }
-
-        const quantity = entry[0];
-        quantity.next(quantity.value === 1 ? 0 : quantity.value - 1);
     }
 
     getPriceItems(): PriceItem[] {

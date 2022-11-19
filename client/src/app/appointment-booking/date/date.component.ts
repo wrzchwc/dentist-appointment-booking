@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, Input } from '@angular/core';
+import { AfterViewChecked, Component, EventEmitter, Input, Output } from '@angular/core';
 import { DateService } from 'src/app/shared/_services/date.service';
 import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
 import { LengthService } from '../../shared/_services/appointments/length.service';
@@ -11,6 +11,7 @@ import { AppointmentCartService } from '../_services/appointment-cart/appointmen
 })
 export class DateComponent implements AfterViewChecked {
     @Input() availableTimes: Date[];
+    @Output() workdayChange: EventEmitter<void>;
     appointmentLength: number;
 
     constructor(
@@ -23,6 +24,7 @@ export class DateComponent implements AfterViewChecked {
     ) {
         this.availableTimes = [];
         this.appointmentLength = length.calculateTotalLength(cart.getLengthItems());
+        this.workdayChange = new EventEmitter<void>();
     }
 
     ngAfterViewChecked() {
@@ -31,6 +33,16 @@ export class DateComponent implements AfterViewChecked {
 
     handleClick() {
         this.time.selectedTime$.next(null);
+    }
+
+    handleNextWorkday() {
+        this.date.workdayForward();
+        this.workdayChange.emit();
+    }
+
+    handlePreviousWorkday() {
+        this.date.workdayBackward();
+        this.workdayChange.emit();
     }
 
     ignoreClick(event: Event) {

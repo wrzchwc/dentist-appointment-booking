@@ -15,13 +15,13 @@
         <button
             mat-raised-button
             color="accent"
-            (click)="date.workdayBackward()"
+            (click)="handlePreviousWorkday()"
             class="button"
             [disabled]="date.previousWorkday < date.currentDay"
         >
             Terminy w dniu {{ date.previousWorkday | date: 'dd.MM.yyyy' }}
         </button>
-        <button mat-raised-button color="primary" (click)="date.workdayForward()" class="button">
+        <button mat-raised-button color="primary" (click)="handleNextWorkday()" class="button">
             Terminy w dniu {{ date.nextWorkday | date: 'dd.MM.yyyy' }}
         </button>
     </div>

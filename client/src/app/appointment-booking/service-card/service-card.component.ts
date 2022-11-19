@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { Service } from 'src/app/shared/_services/appointments/services.service';
 import { TooltipService } from './tooltip.service';
 import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
@@ -10,11 +10,13 @@ import { AppointmentCartService } from '../_services/appointment-cart/appointmen
 })
 export class ServiceCardComponent implements OnChanges {
     @Input() service?: Service;
+    @Output() serviceChange: EventEmitter<void>;
     tooltip: string;
 
     // eslint-disable-next-line no-unused-vars
     constructor(private tooltipService: TooltipService, public cart: AppointmentCartService) {
         this.tooltip = tooltipService.getTooltip(this.service?.detail);
+        this.serviceChange = new EventEmitter<void>();
     }
 
     ngOnChanges() {
@@ -24,12 +26,14 @@ export class ServiceCardComponent implements OnChanges {
     handleRemoveServiceClick() {
         if (this.service) {
             this.cart.remove(this.service);
+            this.serviceChange.emit();
         }
     }
 
     handleAddServiceClick() {
         if (this.service) {
             this.cart.add(this.service);
+            this.serviceChange.emit();
         }
     }
 }
