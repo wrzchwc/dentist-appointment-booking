@@ -12,7 +12,13 @@
         </ng-container>
     </div>
     <div class="buttons-container" (click)="ignoreClick($event)">
-        <button mat-raised-button color="accent" (click)="date.workdayBackward()" class="button" [disabled]="false">
+        <button
+            mat-raised-button
+            color="accent"
+            (click)="date.workdayBackward()"
+            class="button"
+            [disabled]="date.previousWorkday < date.currentDay"
+        >
             Terminy w dniu {{ date.previousWorkday | date: 'dd.MM.yyyy' }}
         </button>
         <button mat-raised-button color="primary" (click)="date.workdayForward()" class="button">

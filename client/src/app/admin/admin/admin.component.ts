@@ -7,9 +7,6 @@ import { DateService } from '../../shared/_services/date.service';
     styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent {
-    currentDate: Date;
-
-    constructor(private date: DateService) {
-        this.currentDate = date.getCurrentDate();
-    }
+    // eslint-disable-next-line no-unused-vars
+    constructor(public date: DateService) {}
 }

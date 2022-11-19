@@ -30,8 +30,12 @@ export class DateService {
         return this._nextWorkday;
     }
 
+    get currentDay(): Date {
+        return new Date();
+    }
+
     getCurrentWorkdayDate(): Date {
-        const date = this.getCurrentDate();
+        const date = this.currentDay;
         if (this.isDay(WeekDay.Saturday, date)) {
             date.setDate(date.getDate() + 2);
             return new Date(date.setHours(9, 0, 0, 0));
@@ -46,10 +50,6 @@ export class DateService {
 
     private isAfterWorkingTime(date: Date): boolean {
         return date.getHours() > 17;
-    }
-
-    getCurrentDate() {
-        return new Date();
     }
 
     isWorkingTime(date: Date, plannedAppointmentLength = 0) {
