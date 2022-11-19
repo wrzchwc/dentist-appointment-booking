@@ -32,7 +32,7 @@ export class SummaryComponent implements AfterViewChecked {
 
         time.selectedTime$.pipe(filter(Boolean)).subscribe((value) => {
             const copy = new Date(value);
-            const appointmentLength = length.calculateTotalLength(cart.getServiceItems());
+            const appointmentLength = length.calculateTotalLength(cart.getLengthItems());
             this.endsAt = new Date(copy.setMinutes(copy.getMinutes() + appointmentLength));
         });
     }
@@ -41,7 +41,7 @@ export class SummaryComponent implements AfterViewChecked {
         const { value } = this.time.selectedTime$;
         if (value) {
             const copy = new Date(value);
-            const appointmentLength = this.length.calculateTotalLength(this.cart.getServiceItems());
+            const appointmentLength = this.length.calculateTotalLength(this.cart.getLengthItems());
             this.endsAt = new Date(copy.setMinutes(value.getMinutes() + appointmentLength));
         }
     }

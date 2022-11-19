@@ -1,4 +1,4 @@
-import { AfterContentChecked, Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DateService } from 'src/app/shared/_services/date.service';
 import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
 import { LengthService } from '../../shared/_services/appointments/length.service';
@@ -9,7 +9,7 @@ import { AppointmentCartService } from '../_services/appointment-cart/appointmen
     templateUrl: './date.component.html',
     styleUrls: ['./date.component.scss'],
 })
-export class DateComponent implements AfterContentChecked {
+export class DateComponent implements OnInit {
     current: Date;
     next: Date;
     previous: Date;
@@ -17,40 +17,45 @@ export class DateComponent implements AfterContentChecked {
     appointmentLength: number;
 
     constructor(
+        // eslint-disable-next-line no-unused-vars
+        public time: AppointmentTimeService,
         public date: DateService,
-        private time: AppointmentTimeService,
         private length: LengthService,
         private cart: AppointmentCartService
     ) {
         this.current = date.getCurrentWorkdayDate();
         this.next = date.getNextWorkday(this.current);
         this.previous = date.getPreviousWorkday(this.current);
-        this.availableTimes = time.getAvailableTimes(this.current);
-        this.appointmentLength = length.calculateTotalLength(cart.getServiceItems());
+        this.availableTimes = [];
+        this.appointmentLength = length.calculateTotalLength(cart.getLengthItems());
     }
 
-    ngAfterContentChecked() {
-        this.appointmentLength = this.length.calculateTotalLength(this.cart.getServiceItems());
-        this.availableTimes = this.time.getAvailableTimes(this.current);
+    ngOnInit() {
+        this.time.getAvailableTimes(this.current).subscribe((times) => {
+            this.availableTimes = times;
+        });
+        this.cart.change$.subscribe(() => {
+            this.appointmentLength = this.length.calculateTotalLength(this.cart.getLengthItems());
+        });
     }
 
     handlePreviousDate() {
         this.current = this.date.getPreviousWorkday(this.current);
-        [this.previous, this.next, this.availableTimes] = this.handleDateChange(this.current);
+        // [this.previous, this.next, this.availableTimes] = this.handleDateChange(this.current);
     }
 
     handleNextDate() {
         this.current = this.date.getNextWorkday(this.current);
-        [this.previous, this.next, this.availableTimes] = this.handleDateChange(this.current);
+        // [this.previous, this.next, this.availableTimes] = this.handleDateChange(this.current);
     }
 
-    private handleDateChange(current: Date): [Date, Date, Date[]] {
-        return [
-            this.date.getPreviousWorkday(current),
-            this.date.getNextWorkday(current),
-            this.time.getAvailableTimes(current),
-        ];
-    }
+    // private handleDateChange(current: Date): [Date, Date, Date[]] {
+    //     return [
+    //         this.date.getPreviousWorkday(current),
+    //         this.date.getNextWorkday(current),
+    //         this.time.getAvailableTimes(current),
+    //     ];
+    // }
 
     handleClick() {
         this.time.selectedTime$.next(null);

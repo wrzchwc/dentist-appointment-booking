@@ -10,16 +10,18 @@ type DaysToWorkday = 3 | 1;
 export class DateService {
     constructor() {}
 
-    getCurrentWorkdayDate() {
+    getCurrentWorkdayDate(): Date {
         const date = this.getCurrentDate();
-
-        if (this.isBeforeWorkingTime(date)) {
+        if (this.isDay(WeekDay.Saturday, date)) {
+            date.setDate(date.getDate() + 2);
             return new Date(date.setHours(9, 0, 0, 0));
-        } else if (this.isWorkingTime(date)) {
+        } else if (this.isDay(WeekDay.Sunday, date) || this.isAfterWorkingTime(date)) {
+            return this.getNextWorkday(date);
+        } else if (this.isBeforeWorkingTime(date)) {
+            date.setHours(9, 0, 0, 0);
             return date;
         }
-
-        return this.getNextWorkday(date);
+        return date;
     }
 
     getCurrentDate() {
@@ -61,5 +63,9 @@ export class DateService {
 
     isBeforeWorkingTime(date: Date): boolean {
         return date.getHours() < 9;
+    }
+
+    private isAfterWorkingTime(date: Date): boolean {
+        return date.getHours() > 17;
     }
 }

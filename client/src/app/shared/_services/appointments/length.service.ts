@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Service } from './services.service';
 
-export type Quantifiable = { quantity: number };
-
-export type ServiceItem = Service & Quantifiable;
+export interface LengthItem {
+    quantity: number;
+    length: number;
+}
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +11,8 @@ export type ServiceItem = Service & Quantifiable;
 export class LengthService {
     constructor() {}
 
-    calculateTotalLength(items: ServiceItem[]): number {
+    // Returns sum of lengths in minutes
+    calculateTotalLength(items: LengthItem[]): number {
         return items.reduce((sum, { quantity, length }) => sum + quantity * length, 0);
     }
 }

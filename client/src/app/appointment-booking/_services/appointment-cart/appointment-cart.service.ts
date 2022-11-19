@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Service } from 'src/app/shared/_services/appointments/services.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { PriceItem } from 'src/app/shared/_services/appointments/price.service';
-import { ServiceItem } from 'src/app/shared/_services/appointments/length.service';
+import { LengthItem } from '../../../shared/_services/appointments/length.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AppointmentCartService {
     private readonly cart: Map<string, [BehaviorSubject<number>, Service]>;
+    change$: Subject<void>;
 
     constructor() {
         this.cart = new Map<string, [BehaviorSubject<number>, Service]>();
+        this.change$ = new Subject<void>();
     }
 
     initialize(services: Service[]) {
@@ -37,6 +39,7 @@ export class AppointmentCartService {
 
         const quantity = entry[0];
         quantity.next(quantity.value + 1);
+        this.change$.next();
     }
 
     remove(service: Service) {
@@ -48,6 +51,7 @@ export class AppointmentCartService {
 
         const quantity = entry[0];
         quantity.next(quantity.value === 1 ? 0 : quantity.value - 1);
+        this.change$.next();
     }
 
     getPriceItems(): PriceItem[] {
@@ -58,7 +62,7 @@ export class AppointmentCartService {
         return { quantity: value, price, detail, name };
     }
 
-    getServiceItems(): ServiceItem[] {
+    getLengthItems(): LengthItem[] {
         return this.getCartValuesWithPositiveSubjectValue().map(this.mapToLengthItem);
     }
 
@@ -70,7 +74,7 @@ export class AppointmentCartService {
         return value > 0;
     }
 
-    private mapToLengthItem([{ value }, service]: [BehaviorSubject<number>, Service]): ServiceItem {
-        return { ...service, quantity: value };
+    private mapToLengthItem([{ value }, { length }]: [BehaviorSubject<number>, Service]): LengthItem {
+        return { length, quantity: value };
     }
 }
