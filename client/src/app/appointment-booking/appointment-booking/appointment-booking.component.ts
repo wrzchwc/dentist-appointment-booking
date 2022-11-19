@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Service } from '../../shared/_services/appointments/services.service';
 import { AppointmentQuestion } from '../_services/appointment-questions/appointment-questions.service';
@@ -10,7 +10,8 @@ import { AppointmentCartService } from '../_services/appointment-cart/appointmen
     templateUrl: './appointment-booking.component.html',
     styleUrls: ['./appointment-booking.component.scss'],
 })
-export class AppointmentBookingComponent implements OnDestroy {
+export class AppointmentBookingComponent implements OnDestroy, OnInit {
+    availableTimes: Date[];
     readonly services: Service[];
     readonly questions: AppointmentQuestion[];
 
@@ -25,10 +26,17 @@ export class AppointmentBookingComponent implements OnDestroy {
         this.services = route.snapshot.data['services'];
         this.questions = route.snapshot.data['appointmentQuestions'];
         cart.initialize(route.snapshot.data['services']);
+        this.availableTimes = [];
     }
 
     ngOnDestroy(): void {
         this.time.selectedTime$.next(null);
+    }
+
+    ngOnInit(): void {
+        this.time.getAvailableTimes().subscribe((times) => {
+            this.availableTimes = times;
+        });
     }
 
     async handleBookAppointmentClick(event: MouseEvent) {

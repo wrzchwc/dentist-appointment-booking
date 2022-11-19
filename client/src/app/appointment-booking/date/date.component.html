@@ -3,24 +3,20 @@
     <p class="estimated-length" (click)="ignoreClick($event)">
         Szacowana długość wizyty to <span class="styles-color-accent">{{ appointmentLength }} min</span>
     </p>
-    <h2 class="subtitle" (click)="ignoreClick($event)">Dostępne terminy w dniu {{ current | date: 'dd.MM.yyyy' }}</h2>
+    <h2 class="subtitle" (click)="ignoreClick($event)">
+        Dostępne terminy w dniu {{ date.currentWorkday | date: 'dd.MM.yyyy' }}
+    </h2>
     <div class="time-cards-container">
         <ng-container *ngFor="let date of availableTimes">
             <app-time-card [date]="date"></app-time-card>
         </ng-container>
     </div>
     <div class="buttons-container" (click)="ignoreClick($event)">
-        <button
-            mat-raised-button
-            color="accent"
-            (click)="handlePreviousDate()"
-            class="button"
-            [disabled]="current.getDate() === date.getCurrentWorkdayDate().getDate()"
-        >
-            Terminy w dniu {{ previous | date: 'dd.MM.yyyy' }}
+        <button mat-raised-button color="accent" (click)="date.workdayBackward()" class="button" [disabled]="false">
+            Terminy w dniu {{ date.previousWorkday | date: 'dd.MM.yyyy' }}
         </button>
-        <button mat-raised-button color="primary" (click)="handleNextDate()" class="button">
-            Terminy w dniu {{ next | date: 'dd.MM.yyyy' }}
+        <button mat-raised-button color="primary" (click)="date.workdayForward()" class="button">
+            Terminy w dniu {{ date.nextWorkday | date: 'dd.MM.yyyy' }}
         </button>
     </div>
 </section>

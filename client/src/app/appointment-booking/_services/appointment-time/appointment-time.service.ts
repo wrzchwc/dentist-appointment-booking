@@ -28,8 +28,8 @@ export class AppointmentTimeService {
         this.selectedTime$ = new BehaviorSubject<Date | null>(null);
     }
 
-    getAvailableTimes(current: Date): Observable<Date[]> {
-        return this.appointmentsService.getAppointments(current).pipe(
+    getAvailableTimes(): Observable<Date[]> {
+        return this.appointmentsService.getAppointments(this.dateService.currentWorkday).pipe(
             map((appointments) => {
                 return appointments.map((appointment) => {
                     const items = this.servicesService.mapAssociatedServicesToLengthItems(appointment.services);
@@ -40,7 +40,7 @@ export class AppointmentTimeService {
             map((periods) => {
                 const availableTimes: Date[] = [];
                 const plannedLength = this.lengthService.calculateTotalLength(this.cartService.getLengthItems());
-                let date = this.getStartDate(current);
+                let date = this.getStartDate(this.dateService.currentWorkday);
                 while (this.dateService.isWorkingTime(date, plannedLength)) {
                     const period = this.createPeriod(date, plannedLength);
                     if (!this.isOverlappingPeriod(period, periods)) {
