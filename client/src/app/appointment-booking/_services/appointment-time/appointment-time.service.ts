@@ -29,28 +29,32 @@ export class AppointmentTimeService {
     }
 
     getAvailableTimes(current: Date): Observable<Date[]> {
-        const availableTimes: Date[] = [];
-        const plannedLength = this.lengthService.calculateTotalLength(this.cartService.getLengthItems());
-        const startDate = this.getStartDate(current);
-
         return this.appointmentsService.getAppointments(current).pipe(
             map((appointments) => {
                 return appointments.map((appointment) => {
-                    const startsAt = new Date(appointment.startsAt);
                     const items = this.servicesService.mapAssociatedServicesToLengthItems(appointment.services);
-                    const length = this.lengthService.calculateTotalLength(items) * 60 * 1000;
-                    return { startsAt, endsAt: new Date(startsAt.getTime() + length) };
-                }) as Period[];
+                    const length = this.lengthService.calculateTotalLength(items);
+                    return this.createPeriod(new Date(appointment.startsAt), length);
+                });
             }),
-            map(() => {
-                let date = startDate;
+            map((periods) => {
+                const availableTimes: Date[] = [];
+                const plannedLength = this.lengthService.calculateTotalLength(this.cartService.getLengthItems());
+                let date = this.getStartDate(current);
                 while (this.dateService.isWorkingTime(date, plannedLength)) {
-                    availableTimes.push(new Date(date));
+                    const period = this.createPeriod(date, plannedLength);
+                    if (!this.isOverlappingPeriod(period, periods)) {
+                        availableTimes.push(new Date(date));
+                    }
                     date.setMinutes(date.getMinutes() + 15);
                 }
                 return availableTimes;
             })
         );
+    }
+
+    private createPeriod(startsAt: Date, length: number): Period {
+        return { startsAt: new Date(startsAt), endsAt: new Date(startsAt.getTime() + length * 60 * 1000) };
     }
 
     private getStartDate(date: Date): Date {
@@ -63,5 +67,25 @@ export class AppointmentTimeService {
     private roundToNextQuarter(date: Date): Date {
         const minutes = 15 * Math.ceil(date.getMinutes() / 15);
         return new Date(date.setMinutes(minutes, 0, 0));
+    }
+
+    private isOverlappingPeriod(period: Period, periods: Period[]): boolean {
+        return (
+            this.periodStartOverlaps(period, periods) ||
+            this.periodEndOverlaps(period, periods) ||
+            this.periodDurationOverlaps(period, periods)
+        );
+    }
+
+    private periodStartOverlaps({ startsAt }: Period, periods: Period[]): boolean {
+        return periods.some((period) => period.startsAt <= startsAt && startsAt < period.endsAt);
+    }
+
+    private periodEndOverlaps({ endsAt }: Period, periods: Period[]): boolean {
+        return periods.some((period) => period.startsAt < endsAt && endsAt <= period.endsAt);
+    }
+
+    private periodDurationOverlaps({ startsAt, endsAt }: Period, periods: Period[]): boolean {
+        return periods.some((period) => startsAt < period.startsAt && endsAt > period.endsAt);
     }
 }
