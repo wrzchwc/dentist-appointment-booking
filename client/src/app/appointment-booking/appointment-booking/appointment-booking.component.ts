@@ -5,9 +5,10 @@ import { Service } from '../../shared/_services/appointments/services.service';
 import { AppointmentQuestion } from '../_services/appointment-questions/appointment-questions.service';
 import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
 import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
-import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { AppointmentsService } from '../../shared/_services/appointments/appointments.service';
 import { DateService } from '../../shared/_services/date.service';
+import { HealthStateService } from '../health-state/health-state.service';
 
 @Component({
     selector: 'app-appointment-booking',
@@ -26,16 +27,24 @@ export class AppointmentBookingComponent implements OnDestroy {
         private appointments: AppointmentsService,
         private route: ActivatedRoute,
         public cart: AppointmentCartService,
-        private date: DateService
+        private date: DateService,
+        private healthState: HealthStateService
     ) {
         this.services = route.snapshot.data['services'];
         this.questions = route.snapshot.data['appointmentQuestions'];
         cart.initialize(route.snapshot.data['services']);
         this.availableTimes = [];
         this.onDestroy = new Subject<void>();
-        cart.change$.pipe(takeUntil(this.onDestroy)).subscribe(() => {
+        cart.change$.pipe(takeUntil(this.onDestroy), debounceTime(281.25)).subscribe(() => {
             this.refreshAppointments();
         });
+    }
+
+    ngOnDestroy(): void {
+        this.time.selectedTime$.next(null);
+        this.onDestroy.next();
+        this.date.reset();
+        this.healthState.clear();
     }
 
     refreshAppointments() {
@@ -45,12 +54,6 @@ export class AppointmentBookingComponent implements OnDestroy {
             .subscribe((times) => {
                 this.availableTimes = times;
             });
-    }
-
-    ngOnDestroy(): void {
-        this.time.selectedTime$.next(null);
-        this.onDestroy.next();
-        this.date.reset();
     }
 
     async handleBookAppointmentClick(event: MouseEvent) {

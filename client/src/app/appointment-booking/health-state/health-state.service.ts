@@ -39,4 +39,8 @@ export class HealthStateService {
     remove(id: string) {
         this.state.delete(id);
     }
+
+    clear() {
+        this.state.clear();
+    }
 }
