@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import { AppointmentQuestion } from '../_services/appointment-questions/appointment-questions.service';
 import { FormBuilder, FormControl, FormRecord } from '@angular/forms';
-import { HealthStateDescriptor, IdInfo } from '../health-state/health-state.service';
+import { HealthStateDescriptor } from '../health-state/health-state.service';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
+import { IdInfo } from '../../shared/_services/appointments/appointments.service';
 
 @Component({
     selector: 'app-health-question',
@@ -38,7 +39,7 @@ export class HealthQuestionComponent implements OnChanges, OnDestroy {
             this.response.addControl('detail', control);
             control.valueChanges.pipe(takeUntil(this.onDestroy), debounceTime(375)).subscribe(() => {
                 if (this.question) {
-                    this.update.emit({ id: this.question.id, additionalInfo: control.value });
+                    this.update.emit({ id: this.question.fact.id, additionalInfo: control.value });
                 }
             });
         }
@@ -47,11 +48,11 @@ export class HealthQuestionComponent implements OnChanges, OnDestroy {
     handlePositiveSelection() {
         if (this.question !== undefined) {
             const { fact, womenOnly } = this.question;
-            this.positive.emit({ id: this.question.id, payload: { fact: fact.value, womenOnly } });
+            this.positive.emit({ id: this.question.fact.id, payload: { fact: fact.value, womenOnly } });
         }
     }
 
     handleNegativeSelection() {
-        this.negative.emit(this.question?.id);
+        this.negative.emit(this.question?.fact.id);
     }
 }

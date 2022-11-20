@@ -7,7 +7,7 @@ export async function getQuestions(request: Request, response: Response) {
     const questions = await m.AppointmentQuestion.findAll({
         include: {
             model: m.AppointmentFact,
-            attributes: ['value'],
+            attributes: ['id', 'value'],
         },
     });
     response.status(200).json(questions);

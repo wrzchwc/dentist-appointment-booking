@@ -9,9 +9,16 @@ export interface Appointment {
     services: AssociatedService[];
 }
 
-export interface IdQuantity {
+interface Id {
     id: string;
+}
+
+export interface IdQuantity extends Id {
     quantity: number;
+}
+
+export interface IdInfo extends Id {
+    additionalInfo?: string;
 }
 
 @Injectable({
@@ -35,7 +42,7 @@ export class AppointmentsService {
         });
     }
 
-    createAppointment(startsAt: Date, services: IdQuantity[]) {
-        return this.client.post(this.baseUrl, { startsAt, services });
+    createAppointment(startsAt: Date, services: IdQuantity[], facts?: IdInfo[]) {
+        return this.client.post(this.baseUrl, { startsAt, services, facts });
     }
 }

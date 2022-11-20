@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { IdInfo } from '../../shared/_services/appointments/appointments.service';
 
 export interface HealthStateDescriptor {
     id: string;
@@ -9,11 +10,6 @@ interface HealthStatePayload {
     fact: string;
     additionalInfo?: string;
     womenOnly: boolean;
-}
-
-export interface IdInfo {
-    id: string;
-    additionalInfo?: string;
 }
 
 @Injectable({
@@ -62,5 +58,9 @@ export class HealthStateService {
 
     private mapToId([id]: [string, HealthStatePayload]): string {
         return id;
+    }
+
+    getIdInfoItems(): IdInfo[] {
+        return Array.from(this.state.entries()).map(([id, { additionalInfo }]) => ({ id, additionalInfo }));
     }
 }

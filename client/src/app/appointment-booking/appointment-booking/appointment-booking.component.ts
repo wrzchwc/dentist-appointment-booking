@@ -61,7 +61,7 @@ export class AppointmentBookingComponent implements OnDestroy {
         const startsAt = this.time.selectedTime$.value;
         if (startsAt !== null) {
             this.appointments
-                .createAppointment(startsAt, this.cart.getIdQuantityObjects())
+                .createAppointment(startsAt, this.cart.getIdQuantityObjects(), this.healthState.getIdInfoItems())
                 .pipe(takeUntil(this.onDestroy))
                 .subscribe(async () => {
                     await this.router.navigateByUrl('/client');

@@ -8,7 +8,7 @@ export interface AppointmentQuestion {
     question: string;
     subquestion: string | null;
     womenOnly: boolean;
-    fact: { value: string };
+    fact: { value: string; id: string };
 }
 
 @Injectable({
