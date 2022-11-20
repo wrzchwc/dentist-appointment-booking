@@ -8,6 +8,7 @@ export interface HealthStateDescriptor {
 interface HealthStatePayload {
     fact: string;
     additionalInfo?: string;
+    womenOnly: boolean;
 }
 
 export interface IdInfo {
@@ -46,5 +47,20 @@ export class HealthStateService {
 
     clear() {
         this.state.clear();
+    }
+
+    clearWomenOnly() {
+        const identifiers = Array.from(this.state.entries()).filter(this.filterForWomenOnly).map(this.mapToId);
+        identifiers.forEach((identifier) => {
+            this.state.delete(identifier);
+        });
+    }
+
+    private filterForWomenOnly([, { womenOnly }]: [string, HealthStatePayload]): boolean {
+        return womenOnly;
+    }
+
+    private mapToId([id]: [string, HealthStatePayload]): string {
+        return id;
     }
 }

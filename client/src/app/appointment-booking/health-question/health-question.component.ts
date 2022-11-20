@@ -46,7 +46,8 @@ export class HealthQuestionComponent implements OnChanges, OnDestroy {
 
     handlePositiveSelection() {
         if (this.question !== undefined) {
-            this.positive.emit({ id: this.question.id, payload: { fact: this.question.fact.value } });
+            const { fact, womenOnly } = this.question;
+            this.positive.emit({ id: this.question.id, payload: { fact: fact.value, womenOnly } });
         }
     }
 
