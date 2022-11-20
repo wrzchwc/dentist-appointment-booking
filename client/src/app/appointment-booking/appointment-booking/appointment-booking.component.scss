@@ -1,7 +1,7 @@
 @use 'src/dimensions' as dimensions;
 
 .main-container {
-    padding: dimensions.$header-height 136px 93px;
+    padding: dimensions.$header-height dimensions.$horizontal-container-padding 93px;
 }
 
 .stepper {

@@ -1,25 +1,50 @@
 @use 'src/dimensions' as dimensions;
 
+$dimension: 58px;
+
 .main-container {
     padding-top: dimensions.$header-height;
 }
 
-.info-container {
-    margin-top: 160px;
+.container {
     display: flex;
-    flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
     cursor: default;
+    flex-direction: column;
 }
 
-.greeting {
-    $dimension: 58px;
+.info-container {
+    @extend .container;
 
-    margin-bottom: 2 * $dimension;
+    margin-top: 160px;
+    align-items: center;
+}
+
+.appointments-container {
+    @extend .container;
+
+    margin-top: 40px;
+    padding: 0 dimensions.$horizontal-container-padding;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.header {
     font-weight: 700;
     font-size: $dimension - 10px;
     line-height: $dimension;
+}
+
+.greeting {
+    @extend .title;
+
+    margin-bottom: 2 * $dimension;
+}
+
+.title {
+    @extend .header;
+
+    margin-bottom: 0;
 }
 
 .action-label {
