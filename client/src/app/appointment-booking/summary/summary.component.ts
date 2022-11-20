@@ -7,6 +7,7 @@ import { PriceService } from '../../shared/_services/appointments/price.service'
 import { ColumnDef } from './row-def.pipe';
 import { LengthService } from '../../shared/_services/appointments/length.service';
 import { filter } from 'rxjs';
+import { HealthStateService } from '../health-state/health-state.service';
 
 @Component({
     selector: 'app-summary',
@@ -22,7 +23,8 @@ export class SummaryComponent implements AfterViewChecked {
         public time: AppointmentTimeService,
         public cart: AppointmentCartService,
         public price: PriceService,
-        private length: LengthService
+        private length: LengthService,
+        public state: HealthStateService
     ) {
         this.displayedColumns = [
             { label: 'usługa', property: 'name' },

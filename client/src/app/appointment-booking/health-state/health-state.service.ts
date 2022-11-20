@@ -25,6 +25,10 @@ export class HealthStateService {
         this.state = new Map<string, HealthStatePayload>();
     }
 
+    get facts(): string[] {
+        return Array.from(this.state.values()).map(({ fact }) => fact);
+    }
+
     store(descriptor: HealthStateDescriptor) {
         this.state.set(descriptor.id, descriptor.payload);
     }
