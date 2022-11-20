@@ -1,0 +1,64 @@
+<section class="main-container">
+    <mat-stepper linear labelPosition="bottom" class="stepper">
+        <mat-step label="Zakres leczenia" [completed]="cart.valid">
+            <ng-template matStepContent>
+                <app-appointment-services [services]="services"></app-appointment-services>
+                <section class="step-buttons-container">
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        matStepperNext
+                        class="step-button"
+                        [disabled]="!cart.valid"
+                    >
+                        DALEJ
+                    </button>
+                    <button mat-raised-button color="accent" routerLink="/client" class="step-button">ANULUJ</button>
+                </section>
+            </ng-template>
+        </mat-step>
+        <mat-step label="Termin wizyty" [completed]="(time.selectedTime$ | async) !== null">
+            <ng-template matStepContent>
+                <app-date [availableTimes]="availableTimes" (workdayChange)="refreshAppointments()"></app-date>
+                <section class="step-buttons-container">
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        matStepperNext
+                        class="step-button"
+                        [disabled]="(time.selectedTime$ | async) === null"
+                    >
+                        DALEJ
+                    </button>
+                    <button mat-raised-button color="accent" matStepperPrevious class="step-button">POWRÓT</button>
+                </section>
+            </ng-template>
+        </mat-step>
+        <mat-step label="Stan zdrowia">
+            <ng-template matStepContent>
+                <app-health-state [questions]="questions"></app-health-state>
+                <section class="step-buttons-container">
+                    <button mat-raised-button color="primary" matStepperNext class="step-button">DALEJ</button>
+                    <button mat-raised-button color="accent" matStepperPrevious class="step-button">POWRÓT</button>
+                </section>
+            </ng-template>
+        </mat-step>
+        <mat-step label="Podsumowanie">
+            <ng-template matStepContent>
+                <app-summary></app-summary>
+                <section class="step-buttons-container">
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        class="step-button"
+                        (click)="handleBookAppointmentClick($event)"
+                    >
+                        REZERWUJ
+                    </button>
+                    <button mat-raised-button color="accent" matStepperPrevious class="step-button">POWRÓT</button>
+                    <button mat-raised-button color="accent" routerLink="/client" class="step-button">ANULUJ</button>
+                </section>
+            </ng-template>
+        </mat-step>
+    </mat-stepper>
+</section>

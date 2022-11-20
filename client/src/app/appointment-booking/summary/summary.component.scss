@@ -1,0 +1,66 @@
+@use '@angular/material' as mat;
+@use '../appointment-booking';
+
+.content {
+    display: flex;
+    gap: 20px;
+}
+
+.content-wrapper {
+    @extend .content;
+
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.content-container {
+    @extend .content;
+
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: mat.get-color-from-palette(mat.$gray-palette, 50);
+}
+
+.text {
+    margin-bottom: 0;
+}
+
+.card-header {
+    @extend .text;
+
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 29px;
+}
+
+.card-content {
+    @extend .text;
+
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.table {
+    width: 100%;
+    background: transparent;
+}
+
+th.mat-header-cell {
+    &:last-of-type {
+        padding-right: 0;
+    }
+}

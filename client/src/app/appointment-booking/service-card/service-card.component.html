@@ -1,0 +1,34 @@
+<ng-container *ngIf="service">
+    <mat-card class="main-container">
+        <span class="styles-color-accent service-name">{{ service.name }}</span>
+        <div class="action-container">
+            <div class="details-container">
+                <article class="detail-container times-detail">
+                    <mat-icon color="primary">schedule</mat-icon>
+                    <span>{{ service | appointmentTimes: 'MIN' }}</span>
+                </article>
+                <article class="detail-container price-detail">
+                    <mat-icon color="primary">payments</mat-icon>
+                    <span *ngIf="service.price">{{ service.price }} PLN</span>
+                    <mat-icon color="accent" [matTooltip]="tooltip" *ngIf="service.detail === 'A'"> info </mat-icon>
+                </article>
+            </div>
+            <div class="cart-container">
+                <button
+                    mat-icon-button
+                    color="accent"
+                    class="icon"
+                    type="button"
+                    (click)="handleRemoveServiceClick()"
+                    [disabled]="(cart.quantityOf(service) | async) === 0"
+                >
+                    <mat-icon class="icon">remove_circle</mat-icon>
+                </button>
+                <span class="count">{{ cart.quantityOf(service) | async }}</span>
+                <button mat-icon-button color="primary" class="icon" type="button" (click)="handleAddServiceClick()">
+                    <mat-icon class="icon">add_circle</mat-icon>
+                </button>
+            </div>
+        </div>
+    </mat-card>
+</ng-container>

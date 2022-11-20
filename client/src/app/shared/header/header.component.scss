@@ -1,0 +1,89 @@
+@use 'src/dimensions' as dimensions;
+
+.shadow {
+    box-shadow: 0 3px 1px -2px #0003, 0 2px 2px #00000024, 0 1px 5px #0000001f;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.main-container {
+    @extend .container;
+
+    position: fixed;
+    top: 0;
+    padding: 29px;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 2;
+}
+
+.logo-container {
+    @extend .container;
+
+    gap: 38px;
+}
+
+.logo-item:hover {
+    opacity: 75%;
+    cursor: pointer;
+}
+
+.app-name {
+    margin-bottom: 0;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 44px;
+}
+
+.user-container {
+    @extend .container;
+
+    gap: 80px;
+}
+
+.profile-container {
+    @extend .container;
+
+    gap: 19px;
+}
+
+.button-base {
+    height: dimensions.$icon-size;
+    width: dimensions.$icon-size;
+}
+
+.avatar {
+    @extend .button-base;
+    @extend .shadow;
+
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 34px;
+    cursor: default;
+}
+
+#sign-out-icon.sign-out-icon {
+    line-height: dimensions.$icon-size;
+    font-size: dimensions.$icon-size;
+}
+
+.nav-container {
+    @extend .container;
+
+    padding: 11px 43px;
+    gap: 40px;
+}
+
+.nav-button {
+    font-weight: 600;
+    font-size: 20px;
+}

@@ -1,0 +1,45 @@
+<nav
+    class="main-container"
+    [ngClass]="{ 'styles-background-accent': auth.authenticated$ | async, shadow: auth.authenticated$ | async }"
+>
+    <div class="logo-container">
+        <img src="/assets/favicon.svg" alt="" class="logo-item" [routerLink]="logoUrl" />
+        <h1 class="logo-item app-name styles-color-primary" [routerLink]="logoUrl">Dentist Appointment Booking</h1>
+    </div>
+    <ng-container *ngIf="auth.authenticated$ | async">
+        <div class="user-container">
+            <ng-container *ngIf="auth.profile?.isAdmin; else client">
+                <div class="nav-container">
+                    <button mat-button color="primary" class="nav-button" routerLink="/admin/appointments">
+                        WIZYTY
+                    </button>
+                    <button mat-button color="primary" class="nav-button" routerLink="/admin/price-list">CENNIK</button>
+                </div>
+            </ng-container>
+            <ng-template #client>
+                <div class="nav-container">
+                    <button
+                        mat-raised-button
+                        color="primary"
+                        class="nav-button"
+                        routerLink="/client/appointment-booking"
+                    >
+                        UMÓW WIZYTYĘ
+                    </button>
+                    <button mat-button color="primary" class="nav-button" routerLink="/client/appointments">
+                        MOJE WIZYTY
+                    </button>
+                </div>
+            </ng-template>
+            <div class="profile-container">
+                <span class="styles-color-primary user-name">{{ auth.profile?.name }}</span>
+                <img [src]="auth.profile?.photoUrl" [alt]="auth.profile?.name" crossorigin="anonymous" class="avatar" />
+                <a [href]="signOutUrl">
+                    <button mat-icon-button color="primary" routerLink="/">
+                        <mat-icon id="sign-out-icon" class="button-base sign-out-icon">logout</mat-icon>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </ng-container>
+</nav>

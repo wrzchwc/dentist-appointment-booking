@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { AuthenticationService } from '../../shared/_services/authentication/authentication.service';
 
 @Component({
     selector: 'app-client',
@@ -7,9 +7,6 @@ import { environment } from '../../../environments/environment';
     styleUrls: ['./client.component.scss'],
 })
 export class ClientComponent {
-    signOutUrl: string;
-
-    constructor() {
-        this.signOutUrl = `${environment.apiUrl}/api/auth/sign-out`;
-    }
+    // eslint-disable-next-line no-unused-vars
+    constructor(public auth: AuthenticationService) {}
 }

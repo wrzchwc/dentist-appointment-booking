@@ -5,3 +5,6 @@ public
 
 *.pem
 .env
+
+/data
+/scripts/data

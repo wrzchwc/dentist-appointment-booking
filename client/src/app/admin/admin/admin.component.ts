@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { DateService } from '../../shared/_services/date.service';
 
 @Component({
     selector: 'app-admin',
@@ -7,9 +7,6 @@ import { environment } from '../../../environments/environment';
     styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent {
-    signOutUrl: string;
-
-    constructor() {
-        this.signOutUrl = `${environment.apiUrl}/api/auth/sign-out`;
-    }
+    // eslint-disable-next-line no-unused-vars
+    constructor(public date: DateService) {}
 }

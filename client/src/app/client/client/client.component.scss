@@ -1,0 +1,38 @@
+@use 'src/dimensions' as dimensions;
+
+.main-container {
+    padding-top: dimensions.$header-height;
+}
+
+.info-container {
+    margin-top: 160px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    cursor: default;
+}
+
+.greeting {
+    $dimension: 58px;
+
+    margin-bottom: 2 * $dimension;
+    font-weight: 700;
+    font-size: $dimension - 10px;
+    line-height: $dimension;
+}
+
+.action-label {
+    cursor: pointer;
+
+    &:hover {
+        opacity: 75%;
+    }
+}
+
+.info-label {
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 39px;
+    margin-bottom: 0;
+}

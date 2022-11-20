@@ -1,13 +1,24 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { AuthenticationResolver } from './_resolvers/authentication/authentication.resolver';
-import { AuthenticationGuard } from './_guards/authentication/authentication.guard';
+import { AuthenticationResolver } from './shared/_resolvers/authentication/authentication.resolver';
+import { AuthenticationGuard } from './shared/_guards/authentication/authentication.guard';
 
 const routes: Routes = [
     {
         path: 'client',
-        canLoad: [AuthenticationGuard],
-        loadChildren: () => import('./client/client.module').then((m) => m.ClientModule),
+        children: [
+            {
+                path: 'appointment-booking',
+                canLoad: [AuthenticationGuard],
+                loadChildren: () =>
+                    import('./appointment-booking/appointment-booking.module').then((m) => m.AppointmentBookingModule),
+            },
+            {
+                path: '',
+                canLoad: [AuthenticationGuard],
+                loadChildren: () => import('./client/client.module').then((m) => m.ClientModule),
+            },
+        ],
     },
     {
         path: 'admin',

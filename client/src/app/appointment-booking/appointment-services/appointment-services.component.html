@@ -1,0 +1,6 @@
+<section class="main-container">
+    <h1 class="styles-color-primary title">Wybierz usługi, które chcesz zrealizować</h1>
+    <ng-container *ngFor="let service of services">
+        <app-service-card [service]="service"></app-service-card>
+    </ng-container>
+</section>
