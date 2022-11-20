@@ -74,16 +74,11 @@ export async function updateAppointmentStartDate(request: r.UpdateAppointmentSta
     response.status(200).json(updatedAppointments[0]);
 }
 
-export async function getAppointments({ query }: r.GetAppointments, response: Response) {
+export async function getAppointments(request: r.GetAppointments, response: Response) {
     let appointments: m.Appointment[];
 
     try {
-        appointments = await m.Appointment.findAll({
-            where: { startsAt: getStartsAtCondition(query) },
-            include: [{ model: m.Service, through: { attributes: ['quantity'] } }],
-            order: [['startsAt', 'ASC']],
-            attributes: ['id', 'startsAt'],
-        });
+        appointments = await m.Appointment.findAll(createGetAppointmentsOptions(request));
     } catch (e) {
         return response.status(500).json({ error: 'Operation failed' });
     }
@@ -91,7 +86,30 @@ export async function getAppointments({ query }: r.GetAppointments, response: Re
     response.status(200).json(appointments);
 }
 
-function getStartsAtCondition({ before, after }: r.GetAppointmentsQuery) {
+export async function getClientAppointments(request: r.GetAppointments, response: Response) {
+    let appointments: m.Appointment[];
+
+    try {
+        const user = await m.User.find(request.session?.passport.user.id);
+        appointments = await user.getAppointments(createGetAppointmentsOptions(request));
+    } catch (e) {
+        const [code, error] = getErrorData(e);
+        return response.status(code).json({ error });
+    }
+
+    response.status(200).json(appointments);
+}
+
+function createGetAppointmentsOptions({ query }: r.GetAppointments): any {
+    return {
+        attributes: ['id', 'startsAt'],
+        order: [['startsAt', 'ASC']],
+        include: [{ model: m.Service, through: { attributes: ['quantity'] } }],
+        where: { startsAt: createStartsAtCondition(query) },
+    };
+}
+
+function createStartsAtCondition({ before, after }: r.DateRange) {
     if (after && before) {
         return { [Op.between]: [after, before] };
     } else if (after) {

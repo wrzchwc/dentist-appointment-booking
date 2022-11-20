@@ -14,6 +14,7 @@ export class User extends s.Model<s.InferAttributes<User>, s.InferCreationAttrib
     declare photoUrl?: string;
 
     declare createAppointment: s.HasManyCreateAssociationMixin<Appointment>;
+    declare getAppointments: s.HasManyGetAssociationsMixin<Appointment>;
 
     static async register(userProfile: Profile) {
         const googleId = userProfile.id;

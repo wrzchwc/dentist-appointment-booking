@@ -8,10 +8,10 @@ export interface UpdateAppointmentStartDate extends Request {
 }
 
 export interface GetAppointments extends Request {
-    query: GetAppointmentsQuery;
+    query: DateRange;
 }
 
-export interface GetAppointmentsQuery {
+export interface DateRange {
     after?: Date;
     before?: Date;
 }

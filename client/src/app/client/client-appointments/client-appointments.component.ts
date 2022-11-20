@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-client-appointments',
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
     styleUrls: ['./client-appointments.component.scss'],
 })
 export class ClientAppointmentsComponent {
-    constructor() {}
+    // eslint-disable-next-line no-unused-vars
+    constructor(public route: ActivatedRoute) {}
 }
