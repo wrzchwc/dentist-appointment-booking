@@ -2,7 +2,12 @@
     <h1 class="styles-color-primary title">Opowiedz o swoim stanie zdrowia</h1>
     <ng-container *ngFor="let question of questions">
         <ng-container *ngIf="!question.womenOnly">
-            <app-health-question [question]="question"></app-health-question>
+            <app-health-question
+                [question]="question"
+                (positive)="state.store($event)"
+                (negative)="state.remove($event)"
+                (update)="state.update($event)"
+            ></app-health-question>
         </ng-container>
     </ng-container>
     <mat-slide-toggle
@@ -16,7 +21,12 @@
     <ng-container *ngIf="isWomen.value">
         <ng-container *ngFor="let question of questions">
             <ng-container *ngIf="question.womenOnly">
-                <app-health-question [question]="question"></app-health-question>
+                <app-health-question
+                    [question]="question"
+                    (positive)="state.store($event)"
+                    (negative)="state.remove($event)"
+                    (update)="state.update($event)"
+                ></app-health-question>
             </ng-container>
         </ng-container>
     </ng-container>

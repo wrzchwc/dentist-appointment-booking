@@ -16,8 +16,8 @@
             </ng-container>
         </div>
         <mat-radio-group [formControl]="response.controls['positive']">
-            <mat-radio-button [value]="true">TAK</mat-radio-button>
-            <mat-radio-button [value]="false">NIE</mat-radio-button>
+            <mat-radio-button [value]="true" (click)="handlePositiveSelection()">TAK</mat-radio-button>
+            <mat-radio-button [value]="false" (click)="handleNegativeSelection()">NIE</mat-radio-button>
         </mat-radio-group>
     </article>
 </ng-container>
