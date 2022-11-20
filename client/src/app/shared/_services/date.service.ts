@@ -18,23 +18,7 @@ export class DateService {
         this._nextWorkday = this.calculateNextWorkday(this._currentWorkday);
     }
 
-    get currentWorkday(): Date {
-        return this._currentWorkday;
-    }
-
-    get previousWorkday(): Date {
-        return this._previousWorkday;
-    }
-
-    get nextWorkday(): Date {
-        return this._nextWorkday;
-    }
-
-    get currentDay(): Date {
-        return new Date();
-    }
-
-    getCurrentWorkdayDate(): Date {
+    private getCurrentWorkdayDate(): Date {
         const date = this.currentDay;
         if (this.isDay(WeekDay.Saturday, date)) {
             date.setDate(date.getDate() + 2);
@@ -50,6 +34,22 @@ export class DateService {
 
     private isAfterWorkingTime(date: Date): boolean {
         return date.getHours() > 17;
+    }
+
+    get currentWorkday(): Date {
+        return this._currentWorkday;
+    }
+
+    get previousWorkday(): Date {
+        return this._previousWorkday;
+    }
+
+    get nextWorkday(): Date {
+        return this._nextWorkday;
+    }
+
+    get currentDay(): Date {
+        return new Date();
     }
 
     isWorkingTime(date: Date, plannedAppointmentLength = 0) {
@@ -99,5 +99,11 @@ export class DateService {
 
     isBeforeWorkingTime(date: Date): boolean {
         return date.getHours() < 9;
+    }
+
+    reset() {
+        this._currentWorkday = this.getCurrentWorkdayDate();
+        this._previousWorkday = this.calculatePreviousWorkday(this._currentWorkday);
+        this._nextWorkday = this.calculateNextWorkday(this._currentWorkday);
     }
 }

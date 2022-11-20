@@ -7,6 +7,7 @@ import { AppointmentTimeService } from '../_services/appointment-time/appointmen
 import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
 import { Subject, takeUntil } from 'rxjs';
 import { AppointmentsService } from '../../shared/_services/appointments/appointments.service';
+import { DateService } from '../../shared/_services/date.service';
 
 @Component({
     selector: 'app-appointment-booking',
@@ -24,7 +25,8 @@ export class AppointmentBookingComponent implements OnDestroy {
         private router: Router,
         private appointments: AppointmentsService,
         private route: ActivatedRoute,
-        public cart: AppointmentCartService
+        public cart: AppointmentCartService,
+        private date: DateService
     ) {
         this.services = route.snapshot.data['services'];
         this.questions = route.snapshot.data['appointmentQuestions'];
@@ -48,6 +50,7 @@ export class AppointmentBookingComponent implements OnDestroy {
     ngOnDestroy(): void {
         this.time.selectedTime$.next(null);
         this.onDestroy.next();
+        this.date.reset();
     }
 
     async handleBookAppointmentClick(event: MouseEvent) {
