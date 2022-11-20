@@ -1,11 +1,11 @@
 /*eslint no-unused-vars: 0*/
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { DateService } from 'src/app/shared/_services/date.service';
-import { LengthService } from 'src/app/shared/_services/appointments/length.service';
-import { AppointmentCartService } from '../appointment-cart/appointment-cart.service';
-import { AppointmentsService } from 'src/app/shared/_services/appointments/appointments.service';
-import { ServicesService } from 'src/app/shared/_services/appointments/services.service';
+import { DateService } from 'src/app/shared/_services/utility/date.service';
+import { LengthService } from 'src/app/shared/_services/utility/length.service';
+import { AppointmentCartService } from '../appointment-cart.service';
+import { ServicesService } from 'src/app/shared/_services/services.service';
+import { AppointmentBookingService } from './appointment-booking.service';
 
 interface Period {
     startsAt: Date;
@@ -22,14 +22,14 @@ export class AppointmentTimeService {
         private dateService: DateService,
         private lengthService: LengthService,
         private cartService: AppointmentCartService,
-        private appointmentsService: AppointmentsService,
+        private appointmentBookingService: AppointmentBookingService,
         private servicesService: ServicesService
     ) {
         this.selectedTime$ = new BehaviorSubject<Date | null>(null);
     }
 
     getAvailableTimes(): Observable<Date[]> {
-        return this.appointmentsService.getAppointments(this.dateService.currentWorkday).pipe(
+        return this.appointmentBookingService.getAppointments(this.dateService.currentWorkday).pipe(
             map((appointments) => {
                 return appointments.map((appointment) => {
                     const items = this.servicesService.mapAssociatedServicesToLengthItems(appointment.services);

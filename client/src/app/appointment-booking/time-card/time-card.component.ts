@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
+import { AppointmentTimeService } from '../appointment-booking/appointment-time.service';
 
 @Component({
     selector: 'app-time-card',

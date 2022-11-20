@@ -1,14 +1,13 @@
 /*eslint no-unused-vars: 0*/
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Service } from '../../shared/_services/appointments/services.service';
-import { AppointmentQuestion } from '../_services/appointment-questions/appointment-questions.service';
-import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
-import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
+import { Service } from '../../shared/_services/services.service';
+import { AppointmentTimeService } from './appointment-time.service';
+import { AppointmentCartService } from '../appointment-cart.service';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
-import { AppointmentsService } from '../../shared/_services/appointments/appointments.service';
-import { DateService } from '../../shared/_services/date.service';
+import { DateService } from '../../shared/_services/utility/date.service';
 import { HealthStateService } from '../health-state/health-state.service';
+import { AppointmentBookingService, AppointmentQuestion } from './appointment-booking.service';
 
 @Component({
     selector: 'app-appointment-booking',
@@ -24,7 +23,7 @@ export class AppointmentBookingComponent implements OnDestroy {
     constructor(
         public time: AppointmentTimeService,
         private router: Router,
-        private appointments: AppointmentsService,
+        private booking: AppointmentBookingService,
         private route: ActivatedRoute,
         public cart: AppointmentCartService,
         private date: DateService,
@@ -60,7 +59,7 @@ export class AppointmentBookingComponent implements OnDestroy {
         event.stopPropagation();
         const startsAt = this.time.selectedTime$.value;
         if (startsAt !== null) {
-            this.appointments
+            this.booking
                 .createAppointment(startsAt, this.cart.getIdQuantityObjects(), this.healthState.getIdInfoItems())
                 .pipe(takeUntil(this.onDestroy))
                 .subscribe(async () => {

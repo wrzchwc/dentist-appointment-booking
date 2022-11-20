@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { LengthItem } from './length.service';
+import { LengthItem } from './utility/length.service';
 
 interface ServiceBase {
     id: string;

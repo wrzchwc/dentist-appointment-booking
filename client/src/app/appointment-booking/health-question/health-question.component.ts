@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
-import { AppointmentQuestion } from '../_services/appointment-questions/appointment-questions.service';
+import { AppointmentQuestion, IdInfo } from '../appointment-booking/appointment-booking.service';
 import { FormBuilder, FormControl, FormRecord } from '@angular/forms';
 import { HealthStateDescriptor } from '../health-state/health-state.service';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
-import { IdInfo } from '../../shared/_services/appointments/appointments.service';
 
 @Component({
     selector: 'app-health-question',

@@ -1,8 +1,8 @@
 import { AfterViewChecked, Component, EventEmitter, Input, Output } from '@angular/core';
-import { DateService } from 'src/app/shared/_services/date.service';
-import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
-import { LengthService } from '../../shared/_services/appointments/length.service';
-import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
+import { DateService } from 'src/app/shared/_services/utility/date.service';
+import { AppointmentTimeService } from '../appointment-booking/appointment-time.service';
+import { LengthService } from '../../shared/_services/utility/length.service';
+import { AppointmentCartService } from '../appointment-cart.service';
 
 @Component({
     selector: 'app-date',

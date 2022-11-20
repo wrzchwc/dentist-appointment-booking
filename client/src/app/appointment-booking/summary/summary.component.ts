@@ -1,11 +1,11 @@
 /*eslint no-unused-vars: 0*/
 import { AfterViewChecked, Component } from '@angular/core';
 import { AuthenticationService } from '../../shared/_services/authentication/authentication.service';
-import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
-import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
-import { PriceService } from '../../shared/_services/appointments/price.service';
+import { AppointmentTimeService } from '../appointment-booking/appointment-time.service';
+import { AppointmentCartService } from '../appointment-cart.service';
+import { PriceService } from '../../shared/_services/utility/price.service';
 import { ColumnDef } from './row-def.pipe';
-import { LengthService } from '../../shared/_services/appointments/length.service';
+import { LengthService } from '../../shared/_services/utility/length.service';
 import { filter } from 'rxjs';
 import { HealthStateService } from '../health-state/health-state.service';
 

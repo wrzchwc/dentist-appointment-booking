@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Service } from 'src/app/shared/_services/appointments/services.service';
+import { Service } from 'src/app/shared/_services/services.service';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { PriceItem } from 'src/app/shared/_services/appointments/price.service';
-import { LengthItem } from 'src/app/shared/_services/appointments/length.service';
-import { IdQuantity } from 'src/app/shared/_services/appointments/appointments.service';
+import { PriceItem } from 'src/app/shared/_services/utility/price.service';
+import { LengthItem } from 'src/app/shared/_services/utility/length.service';
+import { IdQuantity } from './appointment-booking/appointment-booking.service';
 
 @Injectable({
     providedIn: 'root',
