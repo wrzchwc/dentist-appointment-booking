@@ -1,0 +1,18 @@
+<ng-container *ngIf="appointment">
+    <mat-card class="main-container">
+        <div class="header-container">
+            <mat-icon color="primary">event</mat-icon>
+            <h2 class="styles-color-accent header">{{ appointment.startsAt | date: 'dd.MM.yyyy, HH:mm' }}</h2>
+        </div>
+        <div>
+            <mat-chip-list>
+                <ng-container *ngFor="let service of services">
+                    <mat-chip color="accent" selected class="chip">{{ service }}</mat-chip>
+                </ng-container>
+            </mat-chip-list>
+        </div>
+        <button mat-raised-button color="primary" class="details-button" type="button">
+            SZCZEGÓŁY<mat-icon class="icon">info</mat-icon>
+        </button>
+    </mat-card>
+</ng-container>

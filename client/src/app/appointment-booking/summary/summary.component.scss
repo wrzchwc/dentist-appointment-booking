@@ -1,5 +1,6 @@
 @use '@angular/material' as mat;
 @use '../appointment-booking';
+@use 'src/dimensions' as dimensions;
 
 .content {
     display: flex;
@@ -30,7 +31,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
-    padding: 10px;
+    padding: dimensions.$card-padding;
     background-color: mat.get-color-from-palette(mat.$gray-palette, 50);
 }
 

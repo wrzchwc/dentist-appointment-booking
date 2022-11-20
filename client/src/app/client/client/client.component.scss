@@ -10,7 +10,6 @@ $dimension: 58px;
     display: flex;
     justify-content: flex-start;
     cursor: default;
-    flex-direction: column;
 }
 
 .info-container {
@@ -18,15 +17,31 @@ $dimension: 58px;
 
     margin-top: 160px;
     align-items: center;
+    flex-direction: column;
+}
+
+.appointments {
+    gap: 20px;
+}
+
+.appointments-wrapper {
+    @extend .container;
+    @extend .appointments;
+
+    flex-direction: column;
+    padding: 40px dimensions.$horizontal-container-padding;
+    align-items: stretch;
 }
 
 .appointments-container {
     @extend .container;
+    @extend .appointments;
 
-    margin-top: 40px;
-    padding: 0 dimensions.$horizontal-container-padding;
-    align-items: stretch;
-    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.appointment {
+    flex: 1 1 49%;
 }
 
 .header {

@@ -1,8 +1,13 @@
 <section class="main-container">
     <ng-container *ngIf="route.snapshot.data['appointments'].length > 0; else noUpcomingAppointments">
-        <div class="appointments-container">
+        <div class="appointments-wrapper">
             <h1 class="styles-color-primary greeting">Nadchodzące wizyty</h1>
-            {{ route.snapshot.data['appointments'] | json }}
+            <section class="appointments-container">
+                <ng-container *ngFor="let appointment of route.snapshot.data['appointments']">
+                    <app-client-appointment-preview [appointment]="appointment" class="appointment">
+                    </app-client-appointment-preview>
+                </ng-container>
+            </section>
         </div>
     </ng-container>
     <ng-template #noUpcomingAppointments>

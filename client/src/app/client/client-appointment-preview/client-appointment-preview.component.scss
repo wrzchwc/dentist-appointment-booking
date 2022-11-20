@@ -1,0 +1,51 @@
+@use "src/dimensions" as dimensions;
+@use '@angular/material' as mat;
+
+.main-container {
+  $dimension: 2 * dimensions.$card-padding;
+
+  padding: $dimension;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  background-color: mat.get-color-from-palette(mat.$gray-palette, 50);
+  gap: $dimension;
+}
+
+.bold {
+  font-weight: 600;
+}
+
+.details-button {
+  @extend .bold;
+
+  align-self: flex-end;
+  font-size: 16px;
+}
+
+.header {
+  @extend .bold;
+
+  margin-bottom: 0;
+}
+
+.icon {
+  margin-left: 5px
+}
+
+.header-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: dimensions.$card-padding;
+}
+
+.chip {
+  &:nth-child(2n+1) {
+    margin-right: 0;
+  }
+  &:nth-child(2n) {
+    margin-left: 0;
+  }
+}
