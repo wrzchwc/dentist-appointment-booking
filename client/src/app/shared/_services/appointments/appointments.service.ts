@@ -9,6 +9,11 @@ export interface Appointment {
     services: AssociatedService[];
 }
 
+export interface IdQuantity {
+    id: string;
+    quantity: number;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -28,5 +33,9 @@ export class AppointmentsService {
                 before: new Date(copy.setHours(17, 0, 0, 0)).toISOString(),
             },
         });
+    }
+
+    createAppointment(startsAt: Date, services: IdQuantity[]) {
+        return this.client.post(this.baseUrl, { startsAt, services });
     }
 }

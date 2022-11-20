@@ -3,6 +3,7 @@ import { Service } from 'src/app/shared/_services/appointments/services.service'
 import { BehaviorSubject, Subject } from 'rxjs';
 import { PriceItem } from 'src/app/shared/_services/appointments/price.service';
 import { LengthItem } from 'src/app/shared/_services/appointments/length.service';
+import { IdQuantity } from 'src/app/shared/_services/appointments/appointments.service';
 
 @Injectable({
     providedIn: 'root',
@@ -76,5 +77,13 @@ export class AppointmentCartService {
 
     private mapToLengthItem([{ value }, { length }]: [BehaviorSubject<number>, Service]): LengthItem {
         return { length, quantity: value };
+    }
+
+    getIdQuantityObjects(): IdQuantity[] {
+        return this.getCartValuesWithPositiveSubjectValue().map(this.mapToIdQuantityObject);
+    }
+
+    private mapToIdQuantityObject([{ value }, { id }]: [BehaviorSubject<number>, Service]): IdQuantity {
+        return { id, quantity: value };
     }
 }

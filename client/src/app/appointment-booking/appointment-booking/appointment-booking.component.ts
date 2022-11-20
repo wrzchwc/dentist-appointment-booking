@@ -1,3 +1,4 @@
+/*eslint no-unused-vars: 0*/
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Service } from '../../shared/_services/appointments/services.service';
@@ -5,6 +6,7 @@ import { AppointmentQuestion } from '../_services/appointment-questions/appointm
 import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
 import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
 import { Subject, takeUntil } from 'rxjs';
+import { AppointmentsService } from '../../shared/_services/appointments/appointments.service';
 
 @Component({
     selector: 'app-appointment-booking',
@@ -18,10 +20,9 @@ export class AppointmentBookingComponent implements OnDestroy {
     private readonly onDestroy: Subject<void>;
 
     constructor(
-        // eslint-disable-next-line no-unused-vars
         public time: AppointmentTimeService,
-        // eslint-disable-next-line no-unused-vars
         private router: Router,
+        private appointments: AppointmentsService,
         private route: ActivatedRoute,
         public cart: AppointmentCartService
     ) {
@@ -51,6 +52,14 @@ export class AppointmentBookingComponent implements OnDestroy {
 
     async handleBookAppointmentClick(event: MouseEvent) {
         event.stopPropagation();
-        await this.router.navigateByUrl('/client');
+        const startsAt = this.time.selectedTime$.value;
+        if (startsAt !== null) {
+            this.appointments
+                .createAppointment(startsAt, this.cart.getIdQuantityObjects())
+                .pipe(takeUntil(this.onDestroy))
+                .subscribe(async () => {
+                    await this.router.navigateByUrl('/client');
+                });
+        }
     }
 }
