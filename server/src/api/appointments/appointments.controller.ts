@@ -25,26 +25,25 @@ export async function createAppointment(request: r.CreateAppointment, response: 
         const [code, error] = getErrorData(e);
         return response.status(code).json({ error });
     }
-
     response.status(201).json(appointment);
 }
 
 async function addResourcesToAppointment(appointment: m.Appointment, { services, facts }: r.CreateAppointmentBody) {
-    return Promise.all([addServicesToAppointment(appointment, services), addFactsToAppointment(appointment, facts)]);
-}
-
-async function addServicesToAppointment(
-    appointment: m.Appointment,
-    attributes: r.ServiceAssociationCreationAttribute[]
-) {
-    return attributes.map(({ id, quantity }) => appointment.addService(id, { through: { quantity } }));
-}
-
-async function addFactsToAppointment(appointment: m.Appointment, attributes?: r.FactAssociationCreationAttribute[]) {
-    if (attributes) {
-        return attributes.map(({ id, additionalInfo }) => appointment.addFact(id, { through: { additionalInfo } }));
+    if (facts) {
+        return Promise.all([
+            ...services.map((service) => mapToAddServicePromise(appointment, service)),
+            ...facts.map((fact) => mapToAddFactPromise(appointment, fact)),
+        ]);
     }
-    return Promise.resolve();
+    return Promise.all([...services.map((service) => mapToAddServicePromise(appointment, service))]);
+}
+
+async function mapToAddServicePromise(appointment: m.Appointment, attribute: r.ServiceAssociationCreationAttribute) {
+    return appointment.addService(attribute.id, { through: { quantity: attribute.quantity } });
+}
+
+async function mapToAddFactPromise(appointment: m.Appointment, attribute: r.FactAssociationCreationAttribute) {
+    return appointment.addFact(attribute.id, { through: { additionalInfo: attribute.additionalInfo } });
 }
 
 async function getAppointment(id: string) {
