@@ -32,7 +32,7 @@ export class DateService {
         return date;
     }
 
-    private isAfterWorkingTime(date: Date): boolean {
+    isAfterWorkingTime(date: Date): boolean {
         return date.getHours() > 17;
     }
 

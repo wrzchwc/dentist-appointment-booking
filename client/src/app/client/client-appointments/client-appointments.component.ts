@@ -12,6 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class ClientAppointmentsComponent implements OnDestroy {
     appointments: Appointment[];
+    dayWithNoAppointments?: Date;
     private readonly onDestroy: Subject<void>;
 
     constructor(
@@ -29,12 +30,15 @@ export class ClientAppointmentsComponent implements OnDestroy {
         this.onDestroy.next();
     }
 
-    handleDateSelectionChange(event: Date) {
+    handleDateSelectionChange(date: Date) {
         this.clientAppointments
-            .getAppointments(event)
+            .getAppointments(date)
             .pipe(takeUntil(this.onDestroy))
             .subscribe((appointments) => {
                 this.appointments = appointments;
+                if (appointments.length === 0) {
+                    this.dayWithNoAppointments = date;
+                }
             });
     }
 }

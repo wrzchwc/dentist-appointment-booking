@@ -10,7 +10,7 @@
             </app-appointments-list>
         </ng-container>
         <ng-template #empty>
-            <h1 class="no-appointments">Brak wizyt w dniu {{ date.currentWorkday | date: 'dd.MM.yyyy' }}</h1>
+            <h1 class="no-appointments">Brak wizyt w dniu {{ dayWithNoAppointments | date: 'dd.MM.yyyy' }}</h1>
         </ng-template>
     </div>
 </section>
