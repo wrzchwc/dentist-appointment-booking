@@ -1,0 +1,24 @@
+@use 'src/dimensions' as dimensions;
+
+.main-container {
+  padding-top: dimensions.$header-height;
+}
+
+.appointments-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  cursor: default;
+  padding: 40px dimensions.$horizontal-container-padding;
+  align-items: stretch;
+  gap: 20px;
+}
+
+.header {
+  $dimension: 58px;
+
+  font-weight: 700;
+  font-size: $dimension - 10px;
+  line-height: $dimension;
+  margin-bottom: 0;
+}

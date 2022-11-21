@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Appointment } from '../../appointment-booking/appointment-booking/appointment-booking.service';
 
 @Component({
     selector: 'app-client-appointments',
@@ -7,6 +8,9 @@ import { ActivatedRoute } from '@angular/router';
     styleUrls: ['./client-appointments.component.scss'],
 })
 export class ClientAppointmentsComponent {
-    // eslint-disable-next-line no-unused-vars
-    constructor(public route: ActivatedRoute) {}
+    appointments: Appointment[];
+
+    constructor(private route: ActivatedRoute) {
+        this.appointments = route.snapshot.data['appointments'];
+    }
 }

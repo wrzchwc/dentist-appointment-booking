@@ -1,7 +1,7 @@
 <section class="main-container">
     <ng-container *ngIf="route.snapshot.data['appointments'].length > 0; else noUpcomingAppointments">
         <div class="appointments-wrapper">
-            <h1 class="styles-color-primary greeting">Nadchodzące wizyty</h1>
+            <h1 class="styles-color-primary title">Nadchodzące wizyty</h1>
             <app-appointments-list>
                 <ng-container *ngFor="let appointment of route.snapshot.data['appointments']">
                     <app-client-appointment-preview [appointment]="appointment" class="appointment">

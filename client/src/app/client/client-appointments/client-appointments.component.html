@@ -1,1 +1,13 @@
-{{ route.snapshot.data['appointments'] | json }}
+<section class="main-container">
+    <div class="appointments-wrapper">
+        <h1 class="styles-color-primary header">Moje wizyty</h1>
+        <app-appointments-list>
+            <ng-container *ngFor="let appointment of appointments">
+                <app-client-appointment-preview
+                    [appointment]="appointment"
+                    class="appointment"
+                ></app-client-appointment-preview>
+            </ng-container>
+        </app-appointments-list>
+    </div>
+</section>
