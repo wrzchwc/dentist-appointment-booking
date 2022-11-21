@@ -1,7 +1,7 @@
 <ng-container *ngIf="appointment">
     <mat-card class="main-container">
         <div class="header-container">
-            <mat-icon color="primary">event</mat-icon>
+            <mat-icon color="primary">calendar_month</mat-icon>
             <h2 class="styles-color-accent header">{{ appointment.startsAt | date: 'dd.MM.yyyy, HH:mm' }}</h2>
         </div>
         <div>
@@ -11,7 +11,7 @@
                 </ng-container>
             </mat-chip-list>
         </div>
-        <button mat-raised-button color="primary" class="details-button" type="button">
+        <button mat-raised-button color="primary" class="details-button" type="button" [routerLink]="link">
             SZCZEGÓŁY<mat-icon class="icon">info</mat-icon>
         </button>
     </mat-card>

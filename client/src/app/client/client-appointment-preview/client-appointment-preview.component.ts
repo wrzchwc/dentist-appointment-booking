@@ -9,14 +9,17 @@ import { Appointment } from '../../appointment-booking/appointment-booking/appoi
 export class ClientAppointmentPreviewComponent implements OnChanges {
     @Input() appointment?: Appointment;
     services: string[];
+    link: string;
 
     constructor() {
         this.services = [];
+        this.link = '';
     }
 
     ngOnChanges(): void {
         if (this.appointment !== undefined) {
             this.services = this.appointment.services.map((service) => service.name);
+            this.link = `/client/appointments/${this.appointment.id}`;
         }
     }
 }
