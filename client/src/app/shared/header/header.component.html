@@ -1,6 +1,10 @@
 <nav
     class="main-container"
-    [ngClass]="{ 'styles-background-accent': auth.authenticated$ | async, shadow: auth.authenticated$ | async }"
+    [ngClass]="{
+        'styles-background-accent': auth.authenticated$ | async,
+        shadow: auth.authenticated$ | async,
+        authenticated: auth.authenticated$ | async
+    }"
 >
     <div class="logo-container">
         <img src="/assets/favicon.svg" alt="" class="logo-item" [routerLink]="logoUrl" />
