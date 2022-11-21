@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ClientAppointmentsResolver } from '../client-appointments.resolver';
+import { ClientAppointmentsResolver } from './client-appointments.resolver';
 
 describe('ClientAppointmentsResolver', () => {
     let resolver: ClientAppointmentsResolver;

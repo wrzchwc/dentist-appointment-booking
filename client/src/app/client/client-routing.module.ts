@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ClientComponent } from './client/client.component';
 import { ClientAppointmentsComponent } from './client-appointments/client-appointments.component';
-import { ClientAppointmentsResolver } from './client-appointments.resolver';
+import { ClientAppointmentsResolver } from './client-appointments/client-appointments.resolver';
 import { ClientResolver } from './client/client.resolver';
 import { AppointmentComponent } from '../shared/appointment/appointment.component';
 
