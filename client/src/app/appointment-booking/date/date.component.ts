@@ -48,4 +48,15 @@ export class DateComponent implements AfterViewChecked {
     ignoreClick(event: Event) {
         event.stopPropagation();
     }
+
+    isPreviousWorkdayDisabled(): boolean {
+        if (this.date.previousWorkday.getFullYear() < this.date.currentDay.getFullYear()) {
+            return true;
+        } else if (this.date.previousWorkday.getMonth() < this.date.currentDay.getMonth()) {
+            return true;
+        } else if (this.date.previousWorkday.getDate() < this.date.currentDay.getDate()) {
+            return true;
+        }
+        return false;
+    }
 }
