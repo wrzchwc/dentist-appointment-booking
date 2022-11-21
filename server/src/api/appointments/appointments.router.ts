@@ -8,3 +8,4 @@ router.post('/', controller.createAppointment);
 router.patch('/:appointmentId/starts-at', controller.updateAppointmentStartDate);
 router.get('/', controller.getAppointments);
 router.get('/me', controller.getClientAppointments);
+router.get('/available-dates', controller.getAvailableDates);

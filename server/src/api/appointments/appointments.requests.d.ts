@@ -36,3 +36,10 @@ export interface FactAssociationCreationAttribute extends Identifiable {
 interface Identifiable {
     id: string;
 }
+
+export interface GetAvailableDates extends Request {
+    query: {
+        at: Date;
+        length: number;
+    };
+}

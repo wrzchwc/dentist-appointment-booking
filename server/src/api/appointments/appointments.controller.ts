@@ -120,6 +120,27 @@ function createStartsAtCondition({ before, after }: r.DateRange) {
     return { [Op.ne]: null };
 }
 
+export async function getAvailableDates({ query }: r.GetAvailableDates, response: Response) {
+    let appointments: m.Appointment[];
+
+    try {
+        appointments = await m.Appointment.findAll({
+            attributes: ['startsAt'],
+            order: [['startsAt', 'ASC']],
+            include: [{ model: m.Service, attributes: ['length'], through: { attributes: ['quantity'] } }],
+            where: {
+                startsAt: {
+                    [Op.between]: [query.at, new Date(query.at).setHours(17, 0, 0, 0)],
+                },
+            },
+        });
+    } catch (e) {
+        return response.status(500).json({ error: 'Operation failed' });
+    }
+
+    response.status(200).json(appointments);
+}
+
 function getErrorData(e: unknown | m.ModelError): [number, string] {
     return e instanceof m.ModelError ? [e.httpCode, e.message] : [500, 'Operation failed'];
 }
