@@ -1,0 +1,21 @@
+@use 'src/dimensions' as dimensions;
+.main-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.icon {
+    margin-left: 5px;
+}
+
+.button {
+    padding: dimensions.$card-padding;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.picker {
+    width: 25%;
+}

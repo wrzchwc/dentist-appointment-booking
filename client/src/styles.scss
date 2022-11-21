@@ -84,3 +84,15 @@ app-client-appointment-preview {
         }
     }
 }
+
+app-date-picker {
+    mat-form-field {
+        div.mat-form-field-wrapper {
+            div.mat-form-field-flex {
+                div.mat-form-field-infix {
+                    display: flex;
+                }
+            }
+        }
+    }
+}

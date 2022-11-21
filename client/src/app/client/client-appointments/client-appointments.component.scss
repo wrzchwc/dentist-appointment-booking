@@ -1,24 +1,32 @@
 @use 'src/dimensions' as dimensions;
 
 .main-container {
-  padding-top: dimensions.$header-height;
+    padding-top: dimensions.$header-height;
 }
 
 .appointments-wrapper {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  cursor: default;
-  padding: 40px dimensions.$horizontal-container-padding;
-  align-items: stretch;
-  gap: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    cursor: default;
+    padding: 40px dimensions.$horizontal-container-padding;
+    align-items: stretch;
+    gap: 20px;
 }
 
 .header {
-  $dimension: 58px;
+    $dimension: 58px;
 
-  font-weight: 700;
-  font-size: $dimension - 10px;
-  line-height: $dimension;
-  margin-bottom: 0;
+    font-weight: 700;
+    font-size: $dimension - 10px;
+    line-height: $dimension;
+    margin-bottom: 0;
+}
+
+.no-appointments {
+    margin-bottom: 0;
+    font-weight: 500;
+    font-size: 25px;
+    text-align: center;
+    margin-top: 20px;
 }

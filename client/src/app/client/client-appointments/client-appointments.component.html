@@ -1,10 +1,16 @@
 <section class="main-container">
     <div class="appointments-wrapper">
         <h1 class="styles-color-primary header">Moje wizyty</h1>
-        <app-appointments-list>
-            <ng-container *ngFor="let appointment of appointments">
-                <app-client-appointment-preview [appointment]="appointment"></app-client-appointment-preview>
-            </ng-container>
-        </app-appointments-list>
+        <app-date-picker (selectionChange)="handleDateSelectionChange($event)"></app-date-picker>
+        <ng-container *ngIf="appointments.length; else empty">
+            <app-appointments-list>
+                <ng-container *ngFor="let appointment of appointments">
+                    <app-client-appointment-preview [appointment]="appointment"></app-client-appointment-preview>
+                </ng-container>
+            </app-appointments-list>
+        </ng-container>
+        <ng-template #empty>
+            <h1 class="no-appointments">Brak wizyt w dniu {{ date.currentWorkday | date: 'dd.MM.yyyy' }}</h1>
+        </ng-template>
     </div>
 </section>
