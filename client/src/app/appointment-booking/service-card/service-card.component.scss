@@ -1,5 +1,5 @@
 @use '@angular/material' as mat;
-@use 'src/dimensions' as dimensions;
+@use 'src/theme/dimensions' as dimensions;
 
 @function gap($factor) {
     @return 20px * $factor;

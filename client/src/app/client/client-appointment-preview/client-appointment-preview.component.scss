@@ -1,4 +1,4 @@
-@use 'src/dimensions' as dimensions;
+@use 'src/theme/dimensions' as dimensions;
 @use '@angular/material' as mat;
 
 .main-container {
@@ -32,6 +32,7 @@
 
 .icon {
     margin-left: 5px;
+    line-height: 0.9;
 }
 
 .header-container {

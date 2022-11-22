@@ -1,1 +1,14 @@
-{{ appointment | json }}
+<ng-container *ngIf="appointment">
+    <div>
+        <div class="top-container">
+            <div>
+                <h1 class="styles-color-primary title">Wizyta</h1>
+                <h6 class="subtitle">identyfikator: <span class="styles-color-accent">{{ appointment.id }}</span></h6>
+            </div>
+            <button type="button" mat-raised-button color="warn" class="button">
+                ODWOŁAJ<mat-icon class="icon">cancel</mat-icon>
+            </button>
+        </div>
+        <div></div>
+    </div>
+</ng-container>

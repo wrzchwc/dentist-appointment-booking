@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
-@use 'src/styles.theme' as styles;
-@use 'src/dimensions' as dimensions;
+@use 'theme/styles.theme' as styles;
+@use 'theme/dimensions' as dimensions;
 
 @include mat.core();
 

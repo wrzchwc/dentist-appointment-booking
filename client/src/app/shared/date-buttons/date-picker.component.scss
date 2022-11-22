@@ -1,4 +1,4 @@
-@use 'src/dimensions' as dimensions;
+@use 'src/theme/dimensions' as dimensions;
 .main-container {
     display: flex;
     flex-direction: row;
@@ -17,5 +17,5 @@
 }
 
 .picker {
-    width: 25%;
+    width: 33%;
 }

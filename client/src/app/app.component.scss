@@ -1,9 +1,9 @@
-@use 'src/dimensions' as dimensions;
+@use '../theme/dimensions' as dimensions;
 
 .outlet {
     padding: dimensions.$header-height + 40px dimensions.$horizontal-container-padding 40px;
 }
 
 .full-height {
-  height: 100vh;
+    height: 100vh;
 }

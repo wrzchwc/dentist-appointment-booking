@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
 @use '../appointment-booking';
-@use 'src/dimensions' as dimensions;
+@use '../../../theme/dimensions' as dimensions;
 
 .content {
     display: flex;
