@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { DateService } from 'src/app/shared/_services/utility/date.service';
-import { LengthItem, LengthService } from 'src/app/shared/_services/utility/length.service';
+import { LengthService } from 'src/app/shared/_services/utility/length.service';
 import { AppointmentCartService } from '../appointment-cart.service';
 import { ServicesService } from 'src/app/shared/_services/services.service';
 import { AppointmentBookingService } from './appointment-booking.service';
@@ -30,7 +30,7 @@ export class AppointmentTimeService {
         private httpClient: HttpClient
     ) {
         this.selectedTime$ = new BehaviorSubject<Date | null>(null);
-        this.baseUrl = `${environment.apiUrl}/api/appointments/available-times`;
+        this.baseUrl = `${environment.apiUrl}/api/appointments/available-dates`;
     }
 
     getAvailableTimes(): Observable<Date[]> {
@@ -58,32 +58,8 @@ export class AppointmentTimeService {
         );
     }
 
-    getAvailableDates(at: Date): Observable<Date[]> {
-        return this.httpClient.get<AvailableTime[]>(this.baseUrl, { params: { at: at.toISOString() } }).pipe(
-            map((times) => {
-                return times.map(({ services, startsAt }) => {
-                    const items = services.map(this.mapAssociatedServiceToLengthItem);
-                    return this.createPeriod(new Date(startsAt), this.lengthService.calculateTotalLength(items));
-                });
-            }),
-            map((periods) => {
-                const availableTimes: Date[] = [];
-                const plannedLength = this.lengthService.calculateTotalLength(this.cartService.getLengthItems());
-                let date = this.getStartDate(this.dateService.currentWorkday);
-                while (this.dateService.isWorkingTime(date, plannedLength)) {
-                    const period = this.createPeriod(date, plannedLength);
-                    if (!this.isOverlappingPeriod(period, periods)) {
-                        availableTimes.push(new Date(date));
-                    }
-                    date.setMinutes(date.getMinutes() + 15);
-                }
-                return availableTimes;
-            })
-        );
-    }
-
-    private mapAssociatedServiceToLengthItem(service: AssociatedService): LengthItem {
-        return { quantity: service.appointmentServices.quantity, length: service.length };
+    getAvailableDates(date: Date, length: number): Observable<Date[]> {
+        return this.httpClient.get<Date[]>(this.baseUrl, { params: { date: date.toISOString(), length } });
     }
 
     private createPeriod(startsAt: Date, length: number): Period {
@@ -121,16 +97,4 @@ export class AppointmentTimeService {
     private periodDurationOverlaps({ startsAt, endsAt }: Period, periods: Period[]): boolean {
         return periods.some((period) => startsAt < period.startsAt && endsAt > period.endsAt);
     }
-}
-
-interface AvailableTime {
-    startsAt: Date;
-    services: AssociatedService[];
-}
-
-interface AssociatedService {
-    length: number;
-    appointmentServices: {
-        quantity: number;
-    };
 }

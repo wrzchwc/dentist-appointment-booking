@@ -8,6 +8,7 @@ import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { DateService } from '../../shared/_services/utility/date.service';
 import { HealthStateService } from '../health-state/health-state.service';
 import { AppointmentBookingService, AppointmentQuestion } from './appointment-booking.service';
+import { LengthService } from '../../shared/_services/utility/length.service';
 
 @Component({
     selector: 'app-appointment-booking',
@@ -27,7 +28,8 @@ export class AppointmentBookingComponent implements OnDestroy {
         private route: ActivatedRoute,
         public cart: AppointmentCartService,
         private date: DateService,
-        private healthState: HealthStateService
+        private healthState: HealthStateService,
+        private length: LengthService
     ) {
         this.services = route.snapshot.data['services'];
         this.questions = route.snapshot.data['appointmentQuestions'];
@@ -35,7 +37,7 @@ export class AppointmentBookingComponent implements OnDestroy {
         this.availableTimes = [];
         this.onDestroy = new Subject<void>();
         cart.change$.pipe(takeUntil(this.onDestroy), debounceTime(281.25)).subscribe(() => {
-            this.refreshAppointments();
+            this.refreshAppointmentsAvailability();
         });
     }
 
@@ -46,9 +48,9 @@ export class AppointmentBookingComponent implements OnDestroy {
         this.healthState.clear();
     }
 
-    refreshAppointments() {
+    refreshAppointmentsAvailability() {
         this.time
-            .getAvailableTimes()
+            .getAvailableDates(this.date.currentWorkday, this.length.calculateTotalLength(this.cart.getLengthItems()))
             .pipe(takeUntil(this.onDestroy))
             .subscribe((times) => {
                 this.availableTimes = times;
