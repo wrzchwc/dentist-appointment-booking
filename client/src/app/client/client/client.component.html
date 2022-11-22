@@ -1,24 +1,21 @@
-<section class="main-container">
-    <ng-container *ngIf="route.snapshot.data['appointments'].length > 0; else noUpcomingAppointments">
-        <div class="appointments-wrapper">
-            <h1 class="styles-color-primary title">Nadchodzące wizyty</h1>
-            <app-appointments-list>
-                <ng-container *ngFor="let appointment of route.snapshot.data['appointments']">
-                    <app-client-appointment-preview [appointment]="appointment"> </app-client-appointment-preview>
-                </ng-container>
-            </app-appointments-list>
-        </div>
-    </ng-container>
-    <ng-template #noUpcomingAppointments>
-        <div class="info-container">
-            <h1 class="styles-color-primary greeting">Witaj {{ auth.profile?.name }}!</h1>
-            <h2 class="info-label">Nie masz żadnych nadchodzących wizyt.</h2>
-            <h2 class="info-label">
-                Kliknij
-                <span class="styles-color-accent action-label" routerLink="/client/appointment-booking"
-                    >UMÓW WIZYTĘ</span
-                >, aby zarezerwować wizytę.
-            </h2>
-        </div>
-    </ng-template>
-</section>
+<ng-container *ngIf="route.snapshot.data['appointments'].length > 0; else noUpcomingAppointments">
+    <div class="appointments-wrapper">
+        <h1 class="styles-color-primary title">Nadchodzące wizyty</h1>
+        <app-appointments-list>
+            <ng-container *ngFor="let appointment of route.snapshot.data['appointments']">
+                <app-client-appointment-preview [appointment]="appointment"> </app-client-appointment-preview>
+            </ng-container>
+        </app-appointments-list>
+    </div>
+</ng-container>
+<ng-template #noUpcomingAppointments>
+    <div class="info-container">
+        <h1 class="styles-color-primary greeting">Witaj {{ auth.profile?.name }}!</h1>
+        <h2 class="info-label">Nie masz żadnych nadchodzących wizyt.</h2>
+        <h2 class="info-label">
+            Kliknij
+            <span class="styles-color-accent action-label" routerLink="/client/appointment-booking">UMÓW WIZYTĘ</span>,
+            aby zarezerwować wizytę.
+        </h2>
+    </div>
+</ng-template>

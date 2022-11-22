@@ -1,9 +1,5 @@
 @use 'src/dimensions' as dimensions;
 
-.main-container {
-    padding-top: dimensions.$header-height;
-}
-
 .appointments-wrapper {
     display: flex;
     flex-direction: column;

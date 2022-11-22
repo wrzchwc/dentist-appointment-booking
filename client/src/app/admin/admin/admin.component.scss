@@ -1,9 +1,3 @@
-@use 'src/dimensions' as dimensions;
-
-.main-container {
-    padding-top: dimensions.$header-height;
-}
-
 .info-container {
     margin-top: 160px;
     display: flex;
