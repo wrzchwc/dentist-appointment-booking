@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { AppointmentTimeService } from '../appointment-booking/appointment-time.service';
+import { AppointmentDateService } from '../appointment-booking/appointment-date.service';
 
 @Component({
     selector: 'app-time-card',
@@ -10,11 +10,11 @@ export class TimeCardComponent {
     @Input() date?: Date;
 
     // eslint-disable-next-line no-unused-vars
-    constructor(public time: AppointmentTimeService) {}
+    constructor(public time: AppointmentDateService) {}
 
     handleClick($event: Event) {
         $event.stopPropagation();
-        const selection: Date | null = this.time.selectedTime$.value === this.date ? null : this.date!;
-        this.time.selectedTime$.next(selection);
+        const selection: Date | null = this.time.selectedDate$.value === this.date ? null : this.date!;
+        this.time.selectedDate$.next(selection);
     }
 }

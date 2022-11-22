@@ -2,7 +2,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Service } from '../../shared/_services/services.service';
-import { AppointmentTimeService } from './appointment-time.service';
+import { AppointmentDateService } from './appointment-date.service';
 import { AppointmentCartService } from '../appointment-cart.service';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { DateService } from '../../shared/_services/utility/date.service';
@@ -22,7 +22,7 @@ export class AppointmentBookingComponent implements OnDestroy {
     private readonly onDestroy: Subject<void>;
 
     constructor(
-        public time: AppointmentTimeService,
+        public time: AppointmentDateService,
         private router: Router,
         private booking: AppointmentBookingService,
         private route: ActivatedRoute,
@@ -42,7 +42,7 @@ export class AppointmentBookingComponent implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.time.selectedTime$.next(null);
+        this.time.selectedDate$.next(null);
         this.onDestroy.next();
         this.date.reset();
         this.healthState.clear();
@@ -59,7 +59,7 @@ export class AppointmentBookingComponent implements OnDestroy {
 
     async handleBookAppointmentClick(event: MouseEvent) {
         event.stopPropagation();
-        const startsAt = this.time.selectedTime$.value;
+        const startsAt = this.time.selectedDate$.value;
         if (startsAt !== null) {
             this.booking
                 .createAppointment(startsAt, this.cart.getIdQuantityObjects(), this.healthState.getIdInfoItems())

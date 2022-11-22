@@ -17,7 +17,7 @@
                 </section>
             </ng-template>
         </mat-step>
-        <mat-step label="Termin wizyty" [completed]="(time.selectedTime$ | async) !== null">
+        <mat-step label="Termin wizyty" [completed]="(time.selectedDate$ | async) !== null">
             <ng-template matStepContent>
                 <app-date
                     [availableTimes]="availableTimes"
@@ -29,7 +29,7 @@
                         color="primary"
                         matStepperNext
                         class="step-button"
-                        [disabled]="(time.selectedTime$ | async) === null"
+                        [disabled]="(time.selectedDate$ | async) === null"
                     >
                         DALEJ
                     </button>

@@ -1,8 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Appointment } from '../../appointment-booking/appointment-booking/appointment-booking.service';
 import { DateService } from '../../shared/_services/utility/date.service';
-import { ClientAppointmentsService } from './client-appointments.service';
+import { Appointment, ClientAppointmentsService } from './client-appointments.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({

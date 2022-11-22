@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { IdInfo } from '../appointment-booking/appointment-booking.service';
 
 @Injectable({
     providedIn: 'root',
@@ -63,4 +62,9 @@ interface HealthStatePayload {
     fact: string;
     additionalInfo?: string;
     womenOnly: boolean;
+}
+
+export interface IdInfo {
+    id: string;
+    additionalInfo?: string;
 }

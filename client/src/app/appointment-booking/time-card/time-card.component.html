@@ -3,7 +3,7 @@
         class="styles-color-primary main-container"
         (click)="handleClick($event)"
         [ngClass]="{
-            'not-selected': (time.selectedTime$ | async) && (time.selectedTime$ | async)?.getTime() !== date.getTime()
+            'not-selected': (time.selectedDate$ | async) && (time.selectedDate$ | async)?.getTime() !== date.getTime()
         }"
     >
         {{ date | date: 'HH:mm' }}

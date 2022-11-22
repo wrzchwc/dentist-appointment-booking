@@ -3,7 +3,6 @@ import { Service } from 'src/app/shared/_services/services.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { PriceItem } from 'src/app/shared/_services/utility/price.service';
 import { LengthItem } from 'src/app/shared/_services/utility/length.service';
-import { IdQuantity } from './appointment-booking/appointment-booking.service';
 
 @Injectable({
     providedIn: 'root',
@@ -86,4 +85,9 @@ export class AppointmentCartService {
     private mapToIdQuantityObject([{ value }, { id }]: [BehaviorSubject<number>, Service]): IdQuantity {
         return { id, quantity: value };
     }
+}
+
+export interface IdQuantity {
+    id: string;
+    quantity: number;
 }

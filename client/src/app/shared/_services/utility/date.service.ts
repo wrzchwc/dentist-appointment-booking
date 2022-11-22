@@ -52,15 +52,6 @@ export class DateService {
         return new Date();
     }
 
-    isWorkingTime(date: Date, plannedAppointmentLength = 0) {
-        return date.getHours() >= 9 && this.toMinutes(date) <= 17 * 60 - plannedAppointmentLength;
-    }
-
-    // return number of minutes since 12 AM on given day
-    private toMinutes(date: Date): number {
-        return 60 * date.getHours() + date.getMinutes();
-    }
-
     workdayForward(): void {
         this._currentWorkday = this.calculateNextWorkday(this._currentWorkday);
         this._nextWorkday = this.calculateNextWorkday(this._nextWorkday);

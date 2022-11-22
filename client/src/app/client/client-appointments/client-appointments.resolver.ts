@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Appointment } from '../../appointment-booking/appointment-booking/appointment-booking.service';
-import { ClientAppointmentsService } from './client-appointments.service';
+import { Appointment, ClientAppointmentsService } from './client-appointments.service';
 import { DateService } from '../../shared/_services/utility/date.service';
 
 @Injectable({

@@ -1,6 +1,6 @@
 import { AfterViewChecked, Component, EventEmitter, Input, Output } from '@angular/core';
 import { DateService } from 'src/app/shared/_services/utility/date.service';
-import { AppointmentTimeService } from '../appointment-booking/appointment-time.service';
+import { AppointmentDateService } from '../appointment-booking/appointment-date.service';
 import { LengthService } from '../../shared/_services/utility/length.service';
 import { AppointmentCartService } from '../appointment-cart.service';
 
@@ -16,7 +16,7 @@ export class DateComponent implements AfterViewChecked {
 
     constructor(
         // eslint-disable-next-line no-unused-vars
-        public time: AppointmentTimeService,
+        public time: AppointmentDateService,
         // eslint-disable-next-line no-unused-vars
         public date: DateService,
         private length: LengthService,
@@ -32,7 +32,7 @@ export class DateComponent implements AfterViewChecked {
     }
 
     handleClick() {
-        this.time.selectedTime$.next(null);
+        this.time.selectedDate$.next(null);
     }
 
     handleNextWorkday() {

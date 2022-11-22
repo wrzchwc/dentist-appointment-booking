@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Appointment } from '../../appointment-booking/appointment-booking/appointment-booking.service';
 import { DateService } from '../../shared/_services/utility/date.service';
 import { ClientService } from './client.service';
+import { Appointment } from '../client-appointments/client-appointments.service';
 
 @Injectable({
     providedIn: 'root',

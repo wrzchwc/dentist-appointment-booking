@@ -1,27 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { LengthItem } from './utility/length.service';
-
-interface ServiceBase {
-    id: string;
-    name: string;
-    count: 1;
-    length: number;
-}
-
-interface StandardService extends ServiceBase {
-    price: number;
-    detail: null;
-}
-
-interface ExceptionalPriceService extends ServiceBase {
-    price: null;
-    detail: 'A';
-}
-
-export type Service = StandardService | ExceptionalPriceService;
-export type AssociatedService = Service & { appointmentServices: { quantity: number } };
 
 @Injectable({
     providedIn: 'root',
@@ -37,12 +16,23 @@ export class ServicesService {
     getServices() {
         return this.client.get<Service[]>(this.baseUrl);
     }
+}
 
-    mapAssociatedServicesToLengthItems(services: AssociatedService[]): LengthItem[] {
-        return services.map(this.mapAssociatedServiceToLengthItem);
-    }
+export type Service = StandardService | ExceptionalPriceService;
 
-    private mapAssociatedServiceToLengthItem(service: AssociatedService): LengthItem {
-        return { length: service.length, quantity: service.appointmentServices.quantity };
-    }
+interface StandardService extends ServiceBase {
+    price: number;
+    detail: null;
+}
+
+interface ExceptionalPriceService extends ServiceBase {
+    price: null;
+    detail: 'A';
+}
+
+interface ServiceBase {
+    id: string;
+    name: string;
+    count: 1;
+    length: number;
 }

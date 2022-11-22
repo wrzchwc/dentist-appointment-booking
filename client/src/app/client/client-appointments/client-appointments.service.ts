@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Appointment } from '../../appointment-booking/appointment-booking/appointment-booking.service';
+import { Service } from '../../shared/_services/services.service';
 
 @Injectable({
     providedIn: 'root',
@@ -22,3 +22,11 @@ export class ClientAppointmentsService {
         });
     }
 }
+
+export interface Appointment {
+    id: string;
+    startsAt: Date;
+    services: AssociatedService[];
+}
+
+export type AssociatedService = Service & { appointmentServices: { quantity: number } };
