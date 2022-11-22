@@ -1,12 +1,5 @@
-@use 'src/dimensions' as dimensions;
-
-.main-container {
-    padding: 0 dimensions.$horizontal-container-padding 93px;
-}
-
 .stepper {
     background: transparent;
-    margin-top: 40px;
 }
 
 .step-buttons-container {

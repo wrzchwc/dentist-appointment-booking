@@ -1,7 +1,7 @@
 @use 'src/dimensions' as dimensions;
 
 .outlet {
-    padding-top: dimensions.$header-height;
+    padding: dimensions.$header-height + 40px dimensions.$horizontal-container-padding 40px;
 }
 
 .full-height {

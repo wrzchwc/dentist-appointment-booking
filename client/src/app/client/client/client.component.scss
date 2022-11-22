@@ -20,7 +20,6 @@ $dimension: 58px;
     @extend .container;
 
     flex-direction: column;
-    padding: 40px dimensions.$horizontal-container-padding;
     align-items: stretch;
     gap: 20px;
 }
