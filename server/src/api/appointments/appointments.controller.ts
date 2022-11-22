@@ -3,6 +3,7 @@ import * as r from './appointments.requests';
 import { LengthItem, Period, calculateTotalLength, createPeriod, isOverlappingPeriod } from '../../services';
 import { Request, Response } from 'express';
 import { WorkDayHour, isWorkingTime } from '../../services/workday';
+import { GetAvailableDatesQuery } from './appointments.requests';
 import { Op } from 'sequelize';
 
 export async function getQuestions(request: Request, response: Response) {
@@ -126,31 +127,25 @@ export async function getAvailableDates({ query }: r.GetAvailableDates, response
     let appointments: m.Appointment[];
 
     try {
-        appointments = await m.Appointment.findAll({
-            attributes: ['startsAt'],
-            order: [['startsAt', 'ASC']],
-            include: [{ model: m.Service, attributes: ['length'], through: { attributes: ['quantity'] } }],
-            where: {
-                startsAt: {
-                    [Op.between]: [query.date, new Date(new Date(query.date).setHours(17, 0, 0, 0))],
-                },
-            },
-        });
+        appointments = await findAllAppointments(query);
     } catch (e) {
         return response.status(500).json({ error: 'Operation failed' });
     }
 
-    const periods: Period[] = appointments.map(mapAppointmentToPeriod);
-    const availableTimes: Date[] = [];
-    const date = new Date(new Date(query.date).setHours(WorkDayHour.Start, 0, 0, 0));
-    while (isWorkingTime(date, query.length)) {
-        const period = createPeriod(date, query.length);
-        if (!isOverlappingPeriod(period, periods)) {
-            availableTimes.push(new Date(date));
-        }
-        date.setMinutes(date.getMinutes() + 15);
-    }
-    response.status(200).json(availableTimes);
+    response.status(200).json(calculateAvailableDates(query, appointments.map(mapAppointmentToPeriod)));
+}
+
+async function findAllAppointments(query: GetAvailableDatesQuery) {
+    return m.Appointment.findAll({
+        attributes: ['startsAt'],
+        order: [['startsAt', 'ASC']],
+        include: [{ model: m.Service, attributes: ['length'], through: { attributes: ['quantity'] } }],
+        where: {
+            startsAt: {
+                [Op.between]: [query.date, new Date(new Date(query.date).setHours(WorkDayHour.End, 0, 0, 0))],
+            },
+        },
+    });
 }
 
 function mapAppointmentToPeriod({ startsAt, services }: m.Appointment): Period {
@@ -159,6 +154,21 @@ function mapAppointmentToPeriod({ startsAt, services }: m.Appointment): Period {
 
 function mapServiceToLengthItem(service: m.Service): LengthItem {
     return { length: service.length!, quantity: service.appointmentServices.quantity };
+}
+
+function calculateAvailableDates(query: GetAvailableDatesQuery, bookedPeriods: Period[]): Date[] {
+    const availableTimes: Date[] = [];
+    const date = new Date(new Date(query.date).setHours(WorkDayHour.Start, 0, 0, 0));
+
+    while (isWorkingTime(date, query.length)) {
+        const period = createPeriod(date, query.length);
+        if (!isOverlappingPeriod(period, bookedPeriods)) {
+            availableTimes.push(new Date(date));
+        }
+        date.setMinutes(date.getMinutes() + 15);
+    }
+
+    return availableTimes;
 }
 
 function getErrorData(e: unknown | m.ModelError): [number, string] {

@@ -38,8 +38,10 @@ interface Identifiable {
 }
 
 export interface GetAvailableDates extends Request {
-    query: {
-        date: Date;
-        length: number;
-    };
+    query: GetAvailableDatesQuery;
+}
+
+export interface GetAvailableDatesQuery {
+    date: Date;
+    length: number;
 }
