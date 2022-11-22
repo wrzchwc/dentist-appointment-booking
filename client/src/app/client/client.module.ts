@@ -10,9 +10,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { SharedModule } from '../shared/shared.module';
+import { ClientAppointmentComponent } from './client-appointment/client-appointment.component';
 
 @NgModule({
-    declarations: [ClientComponent, ClientAppointmentsComponent, ClientAppointmentPreviewComponent],
+    declarations: [
+        ClientComponent,
+        ClientAppointmentsComponent,
+        ClientAppointmentPreviewComponent,
+        ClientAppointmentComponent,
+    ],
     imports: [
         CommonModule,
         ClientRoutingModule,

@@ -181,14 +181,7 @@ export async function getClientAppointment({ params, session }: r.GetClientAppoi
         appointment = await m.Appointment.findOne({
             where: { userId: session?.passport.user.id, id: params.appointmentId },
             attributes: ['id', 'startsAt'],
-            include: [
-                { model: m.AppointmentFact, attributes: ['value'], through: { attributes: ['additionalInfo'] } },
-                {
-                    model: m.Service,
-                    attributes: ['id', 'name', 'price', 'length'],
-                    through: { attributes: ['quantity'] },
-                },
-            ],
+            include: [{ model: m.Service, through: { attributes: ['quantity'] } }],
         });
     } catch (e) {
         return response.status(500).json({ error: 'Operation failed' });

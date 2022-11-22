@@ -4,7 +4,8 @@ import { ClientComponent } from './client/client.component';
 import { ClientAppointmentsComponent } from './client-appointments/client-appointments.component';
 import { ClientAppointmentsResolver } from './client-appointments/client-appointments.resolver';
 import { ClientResolver } from './client/client.resolver';
-import { AppointmentComponent } from '../shared/appointment/appointment.component';
+import { ClientAppointmentComponent } from './client-appointment/client-appointment.component';
+import { ClientAppointmentResolver } from './client-appointment/client-appointment.resolver';
 
 const routes: Routes = [
     {
@@ -13,7 +14,8 @@ const routes: Routes = [
             {
                 path: ':appointmentId',
                 title: 'Podgląd wizyty',
-                component: AppointmentComponent,
+                resolve: { appointment: ClientAppointmentResolver },
+                component: ClientAppointmentComponent,
             },
             {
                 path: '',
