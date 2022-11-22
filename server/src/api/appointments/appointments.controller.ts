@@ -3,7 +3,6 @@ import * as r from './appointments.requests';
 import { LengthItem, Period, calculateTotalLength, createPeriod, isOverlappingPeriod } from '../../services';
 import { Request, Response } from 'express';
 import { WorkDayHour, isWorkingTime } from '../../services/workday';
-import { GetAvailableDatesQuery } from './appointments.requests';
 import { Op } from 'sequelize';
 
 export async function getQuestions(request: Request, response: Response) {
@@ -103,6 +102,10 @@ export async function getClientAppointments(request: r.GetAppointments, response
     response.status(200).json(appointments);
 }
 
+function getErrorData(e: unknown | m.ModelError): [number, string] {
+    return e instanceof m.ModelError ? [e.httpCode, e.message] : [500, 'Operation failed'];
+}
+
 function createGetAppointmentsOptions({ query }: r.GetAppointments): any {
     return {
         attributes: ['id', 'startsAt'],
@@ -135,7 +138,7 @@ export async function getAvailableDates({ query }: r.GetAvailableDates, response
     response.status(200).json(calculateAvailableDates(query, appointments.map(mapAppointmentToPeriod)));
 }
 
-async function findAllAppointments(query: GetAvailableDatesQuery) {
+async function findAllAppointments(query: r.GetAvailableDatesQuery) {
     return m.Appointment.findAll({
         attributes: ['startsAt'],
         order: [['startsAt', 'ASC']],
@@ -156,7 +159,7 @@ function mapServiceToLengthItem(service: m.Service): LengthItem {
     return { length: service.length!, quantity: service.appointmentServices.quantity };
 }
 
-function calculateAvailableDates(query: GetAvailableDatesQuery, bookedPeriods: Period[]): Date[] {
+function calculateAvailableDates(query: r.GetAvailableDatesQuery, bookedPeriods: Period[]): Date[] {
     const availableTimes: Date[] = [];
     const date = new Date(new Date(query.date).setHours(WorkDayHour.Start, 0, 0, 0));
 
@@ -171,6 +174,29 @@ function calculateAvailableDates(query: GetAvailableDatesQuery, bookedPeriods: P
     return availableTimes;
 }
 
-function getErrorData(e: unknown | m.ModelError): [number, string] {
-    return e instanceof m.ModelError ? [e.httpCode, e.message] : [500, 'Operation failed'];
+export async function getClientAppointment({ params, session }: r.GetClientAppointment, response: Response) {
+    let appointment: m.Appointment | null;
+
+    try {
+        appointment = await m.Appointment.findOne({
+            where: { userId: session?.passport.user.id, id: params.appointmentId },
+            attributes: ['id', 'startsAt'],
+            include: [
+                { model: m.AppointmentFact, attributes: ['value'], through: { attributes: ['additionalInfo'] } },
+                {
+                    model: m.Service,
+                    attributes: ['id', 'name', 'price', 'length'],
+                    through: { attributes: ['quantity'] },
+                },
+            ],
+        });
+    } catch (e) {
+        return response.status(500).json({ error: 'Operation failed' });
+    }
+
+    if (appointment === null) {
+        response.status(404).json({ error: 'Appointment not found' });
+    } else {
+        response.status(200).json(appointment);
+    }
 }

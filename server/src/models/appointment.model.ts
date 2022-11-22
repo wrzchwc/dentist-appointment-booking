@@ -2,7 +2,6 @@ import * as s from 'sequelize';
 import { AppointmentFact } from './appointment-fact.model';
 import { AppointmentsServices } from './appointments-services.model';
 import { HealthSurvey } from './health-survey';
-import { ModelError } from './model-error';
 import { Service } from './service.model';
 import { User } from './user.model';
 import { sequelizeInstance } from '../services';
@@ -20,14 +19,6 @@ export class Appointment extends s.Model<s.InferAttributes<Appointment>, s.Infer
 
     declare addFact: s.BelongsToManyAddAssociationMixin<AppointmentFact, string>;
     declare addService: s.BelongsToManyAddAssociationMixin<Service, string>;
-
-    static async find(id: string) {
-        const appointment = await Appointment.findByPk(id);
-        if (!appointment) {
-            throw new ModelError('Appointment not found', 404);
-        }
-        return appointment;
-    }
 }
 
 Appointment.init(

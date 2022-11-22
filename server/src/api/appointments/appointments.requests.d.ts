@@ -45,3 +45,9 @@ export interface GetAvailableDatesQuery {
     date: Date;
     length: number;
 }
+
+export interface GetClientAppointment extends Request {
+    params: {
+        appointmentId: string;
+    };
+}
