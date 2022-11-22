@@ -1,6 +1,8 @@
 import * as m from '../../models';
 import * as r from './appointments.requests';
+import { LengthItem, Period, calculateTotalLength, createPeriod, isOverlappingPeriod } from '../../services';
 import { Request, Response } from 'express';
+import { WorkDayHour, isWorkingTime } from '../../services/workday';
 import { Op } from 'sequelize';
 
 export async function getQuestions(request: Request, response: Response) {
@@ -130,7 +132,7 @@ export async function getAvailableDates({ query }: r.GetAvailableDates, response
             include: [{ model: m.Service, attributes: ['length'], through: { attributes: ['quantity'] } }],
             where: {
                 startsAt: {
-                    [Op.between]: [query.at, new Date(query.at).setHours(17, 0, 0, 0)],
+                    [Op.between]: [query.date, new Date(new Date(query.date).setHours(17, 0, 0, 0))],
                 },
             },
         });
@@ -138,7 +140,25 @@ export async function getAvailableDates({ query }: r.GetAvailableDates, response
         return response.status(500).json({ error: 'Operation failed' });
     }
 
-    response.status(200).json(appointments);
+    const periods: Period[] = appointments.map(mapAppointmentToPeriod);
+    const availableTimes: Date[] = [];
+    const date = new Date(new Date(query.date).setHours(WorkDayHour.Start, 0, 0, 0));
+    while (isWorkingTime(date, query.length)) {
+        const period = createPeriod(date, query.length);
+        if (!isOverlappingPeriod(period, periods)) {
+            availableTimes.push(new Date(date));
+        }
+        date.setMinutes(date.getMinutes() + 15);
+    }
+    response.status(200).json(availableTimes);
+}
+
+function mapAppointmentToPeriod({ startsAt, services }: m.Appointment): Period {
+    return createPeriod(new Date(startsAt), calculateTotalLength(services.map(mapServiceToLengthItem)));
+}
+
+function mapServiceToLengthItem(service: m.Service): LengthItem {
+    return { length: service.length!, quantity: service.appointmentServices.quantity };
 }
 
 function getErrorData(e: unknown | m.ModelError): [number, string] {

@@ -39,7 +39,7 @@ interface Identifiable {
 
 export interface GetAvailableDates extends Request {
     query: {
-        at: Date;
+        date: Date;
         length: number;
     };
 }
