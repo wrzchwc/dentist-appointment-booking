@@ -51,3 +51,9 @@ export interface GetClientAppointment extends Request {
         appointmentId: string;
     };
 }
+
+export interface DeleteAppointment extends Request {
+    params: {
+        appointmentId: string;
+    };
+}
