@@ -4,7 +4,6 @@ import { HeaderComponent } from './header/header.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { AdminModule } from '../admin/admin.module';
 import { AppointmentsWrapperComponent } from './appointments-wrapper/appointments-wrapper.component';
 import { DatePickerComponent } from './date-buttons/date-picker.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -43,7 +42,6 @@ import { AppointmentsListComponent } from './appointments-list/appointments-list
         MatButtonModule,
         MatIconModule,
         RouterLink,
-        AdminModule,
         MatFormFieldModule,
         MatInputModule,
         ReactiveFormsModule,

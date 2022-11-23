@@ -1,4 +1,10 @@
-<ng-container *ngIf="route.snapshot.data['appointments'].length > 0; else noUpcomingAppointments"> </ng-container>
+<ng-container *ngIf="route.snapshot.data['appointments'].length > 0; else noUpcomingAppointments">
+    <app-appointments-list title="Rezerwacje">
+        <app-appointments-wrapper>
+            <ng-container *ngFor="let appointment of route.snapshot.data['appointments']"> </ng-container>
+        </app-appointments-wrapper>
+    </app-appointments-list>
+</ng-container>
 <ng-template #noUpcomingAppointments>
     <div class="info-container">
         <h1 class="styles-color-primary greeting">Witaj!</h1>

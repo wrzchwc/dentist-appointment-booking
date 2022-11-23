@@ -8,7 +8,7 @@ import { AdminResolver } from './admin/admin.resolver';
 const routes: Routes = [
     { path: 'appointments', component: AdminAppointmentsComponent, title: 'Wizyty' },
     { path: 'price-list', component: PriceListComponent, title: 'Cennik' },
-    { path: '', component: AdminComponent, title: 'Panel administratora', resolve: { appointments: AdminResolver } },
+    { path: '', component: AdminComponent, title: 'Rezerwacje', resolve: { appointments: AdminResolver } },
 ];
 
 @NgModule({
