@@ -12,10 +12,12 @@ import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { CardComponent } from './card/card.component';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
-    declarations: [HeaderComponent, AppointmentsListComponent, DatePickerComponent],
-    exports: [HeaderComponent, AppointmentsListComponent, DatePickerComponent],
+    declarations: [HeaderComponent, AppointmentsListComponent, DatePickerComponent, CardComponent],
+    exports: [HeaderComponent, AppointmentsListComponent, DatePickerComponent, CardComponent],
     imports: [
         CommonModule,
         MatButtonModule,
@@ -28,6 +30,7 @@ import { MatNativeDateModule } from '@angular/material/core';
         MatInputModule,
         MatDatepickerModule,
         MatNativeDateModule,
+        MatCardModule,
     ],
 })
 export class SharedModule {}

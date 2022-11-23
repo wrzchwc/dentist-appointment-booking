@@ -23,6 +23,7 @@ import { AppointmentBookingRoutingModule } from './appointment-booking-routing.m
 import { SummaryComponent } from './summary/summary.component';
 import { MatTableModule } from '@angular/material/table';
 import { RowDefPipe } from './summary/row-def.pipe';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
     declarations: [
@@ -52,6 +53,7 @@ import { RowDefPipe } from './summary/row-def.pipe';
         MatFormFieldModule,
         MatInputModule,
         MatTableModule,
+        SharedModule,
     ],
 })
 export class AppointmentBookingModule {}

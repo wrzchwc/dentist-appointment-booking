@@ -1,5 +1,9 @@
 @use 'sass:math' as math;
 
+@function scale($value, $factor) {
+    @return $value * $factor;
+}
+
 .label {
     margin-bottom: 0;
     font-weight: 600;
@@ -21,14 +25,26 @@
 
 .container {
     display: flex;
+    gap: 40px;
 }
 
-.top-container {
+.content {
     @extend .container;
 
     flex-direction: row;
     justify-content: space-between;
+}
+
+.content-top {
+    @extend .content;
+
     align-items: flex-start;
+}
+
+.content-center {
+    @extend .content;
+
+    align-items: stretch;
 }
 
 .main-container {
@@ -39,11 +55,15 @@
     align-items: stretch;
 }
 
+.card {
+    max-width: 33%;
+    width: 100%;
+}
+
 .icon {
     line-height: 0.9;
     margin-left: 5px;
 }
-
 
 .button {
     $factor: math.div(64, 36);
@@ -54,8 +74,33 @@
     font-size: scale(14px, $factor);
 }
 
-@function scale($value, $factor) {
-    @return $value * $factor;
+.text {
+    font-weight: 500;
+    margin-bottom: 0;
+    cursor: default;
 }
 
+.price {
+    @extend .text;
 
+    font-size: 66px;
+    line-height: 99px;
+}
+
+.date {
+    @extend .text;
+
+    $factor: math.div(49, 24);
+
+    font-size: scale(24px, $factor);
+    line-height: scale(32px, $factor);
+}
+
+.time {
+    @extend .text;
+
+    $factor: math.div(42, 24);
+
+    font-size: scale(24px, $factor);
+    line-height: scale(32px, $factor);
+}

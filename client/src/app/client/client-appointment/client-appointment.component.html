@@ -1,14 +1,28 @@
 <ng-container *ngIf="appointment">
-    <div>
-        <div class="top-container">
+    <div class="main-container">
+        <div class="content-top">
             <div>
                 <h1 class="styles-color-primary title">Wizyta</h1>
-                <h6 class="subtitle">identyfikator: <span class="styles-color-accent">{{ appointment.id }}</span></h6>
+                <h6 class="subtitle">
+                    identyfikator: <span class="styles-color-accent">{{ appointment.id }}</span>
+                </h6>
             </div>
-            <button type="button" mat-raised-button color="warn" class="button">
-                ODWOŁAJ<mat-icon class="icon">cancel</mat-icon>
-            </button>
+            <ng-container *ngIf="cancelable">
+                <button type="button" mat-raised-button color="warn" class="button">
+                    ODWOŁAJ<mat-icon class="icon">cancel</mat-icon>
+                </button>
+            </ng-container>
         </div>
-        <div></div>
+        <div class="content-center">
+            <app-card title="Data wizyty" icon="calendar_month" class="card">
+                <h1 class="date">{{ appointment.startsAt | date: 'dd.MM.yyyy' }}</h1>
+                <h2 class="time">{{ appointment.startsAt | date: 'HH:mm' }} - {{ endsAt | date: 'HH:mm' }}</h2>
+                <h3 class="time">{{ length }} minut</h3>
+            </app-card>
+            <app-card title="Usługi" icon="medical_services" class="card"></app-card>
+            <app-card title="Szacowana cena wizyty" icon="payments" class="card">
+                <h1 class="styles-color-warn price">{{ price }} PLN</h1>
+            </app-card>
+        </div>
     </div>
 </ng-container>

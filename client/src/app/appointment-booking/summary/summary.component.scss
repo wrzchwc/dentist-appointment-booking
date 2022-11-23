@@ -1,6 +1,4 @@
-@use '@angular/material' as mat;
 @use '../appointment-booking';
-@use '../../../theme/dimensions' as dimensions;
 
 .content {
     display: flex;
@@ -23,16 +21,6 @@
     align-items: stretch;
     box-sizing: border-box;
     flex-grow: 1;
-}
-
-.card {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
-    padding: dimensions.$card-padding;
-    background-color: mat.get-color-from-palette(mat.$gray-palette, 50);
 }
 
 .text {

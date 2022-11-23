@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Service } from 'src/app/shared/_services/services.service';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { PriceItem } from 'src/app/shared/_services/utility/price.service';
 import { LengthItem } from 'src/app/shared/_services/utility/length.service';
+import { NamedPriceItem } from '../shared/_services/utility/price.service';
 
 @Injectable({
     providedIn: 'root',
@@ -54,11 +54,11 @@ export class AppointmentCartService {
         }
     }
 
-    getPriceItems(): PriceItem[] {
+    getPriceItems(): NamedPriceItem[] {
         return this.getCartValuesWithPositiveSubjectValue().map(this.mapToPriceItem);
     }
 
-    private mapToPriceItem([{ value }, { price, detail, name }]: [BehaviorSubject<number>, Service]): PriceItem {
+    private mapToPriceItem([{ value }, { price, detail, name }]: [BehaviorSubject<number>, Service]): NamedPriceItem {
         return { quantity: value, price, detail, name };
     }
 
