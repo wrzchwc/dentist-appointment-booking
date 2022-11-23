@@ -1,7 +1,11 @@
 <ng-container *ngIf="route.snapshot.data['appointments'].length > 0; else noUpcomingAppointments">
     <app-appointments-list title="Rezerwacje">
         <app-appointments-wrapper>
-            <ng-container *ngFor="let appointment of route.snapshot.data['appointments']"> </ng-container>
+            <ng-container *ngFor="let appointment of route.snapshot.data['appointments']">
+                <app-appointment-preview [appointment]="appointment">
+                    <h2 class="client">{{ appointment.client.name }} {{ appointment.client.surname }}</h2>
+                </app-appointment-preview>
+            </ng-container>
         </app-appointments-wrapper>
     </app-appointments-list>
 </ng-container>

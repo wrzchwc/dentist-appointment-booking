@@ -2,7 +2,7 @@
     <app-appointments-list title="Nadchodzące wizyty">
         <app-appointments-wrapper>
             <ng-container *ngFor="let appointment of route.snapshot.data['appointments']">
-                <app-client-appointment-preview [appointment]="appointment"> </app-client-appointment-preview>
+                <app-appointment-preview [appointment]="appointment"></app-appointment-preview>
             </ng-container>
         </app-appointments-wrapper>
     </app-appointments-list>

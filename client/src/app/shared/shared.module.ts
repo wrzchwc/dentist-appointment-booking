@@ -17,6 +17,8 @@ import { ServicesTableComponent } from './table/services-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { RowDefinitionPipe } from './table/row-definition.pipe';
 import { AppointmentsListComponent } from './appointments-list/appointments-list.component';
+import { AppointmentPreviewComponent } from './appointment-preview/appointment-preview.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
     declarations: [
@@ -27,6 +29,7 @@ import { AppointmentsListComponent } from './appointments-list/appointments-list
         ServicesTableComponent,
         RowDefinitionPipe,
         AppointmentsListComponent,
+        AppointmentPreviewComponent,
     ],
     exports: [
         HeaderComponent,
@@ -36,6 +39,7 @@ import { AppointmentsListComponent } from './appointments-list/appointments-list
         RowDefinitionPipe,
         ServicesTableComponent,
         AppointmentsListComponent,
+        AppointmentPreviewComponent,
     ],
     imports: [
         CommonModule,
@@ -50,6 +54,7 @@ import { AppointmentsListComponent } from './appointments-list/appointments-list
         MatNativeDateModule,
         MatCardModule,
         MatTableModule,
+        MatChipsModule,
     ],
 })
 export class SharedModule {}

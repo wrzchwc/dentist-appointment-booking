@@ -3,7 +3,7 @@
     <ng-container *ngIf="appointments.length; else empty">
         <app-appointments-wrapper>
             <ng-container *ngFor="let appointment of appointments">
-                <app-client-appointment-preview [appointment]="appointment"></app-client-appointment-preview>
+                <app-appointment-preview [appointment]="appointment"></app-appointment-preview>
             </ng-container>
         </app-appointments-wrapper>
     </ng-container>
