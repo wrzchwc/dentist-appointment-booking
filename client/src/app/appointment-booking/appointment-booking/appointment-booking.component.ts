@@ -53,7 +53,7 @@ export class AppointmentBookingComponent implements OnDestroy {
             .getAvailableDates(this.date.currentWorkday, this.length.calculateTotalLength(this.cart.getLengthItems()))
             .pipe(takeUntil(this.onDestroy))
             .subscribe((times) => {
-                this.availableTimes = times;
+                this.availableTimes = times.filter((time) => new Date(time) >= this.date.currentWorkday);
             });
     }
 
