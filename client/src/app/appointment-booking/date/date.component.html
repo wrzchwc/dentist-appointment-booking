@@ -17,11 +17,12 @@
             color="accent"
             (click)="handlePreviousWorkday()"
             class="button"
-            [disabled]="date.previousWorkday < date.currentDay"
+            [disabled]="isPreviousWorkdayDisabled()"
+            type="button"
         >
             Terminy w dniu {{ date.previousWorkday | date: 'dd.MM.yyyy' }}
         </button>
-        <button mat-raised-button color="primary" (click)="handleNextWorkday()" class="button">
+        <button mat-raised-button color="primary" (click)="handleNextWorkday()" class="button" type="button">
             Terminy w dniu {{ date.nextWorkday | date: 'dd.MM.yyyy' }}
         </button>
     </div>

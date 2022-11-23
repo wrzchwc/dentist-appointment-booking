@@ -1,12 +1,5 @@
-@use 'src/dimensions' as dimensions;
-
-.main-container {
-    padding: dimensions.$header-height 136px 93px;
-}
-
 .stepper {
     background: transparent;
-    margin-top: 40px;
 }
 
 .step-buttons-container {

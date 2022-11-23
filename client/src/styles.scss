@@ -1,6 +1,6 @@
 @use '@angular/material' as mat;
-@use 'src/styles.theme' as styles;
-@use 'src/dimensions' as dimensions;
+@use 'theme/styles.theme' as styles;
+@use 'theme/dimensions' as dimensions;
 
 @include mat.core();
 
@@ -73,6 +73,34 @@ button.mat-icon-button {
     span.mat-button-wrapper {
         mat-icon.mat-icon {
             vertical-align: unset;
+        }
+    }
+}
+
+app-client-appointment-preview {
+    mat-chip-list {
+        div.mat-chip-list-wrapper {
+            gap: 2 * dimensions.$card-padding;
+        }
+    }
+}
+
+app-date-picker {
+    mat-form-field {
+        div.mat-form-field-wrapper {
+            div.mat-form-field-flex {
+                div.mat-form-field-infix {
+                    display: flex;
+                }
+            }
+        }
+    }
+}
+
+app-client-appointment {
+    app-card {
+        mat-card {
+            height: 100%;
         }
     }
 }

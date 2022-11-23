@@ -8,10 +8,10 @@ export interface UpdateAppointmentStartDate extends Request {
 }
 
 export interface GetAppointments extends Request {
-    query: GetAppointmentsQuery;
+    query: DateRange;
 }
 
-export interface GetAppointmentsQuery {
+export interface DateRange {
     after?: Date;
     before?: Date;
 }
@@ -35,4 +35,25 @@ export interface FactAssociationCreationAttribute extends Identifiable {
 
 interface Identifiable {
     id: string;
+}
+
+export interface GetAvailableDates extends Request {
+    query: GetAvailableDatesQuery;
+}
+
+export interface GetAvailableDatesQuery {
+    date: Date;
+    length: number;
+}
+
+export interface GetClientAppointment extends Request {
+    params: {
+        appointmentId: string;
+    };
+}
+
+export interface DeleteAppointment extends Request {
+    params: {
+        appointmentId: string;
+    };
 }

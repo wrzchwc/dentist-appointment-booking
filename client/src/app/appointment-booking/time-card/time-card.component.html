@@ -2,9 +2,7 @@
     <mat-card
         class="styles-color-primary main-container"
         (click)="handleClick($event)"
-        [ngClass]="{
-            'not-selected': (time.selectedTime$ | async) && (time.selectedTime$ | async)?.getTime() !== date.getTime()
-        }"
+        [ngClass]="{ 'not-selected': notSelected }"
     >
         {{ date | date: 'HH:mm' }}
     </mat-card>

@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppointmentBookingComponent } from './appointment-booking/appointment-booking.component';
-import { ServicesResolver } from '../shared/_resolvers/appointment-data/services.resolver';
-import { AppointmentQuestionsResolver } from './_resolvers/appointment-data/appointment-questions.resolver';
+import { ServicesResolver } from '../shared/services.resolver';
+import { AppointmentQuestionsResolver } from './appointment-questions.resolver';
 
 const routes: Routes = [
     {

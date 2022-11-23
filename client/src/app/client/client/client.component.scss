@@ -1,25 +1,45 @@
-@use 'src/dimensions' as dimensions;
+@use '../../../theme/dimensions' as dimensions;
 
-.main-container {
-    padding-top: dimensions.$header-height;
-}
+$dimension: 58px;
 
-.info-container {
-    margin-top: 160px;
+.container {
     display: flex;
-    flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
     cursor: default;
 }
 
-.greeting {
-    $dimension: 58px;
+.info-container {
+    @extend .container;
 
-    margin-bottom: 2 * $dimension;
+    margin-top: 160px;
+    align-items: center;
+    flex-direction: column;
+}
+
+.appointments-wrapper {
+    @extend .container;
+
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.header {
     font-weight: 700;
     font-size: $dimension - 10px;
     line-height: $dimension;
+}
+
+.greeting {
+    @extend .header;
+
+    margin-bottom: 2 * $dimension;
+}
+
+.title {
+    @extend .header;
+
+    margin-bottom: 0;
 }
 
 .action-label {

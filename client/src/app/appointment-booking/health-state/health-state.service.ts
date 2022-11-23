@@ -1,16 +1,4 @@
 import { Injectable } from '@angular/core';
-import { IdInfo } from '../../shared/_services/appointments/appointments.service';
-
-export interface HealthStateDescriptor {
-    id: string;
-    payload: HealthStatePayload;
-}
-
-interface HealthStatePayload {
-    fact: string;
-    additionalInfo?: string;
-    womenOnly: boolean;
-}
 
 @Injectable({
     providedIn: 'root',
@@ -63,4 +51,20 @@ export class HealthStateService {
     getIdInfoItems(): IdInfo[] {
         return Array.from(this.state.entries()).map(([id, { additionalInfo }]) => ({ id, additionalInfo }));
     }
+}
+
+export interface HealthStateDescriptor {
+    id: string;
+    payload: HealthStatePayload;
+}
+
+interface HealthStatePayload {
+    fact: string;
+    additionalInfo?: string;
+    womenOnly: boolean;
+}
+
+export interface IdInfo {
+    id: string;
+    additionalInfo?: string;
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { AppointmentQuestion } from '../_services/appointment-questions/appointment-questions.service';
+import { AppointmentQuestion } from '../appointment-booking/appointment-booking.service';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { HealthStateService } from './health-state.service';
 import { filter, Subject, takeUntil } from 'rxjs';

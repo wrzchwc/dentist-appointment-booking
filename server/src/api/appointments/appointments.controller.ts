@@ -1,6 +1,8 @@
 import * as m from '../../models';
 import * as r from './appointments.requests';
+import { LengthItem, Period, calculateTotalLength, createPeriod, isOverlappingPeriod } from '../../services';
 import { Request, Response } from 'express';
+import { WorkDayHour, isWorkingTime } from '../../services/workday';
 import { Op } from 'sequelize';
 
 export async function getQuestions(request: Request, response: Response) {
@@ -74,16 +76,11 @@ export async function updateAppointmentStartDate(request: r.UpdateAppointmentSta
     response.status(200).json(updatedAppointments[0]);
 }
 
-export async function getAppointments({ query }: r.GetAppointments, response: Response) {
+export async function getAppointments(request: r.GetAppointments, response: Response) {
     let appointments: m.Appointment[];
 
     try {
-        appointments = await m.Appointment.findAll({
-            where: { startsAt: getStartsAtCondition(query) },
-            include: [{ model: m.Service, through: { attributes: ['quantity'] } }],
-            order: [['startsAt', 'ASC']],
-            attributes: ['id', 'startsAt'],
-        });
+        appointments = await m.Appointment.findAll(createGetAppointmentsOptions(request));
     } catch (e) {
         return response.status(500).json({ error: 'Operation failed' });
     }
@@ -91,7 +88,44 @@ export async function getAppointments({ query }: r.GetAppointments, response: Re
     response.status(200).json(appointments);
 }
 
-function getStartsAtCondition({ before, after }: r.GetAppointmentsQuery) {
+export async function getClientAppointments(request: r.GetAppointments, response: Response) {
+    let appointments: m.Appointment[];
+
+    try {
+        const user = await m.User.find(request.session?.passport.user.id);
+        appointments = await user.getAppointments(createGetAppointmentsOptions(request));
+    } catch (e) {
+        const [code, error] = getErrorData(e);
+        return response.status(code).json({ error });
+    }
+
+    response.status(200).json(appointments);
+}
+
+export async function deleteClientAppointment({ params, session }: r.DeleteAppointment, response: Response) {
+    try {
+        await m.Appointment.destroy({ where: { id: params.appointmentId, userId: session?.passport.user.id } });
+    } catch (e) {
+        return response.sendStatus(500);
+    }
+
+    response.sendStatus(200);
+}
+
+function getErrorData(e: unknown | m.ModelError): [number, string] {
+    return e instanceof m.ModelError ? [e.httpCode, e.message] : [500, 'Operation failed'];
+}
+
+function createGetAppointmentsOptions({ query }: r.GetAppointments): any {
+    return {
+        attributes: ['id', 'startsAt'],
+        order: [['startsAt', 'ASC']],
+        include: [{ model: m.Service, through: { attributes: ['quantity'] } }],
+        where: { startsAt: createStartsAtCondition(query) },
+    };
+}
+
+function createStartsAtCondition({ before, after }: r.DateRange) {
     if (after && before) {
         return { [Op.between]: [after, before] };
     } else if (after) {
@@ -102,6 +136,70 @@ function getStartsAtCondition({ before, after }: r.GetAppointmentsQuery) {
     return { [Op.ne]: null };
 }
 
-function getErrorData(e: unknown | m.ModelError): [number, string] {
-    return e instanceof m.ModelError ? [e.httpCode, e.message] : [500, 'Operation failed'];
+export async function getAvailableDates({ query }: r.GetAvailableDates, response: Response) {
+    let appointments: m.Appointment[];
+
+    try {
+        appointments = await findAllAppointments(query);
+    } catch (e) {
+        return response.status(500).json({ error: 'Operation failed' });
+    }
+
+    response.status(200).json(calculateAvailableDates(query, appointments.map(mapAppointmentToPeriod)));
+}
+
+async function findAllAppointments(query: r.GetAvailableDatesQuery) {
+    return m.Appointment.findAll({
+        attributes: ['startsAt'],
+        order: [['startsAt', 'ASC']],
+        include: [{ model: m.Service, attributes: ['length'], through: { attributes: ['quantity'] } }],
+        where: {
+            startsAt: {
+                [Op.between]: [query.date, new Date(new Date(query.date).setHours(WorkDayHour.End, 0, 0, 0))],
+            },
+        },
+    });
+}
+
+function mapAppointmentToPeriod({ startsAt, services }: m.Appointment): Period {
+    return createPeriod(new Date(startsAt), calculateTotalLength(services.map(mapServiceToLengthItem)));
+}
+
+function mapServiceToLengthItem(service: m.Service): LengthItem {
+    return { length: service.length!, quantity: service.appointmentServices.quantity };
+}
+
+function calculateAvailableDates(query: r.GetAvailableDatesQuery, bookedPeriods: Period[]): Date[] {
+    const availableTimes: Date[] = [];
+    const date = new Date(new Date(query.date).setHours(WorkDayHour.Start, 0, 0, 0));
+
+    while (isWorkingTime(date, query.length)) {
+        const period = createPeriod(date, query.length);
+        if (!isOverlappingPeriod(period, bookedPeriods)) {
+            availableTimes.push(new Date(date));
+        }
+        date.setMinutes(date.getMinutes() + 15);
+    }
+
+    return availableTimes;
+}
+
+export async function getClientAppointment({ params, session }: r.GetClientAppointment, response: Response) {
+    let appointment: m.Appointment | null;
+
+    try {
+        appointment = await m.Appointment.findOne({
+            where: { userId: session?.passport.user.id, id: params.appointmentId },
+            attributes: ['id', 'startsAt'],
+            include: [{ model: m.Service, through: { attributes: ['quantity'] } }],
+        });
+    } catch (e) {
+        return response.status(500).json({ error: 'Operation failed' });
+    }
+
+    if (appointment === null) {
+        response.status(404).json({ error: 'Appointment not found' });
+    } else {
+        response.status(200).json(appointment);
+    }
 }

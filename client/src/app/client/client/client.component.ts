@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthenticationService } from '../../shared/_services/authentication/authentication.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-client',
@@ -8,5 +9,5 @@ import { AuthenticationService } from '../../shared/_services/authentication/aut
 })
 export class ClientComponent {
     // eslint-disable-next-line no-unused-vars
-    constructor(public auth: AuthenticationService) {}
+    constructor(public auth: AuthenticationService, public route: ActivatedRoute) {}
 }

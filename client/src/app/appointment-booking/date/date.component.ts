@@ -1,8 +1,8 @@
 import { AfterViewChecked, Component, EventEmitter, Input, Output } from '@angular/core';
-import { DateService } from 'src/app/shared/_services/date.service';
-import { AppointmentTimeService } from '../_services/appointment-time/appointment-time.service';
-import { LengthService } from '../../shared/_services/appointments/length.service';
-import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
+import { DateService } from 'src/app/shared/_services/utility/date.service';
+import { AppointmentDateService } from '../appointment-booking/appointment-date.service';
+import { LengthService } from '../../shared/_services/utility/length.service';
+import { AppointmentCartService } from '../appointment-cart.service';
 
 @Component({
     selector: 'app-date',
@@ -16,7 +16,7 @@ export class DateComponent implements AfterViewChecked {
 
     constructor(
         // eslint-disable-next-line no-unused-vars
-        public time: AppointmentTimeService,
+        public time: AppointmentDateService,
         // eslint-disable-next-line no-unused-vars
         public date: DateService,
         private length: LengthService,
@@ -32,7 +32,7 @@ export class DateComponent implements AfterViewChecked {
     }
 
     handleClick() {
-        this.time.selectedTime$.next(null);
+        this.time.selectedDate$.next(null);
     }
 
     handleNextWorkday() {
@@ -47,5 +47,16 @@ export class DateComponent implements AfterViewChecked {
 
     ignoreClick(event: Event) {
         event.stopPropagation();
+    }
+
+    isPreviousWorkdayDisabled(): boolean {
+        if (this.date.previousWorkday.getFullYear() < this.date.currentDay.getFullYear()) {
+            return true;
+        } else if (this.date.previousWorkday.getMonth() < this.date.currentDay.getMonth()) {
+            return true;
+        } else if (this.date.previousWorkday.getDate() < this.date.currentDay.getDate()) {
+            return true;
+        }
+        return false;
     }
 }

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { Service } from 'src/app/shared/_services/appointments/services.service';
+import { Service } from 'src/app/shared/_services/services.service';
 import { TooltipService } from './tooltip.service';
-import { AppointmentCartService } from '../_services/appointment-cart/appointment-cart.service';
+import { AppointmentCartService } from '../appointment-cart.service';
 
 @Component({
     selector: 'app-service-card',

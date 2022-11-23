@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Service } from 'src/app/shared/_services/appointments/services.service';
+import { Service } from 'src/app/shared/_services/services.service';
 
 @Component({
     selector: 'app-appointment-services',

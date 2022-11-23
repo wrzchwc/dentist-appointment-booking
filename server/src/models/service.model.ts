@@ -11,7 +11,7 @@ export class Service extends Model<InferAttributes<Service>, InferCreationAttrib
     declare detail?: number;
     declare length?: number;
 
-    declare appointment: NonAttribute<AppointmentsServices>;
+    declare appointmentServices: NonAttribute<AppointmentsServices>;
 
     static async find(id: string) {
         const service = await Service.findByPk(id);

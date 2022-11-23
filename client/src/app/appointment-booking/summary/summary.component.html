@@ -4,55 +4,34 @@
         <section class="content-wrapper">
             <ng-container *ngIf="state.facts">
                 <div class="content-container">
-                    <mat-card class="card">
-                        <mat-icon color="primary">medical_information</mat-icon>
-                        <h2 class="styles-color-accent card-header">Stan zdrowia</h2>
+                    <app-card title="Stan zdrowia" icon="medical_information">
                         <ng-container *ngFor="let fact of state.facts">
                             <h3 class="card-content">{{ fact }}</h3>
                         </ng-container>
-                    </mat-card>
+                    </app-card>
                 </div>
             </ng-container>
             <div class="content-container">
-                <mat-card class="card">
-                    <mat-icon color="primary">person</mat-icon>
-                    <h2 class="styles-color-accent card-header">Pacjent(ka)</h2>
+                <app-card title="Pacjent(ka)" icon="person">
                     <h3 class="card-content">{{ auth.profile.name }} {{ auth.profile.surname }}</h3>
                     <h4 class="card-content">{{ auth.profile.email }}</h4>
-                </mat-card>
-                <mat-card class="card">
-                    <mat-icon color="primary">toc</mat-icon>
-                    <h2 class="styles-color-accent card-header">Zakres leczenia</h2>
-                    <table mat-table [dataSource]="cart.getPriceItems()" class="table">
-                        <ng-container *ngFor="let column of displayedColumns">
-                            <ng-container [matColumnDef]="column.property">
-                                <th mat-header-cell *matHeaderCellDef class="styles-color-primary">
-                                    {{ column.label | uppercase }}
-                                </th>
-                                <td mat-cell *matCellDef="let item">{{ item[column.property] }}</td>
-                            </ng-container>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns | rowDef"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns | rowDef"></tr>
-                    </table>
-                </mat-card>
+                </app-card>
+                <app-card title="Zakres leczenia" icon="medical_services">
+                    <app-services-table [dataSource]="cart.getPriceItems()"></app-services-table>
+                </app-card>
             </div>
             <div class="content-container">
-                <mat-card class="card">
-                    <mat-icon color="primary">event_available</mat-icon>
-                    <h2 class="styles-color-accent card-header">Termin wizyty</h2>
-                    <h3 class="card-content">{{ time.selectedTime$ | async | date: 'dd.MM.yyyy' }} r.</h3>
+                <app-card title="Termin wizyty" icon="event_available">
+                    <h3 class="card-content">{{ time.selectedDate$ | async | date: 'dd.MM.yyyy' }} r.</h3>
                     <h4 class="card-content">
-                        {{ time.selectedTime$ | async | date: 'HH:mm' }} - {{ endsAt | date: 'HH:mm' }}
+                        {{ time.selectedDate$ | async | date: 'HH:mm' }} - {{ endsAt | date: 'HH:mm' }}
                     </h4>
-                </mat-card>
-                <mat-card class="card">
-                    <mat-icon color="primary">payments</mat-icon>
-                    <h2 class="styles-color-accent card-header">Szacowana cena wizyty</h2>
+                </app-card>
+                <app-card title="Szacowana cena wizyty" icon="payments">
                     <h3 class="styles-color-warn card-content">
                         {{ price.calculateTotalPrice(cart.getPriceItems()) }} PLN
                     </h3>
-                </mat-card>
+                </app-card>
             </div>
         </section>
     </section>

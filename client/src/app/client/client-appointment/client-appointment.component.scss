@@ -1,0 +1,106 @@
+@use 'sass:math' as math;
+
+@function scale($value, $factor) {
+    @return $value * $factor;
+}
+
+.label {
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.title {
+    @extend .label;
+
+    font-size: 48px;
+    line-height: 64px;
+}
+
+.subtitle {
+    @extend .label;
+
+    font-size: 18.76px;
+    line-height: 40px;
+}
+
+.container {
+    display: flex;
+    gap: 40px;
+}
+
+.content {
+    @extend .container;
+
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.content-top {
+    @extend .content;
+
+    align-items: flex-start;
+}
+
+.content-center {
+    @extend .content;
+
+    align-items: stretch;
+}
+
+.main-container {
+    @extend .container;
+
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+
+.card {
+    flex: 1 1 31.25%;
+}
+
+.icon {
+    line-height: 0.9;
+    margin-left: 5px;
+}
+
+.button {
+    $factor: math.div(64, 36);
+
+    line-height: scale(36px, $factor);
+    min-width: scale(64px, $factor);
+    padding: 0 scale(16px, $factor);
+    font-size: scale(14px, $factor);
+}
+
+.text {
+    font-weight: 500;
+    margin-bottom: 0;
+    cursor: default;
+}
+
+.price {
+    @extend .text;
+
+    font-size: 66px;
+    line-height: 99px;
+}
+
+.date {
+    @extend .text;
+
+    $factor: math.div(49, 24);
+
+    font-size: scale(24px, $factor);
+    line-height: scale(32px, $factor);
+}
+
+.time {
+    @extend .text;
+
+    $factor: math.div(42, 24);
+
+    font-size: scale(24px, $factor);
+    line-height: scale(32px, $factor);
+}
