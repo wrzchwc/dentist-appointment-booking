@@ -33,6 +33,7 @@
 
     flex-direction: row;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .content-top {
@@ -56,8 +57,7 @@
 }
 
 .card {
-    max-width: 33%;
-    width: 100%;
+    flex: 1 1 31.25%;
 }
 
 .icon {

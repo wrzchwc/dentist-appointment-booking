@@ -26,19 +26,30 @@ export class ClientAppointmentComponent {
         private lengthService: LengthService
     ) {
         this.appointment = activatedRoute.snapshot.data['appointment'];
-        this.cancelable = true;
-        this.price = priceService.calculateTotalPrice(this.appointment.services.map(this.mapServiceToPriceItem));
+        this.dataSource = this.mapServicesToPriceItems();
+        this.price = priceService.calculateTotalPrice(this.dataSource);
+        this.length = lengthService.calculateTotalLength(this.mapServicesToLengthItems());
         this.cancelable = dateService.currentDay < new Date(this.appointment.startsAt);
-        this.length = lengthService.calculateTotalLength(this.appointment.services.map(this.mapServiceToLengthItem));
-        this.endsAt = new Date(new Date(this.appointment.startsAt).setMinutes(this.length));
-        this.dataSource = this.appointment.services.map(this.mapServiceToPriceItem);
+        this.endsAt = this.calculateEndsAt();
+    }
+
+    private mapServicesToPriceItems(): NamedPriceItem[] {
+        return this.appointment.services.map(this.mapServiceToPriceItem);
     }
 
     private mapServiceToPriceItem({ price, appointmentServices, detail, name }: AssociatedService): NamedPriceItem {
         return { quantity: appointmentServices.quantity, detail, name, price };
     }
 
+    private mapServicesToLengthItems(): LengthItem[] {
+        return this.appointment.services.map(this.mapServiceToLengthItem);
+    }
+
     private mapServiceToLengthItem(service: AssociatedService): LengthItem {
         return { quantity: service.appointmentServices.quantity, length: service.length };
+    }
+
+    private calculateEndsAt(): Date {
+        return new Date(new Date(this.appointment.startsAt).setMinutes(this.length));
     }
 }
