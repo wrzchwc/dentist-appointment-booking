@@ -1,8 +1,8 @@
-import { RowDefPipe } from './row-def.pipe';
+import { RowDefinitionPipe } from './row-definition.pipe';
 
 describe('RowDefPipe', () => {
     it('create an instance', () => {
-        const pipe = new RowDefPipe();
+        const pipe = new RowDefinitionPipe();
         expect(pipe).toBeTruthy();
     });
 });

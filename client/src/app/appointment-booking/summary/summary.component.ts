@@ -7,7 +7,6 @@ import { PriceService } from '../../shared/_services/utility/price.service';
 import { LengthService } from '../../shared/_services/utility/length.service';
 import { filter } from 'rxjs';
 import { HealthStateService } from '../health-state/health-state.service';
-import { DisplayedColumn } from '../../shared/table/table.component';
 
 @Component({
     selector: 'app-summary',
@@ -16,7 +15,6 @@ import { DisplayedColumn } from '../../shared/table/table.component';
 })
 export class SummaryComponent implements AfterViewChecked {
     endsAt?: Date;
-    readonly displayedColumns: DisplayedColumn[];
 
     constructor(
         public auth: AuthenticationService,
@@ -26,12 +24,6 @@ export class SummaryComponent implements AfterViewChecked {
         private length: LengthService,
         public state: HealthStateService
     ) {
-        this.displayedColumns = [
-            { label: 'usługa', property: 'name' },
-            { label: 'liczba', property: 'quantity' },
-            { label: 'wartość', property: 'price' },
-        ];
-
         time.selectedDate$.pipe(filter(Boolean)).subscribe((value) => {
             const copy = new Date(value);
             const appointmentLength = length.calculateTotalLength(cart.getLengthItems());

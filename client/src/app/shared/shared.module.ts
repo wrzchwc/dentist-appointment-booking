@@ -14,9 +14,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CardComponent } from './card/card.component';
 import { MatCardModule } from '@angular/material/card';
-import { TableComponent } from './table/table.component';
+import { ServicesTableComponent } from './table/services-table.component';
 import { MatTableModule } from '@angular/material/table';
-import { RowDefPipe } from './table/row-def.pipe';
+import { RowDefinitionPipe } from './table/row-definition.pipe';
 
 @NgModule({
     declarations: [
@@ -24,16 +24,16 @@ import { RowDefPipe } from './table/row-def.pipe';
         AppointmentsListComponent,
         DatePickerComponent,
         CardComponent,
-        TableComponent,
-        RowDefPipe,
+        ServicesTableComponent,
+        RowDefinitionPipe,
     ],
     exports: [
         HeaderComponent,
         AppointmentsListComponent,
         DatePickerComponent,
         CardComponent,
-        RowDefPipe,
-        TableComponent,
+        RowDefinitionPipe,
+        ServicesTableComponent,
     ],
     imports: [
         CommonModule,
