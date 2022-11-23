@@ -1,8 +1,11 @@
-<div class="info-container">
-    <h1 class="styles-color-primary greeting">Witaj!</h1>
-    <h2 class="info-label">Brak nadchodzących wizyt w dniu {{ date.currentDay | date: 'dd.MM.yyyy' }} r.</h2>
-    <h2 class="info-label">
-        Kliknij <span class="action-label styles-color-accent" routerLink="/admin/appointments">WIZYTY</span>, aby
-        przejrzeć nadchodzące wizyty.
-    </h2>
-</div>
+<ng-container *ngIf="route.snapshot.data['appointments'].length > 0; else noUpcomingAppointments"> </ng-container>
+<ng-template #noUpcomingAppointments>
+    <div class="info-container">
+        <h1 class="styles-color-primary greeting">Witaj!</h1>
+        <h2 class="info-label">Brak nadchodzących wizyt w dniu {{ date.currentDay | date: 'dd.MM.yyyy' }} r.</h2>
+        <h2 class="info-label">
+            Kliknij <span class="action-label styles-color-accent" routerLink="/admin/appointments">WIZYTY</span>, aby
+            przejrzeć nadchodzące wizyty.
+        </h2>
+    </div>
+</ng-template>

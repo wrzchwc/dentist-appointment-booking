@@ -1,4 +1,4 @@
-@use '../../../theme/dimensions' as dimensions;
+@use 'src/theme/dimensions' as dimensions;
 
 $dimension: 58px;
 
@@ -16,7 +16,7 @@ $dimension: 58px;
     flex-direction: column;
 }
 
-.appointments-wrapper {
+.main {
     @extend .container;
 
     flex-direction: column;
@@ -24,22 +24,11 @@ $dimension: 58px;
     gap: 20px;
 }
 
-.header {
+.greeting {
     font-weight: 700;
     font-size: $dimension - 10px;
     line-height: $dimension;
-}
-
-.greeting {
-    @extend .header;
-
     margin-bottom: 2 * $dimension;
-}
-
-.title {
-    @extend .header;
-
-    margin-bottom: 0;
 }
 
 .action-label {
