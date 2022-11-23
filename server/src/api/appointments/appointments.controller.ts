@@ -76,11 +76,19 @@ export async function updateAppointmentStartDate(request: r.UpdateAppointmentSta
     response.status(200).json(updatedAppointments[0]);
 }
 
-export async function getAppointments(request: r.GetAppointments, response: Response) {
+export async function getAppointments({ query }: r.GetAppointments, response: Response) {
     let appointments: m.Appointment[];
 
     try {
-        appointments = await m.Appointment.findAll(createGetAppointmentsOptions(request));
+        appointments = await m.Appointment.findAll({
+            attributes: ['id', 'startsAt'],
+            order: [['startsAt', 'ASC']],
+            include: [
+                { model: m.Service, attributes: ['id', 'name'], through: { attributes: [] } },
+                { model: m.User, attributes: ['id', 'name', 'surname'] },
+            ],
+            where: { startsAt: createStartsAtCondition(query) },
+        });
     } catch (e) {
         return response.status(500).json({ error: 'Operation failed' });
     }
@@ -88,18 +96,34 @@ export async function getAppointments(request: r.GetAppointments, response: Resp
     response.status(200).json(appointments);
 }
 
-export async function getClientAppointments(request: r.GetAppointments, response: Response) {
+export async function getClientAppointments({ session, query }: r.GetAppointments, response: Response) {
     let appointments: m.Appointment[];
 
     try {
-        const user = await m.User.find(request.session?.passport.user.id);
-        appointments = await user.getAppointments(createGetAppointmentsOptions(request));
+        const user = await m.User.find(session?.passport.user.id);
+        appointments = await user.getAppointments({
+            attributes: ['id', 'startsAt'],
+            order: [['startsAt', 'ASC']],
+            include: [{ model: m.Service, through: { attributes: ['quantity'] } }],
+            where: { startsAt: createStartsAtCondition(query) },
+        });
     } catch (e) {
         const [code, error] = getErrorData(e);
         return response.status(code).json({ error });
     }
 
     response.status(200).json(appointments);
+}
+
+function createStartsAtCondition({ before, after }: r.DateRange) {
+    if (after && before) {
+        return { [Op.between]: [after, before] };
+    } else if (after) {
+        return { [Op.gt]: after };
+    } else if (before) {
+        return { [Op.lt]: before };
+    }
+    return { [Op.ne]: null };
 }
 
 export async function deleteClientAppointment({ params, session }: r.DeleteAppointment, response: Response) {
@@ -114,26 +138,6 @@ export async function deleteClientAppointment({ params, session }: r.DeleteAppoi
 
 function getErrorData(e: unknown | m.ModelError): [number, string] {
     return e instanceof m.ModelError ? [e.httpCode, e.message] : [500, 'Operation failed'];
-}
-
-function createGetAppointmentsOptions({ query }: r.GetAppointments): any {
-    return {
-        attributes: ['id', 'startsAt'],
-        order: [['startsAt', 'ASC']],
-        include: [{ model: m.Service, through: { attributes: ['quantity'] } }],
-        where: { startsAt: createStartsAtCondition(query) },
-    };
-}
-
-function createStartsAtCondition({ before, after }: r.DateRange) {
-    if (after && before) {
-        return { [Op.between]: [after, before] };
-    } else if (after) {
-        return { [Op.gt]: after };
-    } else if (before) {
-        return { [Op.lt]: before };
-    }
-    return { [Op.ne]: null };
 }
 
 export async function getAvailableDates({ query }: r.GetAvailableDates, response: Response) {

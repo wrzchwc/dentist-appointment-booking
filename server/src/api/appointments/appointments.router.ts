@@ -1,5 +1,6 @@
 import * as controller from './appointments.controller';
 import { Router } from 'express';
+import { authorisation } from '../../middleware';
 
 export const router = Router();
 
@@ -9,5 +10,5 @@ router.get('/me/:appointmentId', controller.getClientAppointment);
 router.delete('/me/:appointmentId', controller.deleteClientAppointment);
 router.get('/me', controller.getClientAppointments);
 router.patch('/:appointmentId/starts-at', controller.updateAppointmentStartDate);
-router.get('/', controller.getAppointments);
+router.get('/', authorisation, controller.getAppointments);
 router.post('/', controller.createAppointment);
