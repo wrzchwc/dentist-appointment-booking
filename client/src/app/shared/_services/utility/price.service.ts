@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
 
-export interface NamedPriceItem extends PriceItem {
-    name: string;
-}
-
 export interface PriceItem {
     price: number | null;
     detail: 'A' | 'B' | 'C' | null;

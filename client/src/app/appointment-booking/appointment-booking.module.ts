@@ -22,7 +22,6 @@ import { TimeCardComponent } from './time-card/time-card.component';
 import { AppointmentBookingRoutingModule } from './appointment-booking-routing.module';
 import { SummaryComponent } from './summary/summary.component';
 import { MatTableModule } from '@angular/material/table';
-import { RowDefPipe } from './summary/row-def.pipe';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -36,7 +35,6 @@ import { SharedModule } from '../shared/shared.module';
         DateComponent,
         TimeCardComponent,
         SummaryComponent,
-        RowDefPipe,
     ],
     imports: [
         CommonModule,

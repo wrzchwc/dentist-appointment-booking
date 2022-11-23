@@ -17,18 +17,7 @@
                     <h4 class="card-content">{{ auth.profile.email }}</h4>
                 </app-card>
                 <app-card title="Zakres leczenia" icon="medical_services">
-                    <table mat-table [dataSource]="cart.getPriceItems()" class="table">
-                        <ng-container *ngFor="let column of displayedColumns">
-                            <ng-container [matColumnDef]="column.property">
-                                <th mat-header-cell *matHeaderCellDef class="styles-color-primary">
-                                    {{ column.label | uppercase }}
-                                </th>
-                                <td mat-cell *matCellDef="let item">{{ item[column.property] }}</td>
-                            </ng-container>
-                        </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns | rowDef"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns | rowDef"></tr>
-                    </table>
+                    <app-table [dataSource]="cart.getPriceItems()" [displayedColumns]="displayedColumns"></app-table>
                 </app-card>
             </div>
             <div class="content-container">

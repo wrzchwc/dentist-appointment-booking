@@ -1,15 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-
-export interface ColumnDef {
-    property: string;
-    label: string;
-}
+import { DisplayedColumn } from './table.component';
 
 @Pipe({
     name: 'rowDef',
 })
 export class RowDefPipe implements PipeTransform {
-    transform(values: ColumnDef[]): string[] {
+    transform(values: DisplayedColumn[]): string[] {
         return values.map(({ property }) => property);
     }
 }

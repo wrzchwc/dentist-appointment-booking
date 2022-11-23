@@ -14,10 +14,27 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CardComponent } from './card/card.component';
 import { MatCardModule } from '@angular/material/card';
+import { TableComponent } from './table/table.component';
+import { MatTableModule } from '@angular/material/table';
+import { RowDefPipe } from './table/row-def.pipe';
 
 @NgModule({
-    declarations: [HeaderComponent, AppointmentsListComponent, DatePickerComponent, CardComponent],
-    exports: [HeaderComponent, AppointmentsListComponent, DatePickerComponent, CardComponent],
+    declarations: [
+        HeaderComponent,
+        AppointmentsListComponent,
+        DatePickerComponent,
+        CardComponent,
+        TableComponent,
+        RowDefPipe,
+    ],
+    exports: [
+        HeaderComponent,
+        AppointmentsListComponent,
+        DatePickerComponent,
+        CardComponent,
+        RowDefPipe,
+        TableComponent,
+    ],
     imports: [
         CommonModule,
         MatButtonModule,
@@ -31,6 +48,7 @@ import { MatCardModule } from '@angular/material/card';
         MatDatepickerModule,
         MatNativeDateModule,
         MatCardModule,
+        MatTableModule,
     ],
 })
 export class SharedModule {}

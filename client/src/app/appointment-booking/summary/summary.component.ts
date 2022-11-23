@@ -4,10 +4,10 @@ import { AuthenticationService } from '../../shared/_services/authentication/aut
 import { AppointmentDateService } from '../appointment-booking/appointment-date.service';
 import { AppointmentCartService } from '../appointment-cart.service';
 import { PriceService } from '../../shared/_services/utility/price.service';
-import { ColumnDef } from './row-def.pipe';
 import { LengthService } from '../../shared/_services/utility/length.service';
 import { filter } from 'rxjs';
 import { HealthStateService } from '../health-state/health-state.service';
+import { DisplayedColumn } from '../../shared/table/table.component';
 
 @Component({
     selector: 'app-summary',
@@ -16,7 +16,7 @@ import { HealthStateService } from '../health-state/health-state.service';
 })
 export class SummaryComponent implements AfterViewChecked {
     endsAt?: Date;
-    readonly displayedColumns: ColumnDef[];
+    readonly displayedColumns: DisplayedColumn[];
 
     constructor(
         public auth: AuthenticationService,

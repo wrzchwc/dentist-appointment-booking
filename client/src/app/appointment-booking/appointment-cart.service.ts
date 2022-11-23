@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Service } from 'src/app/shared/_services/services.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { LengthItem } from 'src/app/shared/_services/utility/length.service';
-import { NamedPriceItem } from '../shared/_services/utility/price.service';
+import { NamedPriceItem } from '../shared/table/table.component';
 
 @Injectable({
     providedIn: 'root',
