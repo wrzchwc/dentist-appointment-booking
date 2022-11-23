@@ -10,7 +10,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class DatePickerComponent implements OnInit {
     @Output() selectionChange: EventEmitter<Date>;
-    selectedDate: FormControl<any>;
+    selectedDate: FormControl<Date>;
     private readonly onDestroy: Subject<void>;
 
     constructor(private date: DateService, private builder: FormBuilder) {
