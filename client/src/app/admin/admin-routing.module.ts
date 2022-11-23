@@ -3,11 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from './admin/admin.component';
 import { AdminAppointmentsComponent } from './admin-appointments/admin-appointments.component';
 import { PriceListComponent } from './price-list/price-list.component';
+import { AdminResolver } from './admin/admin.resolver';
 
 const routes: Routes = [
     { path: 'appointments', component: AdminAppointmentsComponent, title: 'Wizyty' },
     { path: 'price-list', component: PriceListComponent, title: 'Cennik' },
-    { path: '', component: AdminComponent, title: 'Panel administratora' },
+    { path: '', component: AdminComponent, title: 'Panel administratora', resolve: { appointments: AdminResolver } },
 ];
 
 @NgModule({
