@@ -3,6 +3,7 @@
         <div class="header-container">
             <mat-icon color="primary">calendar_month</mat-icon>
             <h2 class="header">{{ appointment.startsAt | date: 'dd.MM.yyyy, HH:mm' }}</h2>
+            <ng-content></ng-content>
         </div>
         <div>
             <mat-chip-list>

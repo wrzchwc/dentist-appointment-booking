@@ -4,9 +4,7 @@ import { HeaderComponent } from './header/header.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
-import { AdminModule } from '../admin/admin.module';
-import { AppointmentsListComponent } from './appointments-list/appointments-list.component';
-import { DatePickerComponent } from './date-buttons/date-picker.component';
+import { AppointmentsWrapperComponent } from './appointments-wrapper/appointments-wrapper.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -17,30 +15,37 @@ import { MatCardModule } from '@angular/material/card';
 import { ServicesTableComponent } from './table/services-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { RowDefinitionPipe } from './table/row-definition.pipe';
+import { AppointmentsListComponent } from './appointments-list/appointments-list.component';
+import { AppointmentPreviewComponent } from './appointment-preview/appointment-preview.component';
+import { MatChipsModule } from '@angular/material/chips';
+import { AppointmentsComponent } from './appointments/appointments.component';
 
 @NgModule({
     declarations: [
         HeaderComponent,
-        AppointmentsListComponent,
-        DatePickerComponent,
+        AppointmentsWrapperComponent,
         CardComponent,
         ServicesTableComponent,
         RowDefinitionPipe,
+        AppointmentsListComponent,
+        AppointmentPreviewComponent,
+        AppointmentsComponent,
     ],
     exports: [
         HeaderComponent,
-        AppointmentsListComponent,
-        DatePickerComponent,
+        AppointmentsWrapperComponent,
         CardComponent,
         RowDefinitionPipe,
         ServicesTableComponent,
+        AppointmentsListComponent,
+        AppointmentPreviewComponent,
+        AppointmentsComponent,
     ],
     imports: [
         CommonModule,
         MatButtonModule,
         MatIconModule,
         RouterLink,
-        AdminModule,
         MatFormFieldModule,
         MatInputModule,
         ReactiveFormsModule,
@@ -49,6 +54,7 @@ import { RowDefinitionPipe } from './table/row-definition.pipe';
         MatNativeDateModule,
         MatCardModule,
         MatTableModule,
+        MatChipsModule,
     ],
 })
 export class SharedModule {}

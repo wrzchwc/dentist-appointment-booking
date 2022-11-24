@@ -1,6 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DateService } from '../../shared/_services/utility/date.service';
 import { Appointment, ClientAppointmentsService } from './client-appointments.service';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -11,16 +10,10 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class ClientAppointmentsComponent implements OnDestroy {
     appointments: Appointment[];
-    dayWithNoAppointments?: Date;
     private readonly onDestroy: Subject<void>;
 
-    constructor(
-        private route: ActivatedRoute,
-        // eslint-disable-next-line no-unused-vars
-        public date: DateService,
-        // eslint-disable-next-line no-unused-vars
-        private clientAppointments: ClientAppointmentsService
-    ) {
+    // eslint-disable-next-line no-unused-vars
+    constructor(private clientAppointments: ClientAppointmentsService, private route: ActivatedRoute) {
         this.appointments = route.snapshot.data['appointments'];
         this.onDestroy = new Subject<void>();
     }
@@ -29,15 +22,12 @@ export class ClientAppointmentsComponent implements OnDestroy {
         this.onDestroy.next();
     }
 
-    handleDateSelectionChange(date: Date) {
+    handleDateChange(date: Date) {
         this.clientAppointments
             .getAppointments(date)
             .pipe(takeUntil(this.onDestroy))
             .subscribe((appointments) => {
                 this.appointments = appointments;
-                if (appointments.length === 0) {
-                    this.dayWithNoAppointments = date;
-                }
             });
     }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-appointments-list',
@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
     styleUrls: ['./appointments-list.component.scss'],
 })
 export class AppointmentsListComponent {
-    constructor() {}
+    @Input() title?: string;
 }

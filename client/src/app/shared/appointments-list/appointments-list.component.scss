@@ -1,7 +1,17 @@
-.main-container {
+.main {
     display: flex;
     justify-content: flex-start;
     cursor: default;
+    flex-direction: column;
+    align-items: stretch;
     gap: 20px;
-    flex-wrap: wrap;
+}
+
+.title {
+    $dimension: 58px;
+
+    font-weight: 700;
+    font-size: $dimension - 10px;
+    line-height: $dimension;
+    margin-bottom: 0;
 }

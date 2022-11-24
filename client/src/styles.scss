@@ -77,7 +77,7 @@ button.mat-icon-button {
     }
 }
 
-app-client-appointment-preview {
+app-appointment-preview {
     mat-chip-list {
         div.mat-chip-list-wrapper {
             gap: 2 * dimensions.$card-padding;
@@ -85,13 +85,11 @@ app-client-appointment-preview {
     }
 }
 
-app-date-picker {
-    mat-form-field {
-        div.mat-form-field-wrapper {
-            div.mat-form-field-flex {
-                div.mat-form-field-infix {
-                    display: flex;
-                }
+mat-form-field.picker {
+    div.mat-form-field-wrapper {
+        div.mat-form-field-flex {
+            div.mat-form-field-infix {
+                display: flex;
             }
         }
     }
