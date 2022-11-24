@@ -1,0 +1,17 @@
+<div class="main-container">
+    <div class="content">
+        <div>
+            <h1 class="styles-color-primary title">Wizyta</h1>
+            <h6 class="subtitle">
+                identyfikator: <span class="styles-color-accent">{{ appointmentId }}</span>
+            </h6>
+        </div>
+        <ng-container *ngIf="cancelable">
+            <button type="button" mat-raised-button color="warn" class="button" (click)="cancel.emit()">
+                ODWOŁAJ
+                <mat-icon class="icon">cancel</mat-icon>
+            </button>
+        </ng-container>
+    </div>
+    <ng-content></ng-content>
+</div>

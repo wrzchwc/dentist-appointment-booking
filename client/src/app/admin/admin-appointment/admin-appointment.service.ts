@@ -20,7 +20,7 @@ export class AdminAppointmentService {
     }
 }
 
-interface Appointment {
+export interface Appointment {
     id: string;
     startsAt: Date;
     facts: Fact[];

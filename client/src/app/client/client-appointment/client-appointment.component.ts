@@ -46,7 +46,7 @@ export class ClientAppointmentComponent implements OnDestroy {
         this.onDestroy.next();
     }
 
-    handleCancelClick() {
+    handleCancel() {
         this.clientAppointmentService
             .cancelAppointment(this.appointment.id)
             .pipe(takeUntil(this.onDestroy))
