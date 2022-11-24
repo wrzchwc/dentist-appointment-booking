@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { Appointment } from '../appointments/appointments.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-appointment-preview',
@@ -11,7 +12,8 @@ export class AppointmentPreviewComponent implements OnChanges {
     services: string[];
     link: string;
 
-    constructor() {
+    // eslint-disable-next-line no-unused-vars
+    constructor(private router: Router) {
         this.services = [];
         this.link = '';
     }
@@ -19,7 +21,8 @@ export class AppointmentPreviewComponent implements OnChanges {
     ngOnChanges(): void {
         if (this.appointment !== undefined) {
             this.services = this.appointment.services.map((service) => service.name);
-            this.link = `/client/appointments/${this.appointment.id}`;
+            const [role] = this.router.url.split('/').filter(Boolean);
+            this.link = `/${role}/appointments/${this.appointment.id}`;
         }
     }
 }

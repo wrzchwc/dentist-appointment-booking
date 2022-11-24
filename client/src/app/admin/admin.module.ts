@@ -6,9 +6,10 @@ import { AdminAppointmentsComponent } from './admin-appointments/admin-appointme
 import { PriceListComponent } from './price-list/price-list.component';
 import { SharedModule } from '../shared/shared.module';
 import { MatIconModule } from '@angular/material/icon';
+import { AdminAppointmentComponent } from './admin-appointment/admin-appointment.component';
 
 @NgModule({
-    declarations: [AdminComponent, AdminAppointmentsComponent, PriceListComponent],
+    declarations: [AdminComponent, AdminAppointmentsComponent, PriceListComponent, AdminAppointmentComponent],
     imports: [CommonModule, AdminRoutingModule, SharedModule, MatIconModule],
 })
 export class AdminModule {}
