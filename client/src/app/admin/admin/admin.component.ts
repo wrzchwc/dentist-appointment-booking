@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DateService } from '../../shared/_services/utility/date.service';
 import { ActivatedRoute } from '@angular/router';
-import { Appointment } from './admin.service';
+import { Appointment } from '../admin-appointments/admin-appointments.service';
 
 @Component({
     selector: 'app-admin',

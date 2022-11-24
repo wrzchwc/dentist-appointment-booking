@@ -4,9 +4,15 @@ import { AdminComponent } from './admin/admin.component';
 import { AdminAppointmentsComponent } from './admin-appointments/admin-appointments.component';
 import { PriceListComponent } from './price-list/price-list.component';
 import { AdminResolver } from './admin/admin.resolver';
+import { AdminAppointmentsResolver } from './admin-appointments/admin-appointments.resolver';
 
 const routes: Routes = [
-    { path: 'appointments', component: AdminAppointmentsComponent, title: 'Wizyty' },
+    {
+        path: 'appointments',
+        component: AdminAppointmentsComponent,
+        title: 'Wizyty',
+        resolve: { appointments: AdminAppointmentsResolver },
+    },
     { path: 'price-list', component: PriceListComponent, title: 'Cennik' },
     { path: '', component: AdminComponent, title: 'Rezerwacje', resolve: { appointments: AdminResolver } },
 ];

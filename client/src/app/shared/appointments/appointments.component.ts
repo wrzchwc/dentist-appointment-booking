@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { DateService } from '../_services/utility/date.service';
 
 @Component({
     selector: 'app-appointments',
@@ -10,17 +11,18 @@ import { Subject, takeUntil } from 'rxjs';
 export class AppointmentsComponent implements OnChanges, OnDestroy {
     @Input() listTitle?: string;
     @Input() appointments?: Appointment[];
-    @Input() pickerControl?: FormControl<Date>;
     @Output() readonly dateChange: EventEmitter<Date>;
+    readonly pickerControl: FormControl<Date>;
     private readonly onDestroy: Subject<void>;
 
-    constructor() {
+    constructor(private builder: FormBuilder, private date: DateService) {
         this.onDestroy = new Subject<void>();
         this.dateChange = new EventEmitter<Date>();
+        this.pickerControl = builder.control(date.currentWorkday, { nonNullable: true });
     }
 
     ngOnChanges() {
-        this.pickerControl?.valueChanges.pipe(takeUntil(this.onDestroy)).subscribe((date) => {
+        this.pickerControl.valueChanges.pipe(takeUntil(this.onDestroy)).subscribe((date) => {
             this.dateChange.emit(date);
         });
     }

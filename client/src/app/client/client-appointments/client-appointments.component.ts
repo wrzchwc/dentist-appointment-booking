@@ -1,10 +1,7 @@
-/*eslint no-unused-vars: */
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DateService } from '../../shared/_services/utility/date.service';
 import { Appointment, ClientAppointmentsService } from './client-appointments.service';
 import { Subject, takeUntil } from 'rxjs';
-import { FormBuilder, FormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-client-appointments',
@@ -13,18 +10,12 @@ import { FormBuilder, FormControl } from '@angular/forms';
 })
 export class ClientAppointmentsComponent implements OnDestroy {
     appointments: Appointment[];
-    readonly pickerControl: FormControl<Date>;
     private readonly onDestroy: Subject<void>;
 
-    constructor(
-        public date: DateService,
-        private clientAppointments: ClientAppointmentsService,
-        private builder: FormBuilder,
-        private route: ActivatedRoute
-    ) {
+    // eslint-disable-next-line no-unused-vars
+    constructor(private clientAppointments: ClientAppointmentsService, private route: ActivatedRoute) {
         this.appointments = route.snapshot.data['appointments'];
         this.onDestroy = new Subject<void>();
-        this.pickerControl = builder.control(date.currentWorkday, { nonNullable: true });
     }
 
     ngOnDestroy() {
