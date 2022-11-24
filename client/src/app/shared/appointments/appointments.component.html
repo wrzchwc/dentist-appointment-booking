@@ -1,21 +1,17 @@
-<ng-container *ngIf="appointments && pickerControl">
-    <app-appointments-list [title]="listTitle">
-        <mat-form-field appearance="outline" class="picker">
-            <mat-label>Wybierz datę</mat-label>
-            <input matInput [matDatepicker]="picker" [formControl]="pickerControl" />
-            <mat-hint>MM/DD/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-        <ng-container *ngIf="appointments.length; else empty">
-            <app-appointments-wrapper>
-                <ng-container *ngFor="let appointment of appointments">
-                    <app-appointment-preview [appointment]="appointment"></app-appointment-preview>
-                </ng-container>
-            </app-appointments-wrapper>
-        </ng-container>
-        <ng-template #empty>
-            <h1 class="no-appointments">Brak wizyt w dniu {{ pickerControl.value | date: 'dd.MM.yyyy' }}</h1>
-        </ng-template>
-    </app-appointments-list>
-</ng-container>
+<app-appointments-list [title]="listTitle">
+    <mat-form-field appearance="outline" class="picker">
+        <mat-label>Wybierz datę</mat-label>
+        <input matInput [matDatepicker]="picker" [formControl]="pickerControl" />
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <ng-container *ngIf="empty; else notEmpty">
+        <h1 class="no-appointments">Brak wizyt w dniu {{ pickerControl.value | date: 'dd.MM.yyyy' }}</h1>
+    </ng-container>
+    <ng-template #notEmpty>
+        <app-appointments-wrapper>
+            <ng-content></ng-content>
+        </app-appointments-wrapper>
+    </ng-template>
+</app-appointments-list>

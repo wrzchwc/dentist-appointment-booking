@@ -1,2 +1,5 @@
-<app-appointments listTitle="Moje wizyty" [appointments]="appointments" (dateChange)="handleDateChange($event)">
+<app-appointments listTitle="Moje wizyty" [empty]="appointments.length === 0" (dateChange)="handleDateChange($event)">
+    <ng-container *ngFor="let appointment of appointments">
+        <app-appointment-preview [appointment]="appointment"></app-appointment-preview>
+    </ng-container>
 </app-appointments>
