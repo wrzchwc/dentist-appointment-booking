@@ -22,7 +22,7 @@ export async function createAppointment(request: r.CreateAppointment, response: 
         const user = await m.User.find((request.user as m.User).id);
         const createdAppointment = await user.createAppointment({ startsAt: request.body.startsAt });
         await addResourcesToAppointment(createdAppointment, request.body);
-        appointment = await getAppointment(createdAppointment.id);
+        appointment = await getApppointmentWithAssociations(createdAppointment.id);
     } catch (e) {
         const [code, error] = getErrorData(e);
         return response.status(code).json({ error });
@@ -48,7 +48,7 @@ async function mapToAddFactPromise(appointment: m.Appointment, attribute: r.Fact
     return appointment.addFact(attribute.id, { through: { additionalInfo: attribute.additionalInfo } });
 }
 
-async function getAppointment(id: string) {
+async function getApppointmentWithAssociations(id: string) {
     const serviceAttributes = ['name', 'price', 'count', 'detail', 'length'];
     const services = { model: m.Service, attributes: serviceAttributes, through: { attributes: ['quantity'] } };
     const facts = { model: m.AppointmentFact, attributes: ['value'], through: { attributes: ['additionalInfo'] } };
@@ -188,7 +188,7 @@ function calculateAvailableDates(query: r.GetAvailableDatesQuery, bookedPeriods:
     return availableTimes;
 }
 
-export async function getClientAppointment({ params, session }: r.GetClientAppointment, response: Response) {
+export async function getClientAppointment({ params, session }: r.GetAppointment, response: Response) {
     let appointment: m.Appointment | null;
 
     try {
@@ -206,4 +206,32 @@ export async function getClientAppointment({ params, session }: r.GetClientAppoi
     } else {
         response.status(200).json(appointment);
     }
+}
+
+const getAppointmentIncludeOptions = [
+    {
+        model: m.Service,
+        attributes: ['id', 'name', 'price', 'length', 'detail'],
+        through: { attributes: ['quantity'] },
+    },
+    { model: m.AppointmentFact, attributes: ['id', 'value'], through: { attributes: ['additionalInfo'] } },
+    { model: m.User, attributes: ['name', 'surname', 'email', 'id', 'photoUrl'] },
+];
+
+export async function getAppointment({ params }: r.GetAppointment, response: Response) {
+    let appointment: m.Appointment | null;
+
+    try {
+        appointment = await m.Appointment.findByPk(params.appointmentId, {
+            attributes: ['id', 'startsAt'],
+            include: getAppointmentIncludeOptions,
+        });
+    } catch (e) {
+        return response.status(500).json({ error: 'Operation failed' });
+    }
+
+    if (appointment === null) {
+        return response.status(404).json({ error: 'Appointment not found' });
+    }
+    response.status(200).json(appointment);
 }
