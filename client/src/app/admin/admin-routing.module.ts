@@ -6,6 +6,7 @@ import { PriceListComponent } from './price-list/price-list.component';
 import { AdminResolver } from './admin/admin.resolver';
 import { AdminAppointmentsResolver } from './admin-appointments/admin-appointments.resolver';
 import { AdminAppointmentComponent } from './admin-appointment/admin-appointment.component';
+import { AdminAppointmentResolver } from './admin-appointment/admin-appointment.resolver';
 
 const routes: Routes = [
     {
@@ -14,6 +15,7 @@ const routes: Routes = [
             {
                 path: ':appointmentId',
                 title: 'Podgląd wizyty',
+                resolve: { appointment: AdminAppointmentResolver },
                 component: AdminAppointmentComponent,
             },
             {

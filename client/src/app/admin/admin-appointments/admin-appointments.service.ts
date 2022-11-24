@@ -27,7 +27,7 @@ export interface Appointment extends Base {
     user: User;
 }
 
-interface User {
+export interface User {
     id: string;
     name: string;
     surname: string;
