@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { AppointmentsWrapperComponent } from './appointments-wrapper/appointments-wrapper.component';
-import { DatePickerComponent } from './date-buttons/date-picker.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -19,27 +18,28 @@ import { RowDefinitionPipe } from './table/row-definition.pipe';
 import { AppointmentsListComponent } from './appointments-list/appointments-list.component';
 import { AppointmentPreviewComponent } from './appointment-preview/appointment-preview.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { AppointmentsComponent } from './appointments/appointments.component';
 
 @NgModule({
     declarations: [
         HeaderComponent,
         AppointmentsWrapperComponent,
-        DatePickerComponent,
         CardComponent,
         ServicesTableComponent,
         RowDefinitionPipe,
         AppointmentsListComponent,
         AppointmentPreviewComponent,
+        AppointmentsComponent,
     ],
     exports: [
         HeaderComponent,
         AppointmentsWrapperComponent,
-        DatePickerComponent,
         CardComponent,
         RowDefinitionPipe,
         ServicesTableComponent,
         AppointmentsListComponent,
         AppointmentPreviewComponent,
+        AppointmentsComponent,
     ],
     imports: [
         CommonModule,

@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { Appointment } from '../../client/client-appointments/client-appointments.service';
+import { Appointment } from '../appointments/appointments.component';
 
 @Component({
     selector: 'app-appointment-preview',

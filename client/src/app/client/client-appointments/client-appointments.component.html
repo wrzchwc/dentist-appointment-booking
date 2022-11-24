@@ -1,13 +1,5 @@
-<app-appointments-list title="Moje wizyty">
-    <app-date-picker (selectionChange)="handleDateSelectionChange($event)"></app-date-picker>
-    <ng-container *ngIf="appointments.length; else empty">
-        <app-appointments-wrapper>
-            <ng-container *ngFor="let appointment of appointments">
-                <app-appointment-preview [appointment]="appointment"></app-appointment-preview>
-            </ng-container>
-        </app-appointments-wrapper>
-    </ng-container>
-    <ng-template #empty>
-        <h1 class="no-appointments">Brak wizyt w dniu {{ dayWithNoAppointments | date: 'dd.MM.yyyy' }}</h1>
-    </ng-template>
-</app-appointments-list>
+<app-appointments
+    listTitle="Moje wizyty"
+    [appointments]="appointments"
+    [pickerControl]="pickerControl"
+></app-appointments>

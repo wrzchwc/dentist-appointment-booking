@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { Appointment as Base } from '../../shared/appointments/appointments.component';
 
 @Injectable({
     providedIn: 'root',
@@ -19,13 +20,12 @@ export class AdminService {
     }
 }
 
-export interface Appointment {
-    id: string;
-    startsAt: Date;
-    services: Service[];
+export interface Appointment extends Base {
+    user: User;
 }
 
-interface Service {
+interface User {
     id: string;
     name: string;
+    surname: string;
 }
