@@ -1,8 +1,5 @@
 @use 'sass:math' as math;
-
-@function scale($value, $factor) {
-  @return $value * $factor;
-}
+@use 'src/theme/functions' as functions;
 
 .container {
   display: flex;
@@ -29,10 +26,10 @@
 .button {
   $factor: math.div(64, 36);
 
-  line-height: scale(36px, $factor);
-  min-width: scale(64px, $factor);
-  padding: 0 scale(16px, $factor);
-  font-size: scale(14px, $factor);
+  line-height: functions.scale(36px, $factor);
+  min-width: functions.scale(64px, $factor);
+  padding: 0 functions.scale(16px, $factor);
+  font-size: functions. scale(14px, $factor);
 }
 
 .label {
