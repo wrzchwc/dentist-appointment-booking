@@ -10,7 +10,7 @@ import { DateService } from '../_services/utility/date.service';
 })
 export class AppointmentsComponent implements OnChanges, OnDestroy {
     @Input() listTitle?: string;
-    @Input() empty: boolean;
+    @Input() appointments?: Appointment[];
     @Output() readonly dateChange: EventEmitter<Date>;
     readonly pickerControl: FormControl<Date>;
     private readonly onDestroy: Subject<void>;
@@ -19,7 +19,6 @@ export class AppointmentsComponent implements OnChanges, OnDestroy {
         this.onDestroy = new Subject<void>();
         this.dateChange = new EventEmitter<Date>();
         this.pickerControl = builder.control(date.currentWorkday, { nonNullable: true });
-        this.empty = true;
     }
 
     ngOnChanges() {
