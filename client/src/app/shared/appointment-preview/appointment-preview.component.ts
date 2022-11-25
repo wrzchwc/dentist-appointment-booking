@@ -11,8 +11,6 @@ export class AppointmentPreviewComponent implements OnChanges {
     @Input() appointment?: Partial<Appointment>;
     services: string[];
     link: string;
-    name?: string;
-    surname?: string;
 
     // eslint-disable-next-line no-unused-vars
     constructor(private router: Router) {

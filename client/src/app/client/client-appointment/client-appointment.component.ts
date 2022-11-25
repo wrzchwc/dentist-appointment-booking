@@ -11,7 +11,7 @@ import { AppointmentService } from '../../shared/appointment/appointment.service
 @Component({
     selector: 'app-client-appointment',
     templateUrl: './client-appointment.component.html',
-    styleUrls: ['./client-appointment.component.scss'],
+    styleUrls: ['./client-appointment.component.scss', '../../shared/appointment/appointment.scss'],
 })
 export class ClientAppointmentComponent implements OnDestroy {
     readonly appointment: Appointment;

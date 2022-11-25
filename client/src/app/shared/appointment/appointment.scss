@@ -2,45 +2,45 @@
 @use 'src/theme/functions' as functions;
 
 .content {
-  display: flex;
-  gap: 40px;
-  flex-direction: row;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  align-items: stretch;
+    display: flex;
+    gap: 40px;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: stretch;
 }
 
 .card {
-  flex: 1 1 31.25%;
+    flex: 1 1 31.25%;
 }
 
 .text {
-  font-weight: 500;
-  margin-bottom: 0;
-  cursor: default;
+    font-weight: 500;
+    margin-bottom: 0;
+    cursor: default;
 }
 
 .price {
-  @extend .text;
+    @extend .text;
 
-  font-size: 66px;
-  line-height: 99px;
+    font-size: 66px;
+    line-height: 99px;
 }
 
 .date {
-  @extend .text;
+    @extend .text;
 
-  $factor: math.div(49, 24);
+    $factor: math.div(49, 24);
 
-  font-size: functions.scale(24px, $factor);
-  line-height: functions.scale(32px, $factor);
+    font-size: functions.scale(24px, $factor);
+    line-height: functions.scale(32px, $factor);
 }
 
 .time {
-  @extend .text;
+    @extend .text;
 
-  $factor: math.div(42, 24);
+    $factor: math.div(42, 24);
 
-  font-size: functions.scale(24px, $factor);
-  line-height: functions.scale(32px, $factor);
+    font-size: functions.scale(24px, $factor);
+    line-height: functions.scale(32px, $factor);
 }

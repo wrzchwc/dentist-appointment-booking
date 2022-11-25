@@ -1,4 +1,4 @@
-@use 'sass:math' as math;
+@use "sass:math" as math;
 @use 'src/theme/functions' as functions;
 
 .container {
@@ -16,20 +16,17 @@
 
 .content {
   @extend .container;
-
   flex-direction: row;
   justify-content: space-between;
-  flex-wrap: wrap;
   align-items: flex-start;
 }
 
 .button {
   $factor: math.div(64, 36);
-
   line-height: functions.scale(36px, $factor);
   min-width: functions.scale(64px, $factor);
   padding: 0 functions.scale(16px, $factor);
-  font-size: functions. scale(14px, $factor);
+  font-size: functions.scale(14px, $factor);
 }
 
 .label {
@@ -39,14 +36,12 @@
 
 .title {
   @extend .label;
-
   font-size: 48px;
   line-height: 64px;
 }
 
 .subtitle {
   @extend .label;
-
   font-size: 18.76px;
   line-height: 40px;
 }
