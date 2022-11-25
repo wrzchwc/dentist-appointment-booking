@@ -18,6 +18,7 @@ export class AdminAppointmentComponent implements OnDestroy {
     readonly length: number;
     readonly endsAt: Date;
     readonly dataSource: NamedPriceItem[];
+    readonly emailHref;
     private readonly onDestroy: Subject<void>;
 
     constructor(
@@ -32,6 +33,7 @@ export class AdminAppointmentComponent implements OnDestroy {
         this.cancelable = appointmentService.isCancelable(this.appointment.startsAt);
         this.endsAt = appointmentService.calculateEndsAt(this.appointment.startsAt, length);
         this.onDestroy = new Subject<void>();
+        this.emailHref = `mailto:${this.appointment.user.email}`;
     }
 
     ngOnDestroy(): void {
