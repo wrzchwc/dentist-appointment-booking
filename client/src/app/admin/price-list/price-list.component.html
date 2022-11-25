@@ -22,7 +22,7 @@
                     <article class="detail-container">
                         <button mat-button [matMenuTriggerFor]="menu" color="accent" class="menu">EDYTUJ</button>
                         <mat-menu #menu="matMenu">
-                            <button mat-menu-item>Zmień cenę</button>
+                            <button mat-menu-item (click)="handlePriceUpdate(service)">Zmień cenę</button>
                         </mat-menu>
                     </article>
                 </div>

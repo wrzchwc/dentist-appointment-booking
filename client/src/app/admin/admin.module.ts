@@ -11,9 +11,20 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
+import { UpdatePriceComponent } from './update-price/update-price.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-    declarations: [AdminComponent, AdminAppointmentsComponent, PriceListComponent, AdminAppointmentComponent],
+    declarations: [
+        AdminComponent,
+        AdminAppointmentsComponent,
+        PriceListComponent,
+        AdminAppointmentComponent,
+        UpdatePriceComponent,
+    ],
     imports: [
         CommonModule,
         AdminRoutingModule,
@@ -23,6 +34,10 @@ import { MatMenuModule } from '@angular/material/menu';
         MatTooltipModule,
         MatButtonModule,
         MatMenuModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
     ],
 })
 export class AdminModule {}
