@@ -20,6 +20,7 @@ import { AppointmentPreviewComponent } from './appointment-preview/appointment-p
 import { MatChipsModule } from '@angular/material/chips';
 import { AppointmentsComponent } from './appointments/appointments.component';
 import { AppointmentComponent } from './appointment/appointment.component';
+import { AppointmentTimesPipe } from './appointment-times.pipe';
 
 @NgModule({
     declarations: [
@@ -32,6 +33,7 @@ import { AppointmentComponent } from './appointment/appointment.component';
         AppointmentPreviewComponent,
         AppointmentsComponent,
         AppointmentComponent,
+        AppointmentTimesPipe,
     ],
     exports: [
         HeaderComponent,
@@ -43,6 +45,7 @@ import { AppointmentComponent } from './appointment/appointment.component';
         AppointmentPreviewComponent,
         AppointmentsComponent,
         AppointmentComponent,
+        AppointmentTimesPipe,
     ],
     imports: [
         CommonModule,
