@@ -10,11 +10,13 @@ export class AppointmentComponent implements OnChanges {
     @Input() appointmentId?: string;
     @Input() startsAt?: Date;
     @Output() readonly cancel: EventEmitter<void>;
+    @Output() readonly reschedule: EventEmitter<void>;
     cancelable?: boolean;
 
     // eslint-disable-next-line no-unused-vars
     constructor(private date: DateService) {
         this.cancel = new EventEmitter<void>();
+        this.reschedule = new EventEmitter<void>();
     }
 
     ngOnChanges(): void {

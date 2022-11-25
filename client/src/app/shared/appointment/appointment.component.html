@@ -7,10 +7,16 @@
             </h6>
         </div>
         <ng-container *ngIf="cancelable">
-            <button type="button" mat-raised-button color="warn" class="button" (click)="cancel.emit()">
-                ODWOŁAJ
-                <mat-icon class="icon">cancel</mat-icon>
-            </button>
+            <div>
+                <button type="button" mat-raised-button color="accent" class="button" (click)="reschedule.emit()">
+                    PRZEŁÓŻ
+                    <mat-icon class="icon">more_time</mat-icon>
+                </button>
+                <button type="button" mat-raised-button color="warn" class="button" (click)="cancel.emit()">
+                    ODWOŁAJ
+                    <mat-icon class="icon">cancel</mat-icon>
+                </button>
+            </div>
         </ng-container>
     </div>
     <ng-content></ng-content>

@@ -36,7 +36,7 @@ export class AdminAppointmentComponent implements OnDestroy {
         this.price = priceService.calculateTotalPrice(this.dataSource);
         this.length = appointmentService.calculateLength(this.appointment.services);
         this.cancelable = appointmentService.isCancelable(this.appointment.startsAt);
-        this.endsAt = appointmentService.calculateEndsAt(this.appointment.startsAt, length);
+        this.endsAt = appointmentService.calculateEndsAt(this.appointment.startsAt, this.length);
         this.onDestroy = new Subject<void>();
         this.emailHref = `mailto:${this.appointment.user.email}`;
     }
