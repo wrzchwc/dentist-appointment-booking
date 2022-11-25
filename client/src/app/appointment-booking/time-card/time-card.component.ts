@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy } from '@angular/core';
-import { AppointmentDateService } from '../appointment-booking/appointment-date.service';
+import { AppointmentDateService } from '../../shared/_services/appointment-date.service';
 import { filter, Subject, takeUntil } from 'rxjs';
 
 @Component({

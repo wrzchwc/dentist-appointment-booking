@@ -1,6 +1,6 @@
 import { AfterViewChecked, Component, EventEmitter, Input, Output } from '@angular/core';
 import { DateService } from 'src/app/shared/_services/utility/date.service';
-import { AppointmentDateService } from '../appointment-booking/appointment-date.service';
+import { AppointmentDateService } from '../../shared/_services/appointment-date.service';
 import { LengthService } from '../../shared/_services/utility/length.service';
 import { AppointmentCartService } from '../appointment-cart.service';
 

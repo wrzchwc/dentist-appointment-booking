@@ -1,5 +1,10 @@
 <ng-container *ngIf="appointment">
-    <app-appointment [appointmentId]="appointment.id" [startsAt]="appointment.startsAt" (cancel)="handleCancel()">
+    <app-appointment
+        [appointmentId]="appointment.id"
+        [startsAt]="appointment.startsAt"
+        (cancel)="handleCancel()"
+        [length]="length"
+    >
         <div class="content">
             <app-card title="Data wizyty" icon="calendar_month" class="card">
                 <h1 class="date">{{ appointment.startsAt | date: 'dd.MM.yyyy' }}</h1>

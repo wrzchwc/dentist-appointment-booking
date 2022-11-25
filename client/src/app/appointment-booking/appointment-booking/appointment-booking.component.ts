@@ -2,7 +2,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Service } from '../../shared/_services/services.service';
-import { AppointmentDateService } from './appointment-date.service';
+import { AppointmentDateService } from '../../shared/_services/appointment-date.service';
 import { AppointmentCartService } from '../appointment-cart.service';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { DateService } from '../../shared/_services/utility/date.service';

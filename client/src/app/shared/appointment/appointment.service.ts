@@ -24,7 +24,8 @@ export class AppointmentService {
     }
 
     calculateEndsAt(startsAt: Date, length: number): Date {
-        return new Date(new Date(startsAt).setMinutes(length));
+        const copy = new Date(startsAt);
+        return new Date(copy.setMinutes(copy.getMinutes() + length));
     }
 
     private mapServiceToPriceItem({ price, appointmentServices, detail, name }: AssociatedService): NamedPriceItem {

@@ -22,7 +22,7 @@ export async function createAppointment(request: r.CreateAppointment, response: 
         const user = await m.User.find((request.user as m.User).id);
         const createdAppointment = await user.createAppointment({ startsAt: request.body.startsAt });
         await addResourcesToAppointment(createdAppointment, request.body);
-        appointment = await getApppointmentWithAssociations(createdAppointment.id);
+        appointment = await getAppointmentWithAssociations(createdAppointment.id);
     } catch (e) {
         const [code, error] = getErrorData(e);
         return response.status(code).json({ error });
@@ -48,7 +48,7 @@ async function mapToAddFactPromise(appointment: m.Appointment, attribute: r.Fact
     return appointment.addFact(attribute.id, { through: { additionalInfo: attribute.additionalInfo } });
 }
 
-async function getApppointmentWithAssociations(id: string) {
+async function getAppointmentWithAssociations(id: string) {
     const serviceAttributes = ['name', 'price', 'count', 'detail', 'length'];
     const services = { model: m.Service, attributes: serviceAttributes, through: { attributes: ['quantity'] } };
     const facts = { model: m.AppointmentFact, attributes: ['value'], through: { attributes: ['additionalInfo'] } };
@@ -56,24 +56,26 @@ async function getApppointmentWithAssociations(id: string) {
     return m.Appointment.findByPk(id, { attributes: ['id', 'startsAt'], include: [services, facts] });
 }
 
-export async function updateAppointmentStartDate(request: r.UpdateAppointmentStartDate, response: Response) {
-    let updatedAppointments: m.Appointment[];
+export async function updateAppointment({ body, params, session }: r.UpdateAppointment, response: Response) {
+    let appointment: m.Appointment | null;
 
     try {
-        [, updatedAppointments] = await m.Appointment.update(
-            { startsAt: request.body.startsAt },
-            { where: { id: request.params.appointmentId }, returning: true }
-        );
+        appointment = await m.Appointment.findByPk(params.appointmentId);
     } catch (e) {
-        const [code, message] = getErrorData(e);
-        return response.status(code).json({ error: message });
+        return response.status(500).json({ error: 'Operation failed' });
     }
 
-    if (updatedAppointments.length !== 1) {
+    if (appointment === null) {
         return response.status(404).json({ error: 'Appointment not found' });
+    } else if (!(session?.passport.user.isAdmin || session?.passport.user.id === appointment.userId)) {
+        return response.status(403).json({ error: 'User unauthorized' });
     }
 
-    response.status(200).json(updatedAppointments[0]);
+    try {
+        return response.status(200).json(await appointment.update(body));
+    } catch (e) {
+        return response.status(500).json({ error: 'Operation failed' });
+    }
 }
 
 export async function getAppointments({ query }: r.GetAppointments, response: Response) {

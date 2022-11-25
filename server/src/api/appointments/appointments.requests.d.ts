@@ -2,9 +2,13 @@ import { Appointment } from '../../models';
 import { CreationAttributes } from 'sequelize';
 import { Request } from 'express';
 
-export interface UpdateAppointmentStartDate extends Request {
-    params: { appointmentId: string };
-    body: { startsAt: Date };
+export interface UpdateAppointment extends Request {
+    params: {
+        appointmentId: string;
+    };
+    body: {
+        startsAt?: Date;
+    };
 }
 
 export interface GetAppointments extends Request {
