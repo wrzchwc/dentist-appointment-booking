@@ -21,6 +21,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { AppointmentsComponent } from './appointments/appointments.component';
 import { AppointmentComponent } from './appointment/appointment.component';
 import { AppointmentTimesPipe } from './appointment-times.pipe';
+import { UpdateStartDateComponent } from './update-start-date/update-start-date.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
     declarations: [
@@ -34,6 +37,7 @@ import { AppointmentTimesPipe } from './appointment-times.pipe';
         AppointmentsComponent,
         AppointmentComponent,
         AppointmentTimesPipe,
+        UpdateStartDateComponent,
     ],
     exports: [
         HeaderComponent,
@@ -61,6 +65,8 @@ import { AppointmentTimesPipe } from './appointment-times.pipe';
         MatCardModule,
         MatTableModule,
         MatChipsModule,
+        MatDialogModule,
+        MatSelectModule,
     ],
 })
 export class SharedModule {}

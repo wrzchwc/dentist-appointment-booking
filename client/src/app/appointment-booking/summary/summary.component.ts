@@ -1,7 +1,7 @@
 /*eslint no-unused-vars: 0*/
 import { AfterViewChecked, Component } from '@angular/core';
 import { AuthenticationService } from '../../shared/_services/authentication/authentication.service';
-import { AppointmentDateService } from '../appointment-booking/appointment-date.service';
+import { AppointmentDateService } from '../../shared/_services/appointment-date.service';
 import { AppointmentCartService } from '../appointment-cart.service';
 import { PriceService } from '../../shared/_services/utility/price.service';
 import { LengthService } from '../../shared/_services/utility/length.service';
