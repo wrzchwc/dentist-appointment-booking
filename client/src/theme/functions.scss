@@ -1,3 +1,7 @@
 @function scale($value, $factor) {
     @return $value * $factor;
 }
+
+@function gap($factor) {
+    @return 20px * $factor;
+}

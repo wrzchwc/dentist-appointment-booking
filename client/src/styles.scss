@@ -9,13 +9,13 @@ $client-accent: mat.define-palette(mat.$blue-palette, 800);
 $client-warn: mat.define-palette(mat.$red-palette);
 
 $client-theme: mat.define-light-theme(
-                (
-                        color: (
-                                primary: $client-primary,
-                                accent: $client-accent,
-                                warn: $client-warn,
-                        ),
-                )
+    (
+        color: (
+            primary: $client-primary,
+            accent: $client-accent,
+            warn: $client-warn,
+        ),
+    )
 );
 
 @include mat.all-component-themes($client-theme);
@@ -23,82 +23,83 @@ $client-theme: mat.define-light-theme(
 
 html,
 body {
-  height: 100%;
-  background-color: mat.get-color-from-palette(mat.$gray-palette, 100);
+    height: 100%;
+    background-color: mat.get-color-from-palette(mat.$gray-palette, 100);
 }
 
 body {
-  margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
-  font-style: normal;
-  color: mat.get-color-from-palette(mat.$gray-palette, 900);
+    margin: 0;
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+    font-style: normal;
+    color: mat.get-color-from-palette(mat.$gray-palette, 900);
 }
 
 app-appointment-booking {
-  .stepper {
-    .mat-horizontal-stepper-wrapper {
-      .mat-horizontal-stepper-header-container {
-        .mat-step-header {
-          $font-weight: 700;
+    .stepper {
+        .mat-horizontal-stepper-wrapper {
+            .mat-horizontal-stepper-header-container {
+                .mat-step-header {
+                    $font-weight: 700;
 
-          .mat-step-label {
-            .mat-step-text-label {
-              font-weight: $font-weight;
-              font-size: 14px;
-              line-height: 17px;
+                    .mat-step-label {
+                        .mat-step-text-label {
+                            font-weight: $font-weight;
+                            font-size: 14px;
+                            line-height: 17px;
+                        }
+                    }
+
+                    .mat-step-icon {
+                        height: dimensions.$icon-size;
+                        width: dimensions.$icon-size;
+
+                        .mat-step-icon-content {
+                            font-weight: $font-weight;
+                            font-size: 17px;
+                            line-height: 19px;
+                        }
+                    }
+                }
             }
-          }
 
-          .mat-step-icon {
-            height: dimensions.$icon-size;
-            width: dimensions.$icon-size;
-
-            .mat-step-icon-content {
-              font-weight: $font-weight;
-              font-size: 17px;
-              line-height: 19px;
+            .mat-horizontal-content-container {
+                padding: 0 0 5px;
             }
-          }
         }
-      }
-
-      .mat-horizontal-content-container {
-        padding: 0 0 5px;
-      }
     }
-  }
 }
 
 button.mat-icon-button {
-  span.mat-button-wrapper {
-    mat-icon.mat-icon {
-      vertical-align: unset;
+    span.mat-button-wrapper {
+        mat-icon.mat-icon {
+            vertical-align: unset;
+        }
     }
-  }
 }
 
 app-appointment-preview {
-  mat-chip-list {
-    div.mat-chip-list-wrapper {
-      gap: 2 * dimensions.$card-padding;
+    mat-chip-list {
+        div.mat-chip-list-wrapper {
+            gap: 2 * dimensions.$card-padding;
+        }
     }
-  }
 }
 
 mat-form-field.picker {
-  div.mat-form-field-wrapper {
-    div.mat-form-field-flex {
-      div.mat-form-field-infix {
-        display: flex;
-      }
+    div.mat-form-field-wrapper {
+        div.mat-form-field-flex {
+            div.mat-form-field-infix {
+                display: flex;
+            }
+        }
     }
-  }
 }
 
-app-client-appointment, app-admin-appointment {
-  app-card {
-    mat-card {
-      height: 100%;
+app-client-appointment,
+app-admin-appointment {
+    app-card {
+        mat-card {
+            height: 100%;
+        }
     }
-  }
 }

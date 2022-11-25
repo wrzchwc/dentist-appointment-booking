@@ -1,9 +1,7 @@
 @use '@angular/material' as mat;
 @use 'src/theme/dimensions' as dimensions;
+@use 'src/theme/functions' as functions;
 
-@function gap($factor) {
-    @return 20px * $factor;
-}
 
 .container {
     display: flex;
@@ -20,14 +18,14 @@
 
     padding: 25px;
     background: mat.get-color-from-palette(mat.$gray-palette, 50);
-    gap: gap(2);
+    gap: functions.gap(2);
 }
 
 .details-container {
     @extend .container;
     @extend .font-weight-700;
 
-    gap: gap(1);
+    gap: functions.gap(1);
     color: mat.get-color-from-palette(mat.$gray-palette, 900);
     font-size: 14px;
     line-height: 17px;
@@ -58,12 +56,12 @@
     @extend .container;
     @extend .font-weight-700;
 
-    gap: gap(1);
+    gap: functions.gap(1);
 }
 
 .action-container {
     @extend .container;
-    gap: gap(2);
+    gap: functions.gap(2);
 }
 
 .icon {

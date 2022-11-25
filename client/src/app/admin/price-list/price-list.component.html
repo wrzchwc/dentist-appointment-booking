@@ -1,1 +1,32 @@
-<p>price-list works!</p>
+<div class="main">
+    <h1 class="styles-color-primary title">Cennik</h1>
+    <ng-container *ngFor="let service of services">
+        <mat-card class="card-container">
+            <span class="styles-color-accent service-name">{{ service.name }}</span>
+            <div class="action-container">
+                <div class="details-container">
+                    <article class="detail-container times-detail">
+                        <mat-icon color="primary">schedule</mat-icon>
+                        <span>{{ service | appointmentTimes: 'MIN' }}</span>
+                    </article>
+                    <article class="detail-container price-detail">
+                        <mat-icon color="primary">payments</mat-icon>
+                        <span *ngIf="service.price">{{ service.price }} PLN</span>
+                        <mat-icon
+                            color="accent"
+                            [matTooltip]="tooltipService.getTooltip(service.detail)"
+                            *ngIf="service.detail === 'A'"
+                            >info</mat-icon
+                        >
+                    </article>
+                    <article class="detail-container">
+                        <button mat-button [matMenuTriggerFor]="menu" color="accent" class="menu">EDYTUJ</button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item>Zmień cenę</button>
+                        </mat-menu>
+                    </article>
+                </div>
+            </div>
+        </mat-card>
+    </ng-container>
+</div>

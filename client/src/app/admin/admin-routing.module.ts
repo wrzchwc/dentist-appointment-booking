@@ -7,6 +7,7 @@ import { AdminResolver } from './admin/admin.resolver';
 import { AdminAppointmentsResolver } from './admin-appointments/admin-appointments.resolver';
 import { AdminAppointmentComponent } from './admin-appointment/admin-appointment.component';
 import { AdminAppointmentResolver } from './admin-appointment/admin-appointment.resolver';
+import { ServicesResolver } from '../shared/services.resolver';
 
 const routes: Routes = [
     {
@@ -26,7 +27,7 @@ const routes: Routes = [
             },
         ],
     },
-    { path: 'price-list', component: PriceListComponent, title: 'Cennik' },
+    { path: 'price-list', component: PriceListComponent, title: 'Cennik', resolve: { services: ServicesResolver } },
     { path: '', component: AdminComponent, title: 'Rezerwacje', resolve: { appointments: AdminResolver } },
 ];
 
