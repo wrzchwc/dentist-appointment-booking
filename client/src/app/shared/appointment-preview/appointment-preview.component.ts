@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { Appointment } from '../appointments/appointments.component';
 import { Router } from '@angular/router';
+import { Appointment } from '../../admin/admin-appointments/admin-appointments.service';
 
 @Component({
     selector: 'app-appointment-preview',
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
     styleUrls: ['./appointment-preview.component.scss'],
 })
 export class AppointmentPreviewComponent implements OnChanges {
-    @Input() appointment?: Appointment;
+    @Input() appointment?: Partial<Appointment>;
     services: string[];
     link: string;
 
@@ -20,7 +20,7 @@ export class AppointmentPreviewComponent implements OnChanges {
 
     ngOnChanges(): void {
         if (this.appointment !== undefined) {
-            this.services = this.appointment.services.map((service) => service.name);
+            this.services = this.appointment.services?.map((service) => service.name) || [];
             const [role] = this.router.url.split('/').filter(Boolean);
             this.link = `/${role}/appointments/${this.appointment.id}`;
         }

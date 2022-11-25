@@ -1,19 +1,6 @@
 <ng-container *ngIf="appointment">
-    <div class="main-container">
-        <div class="content-top">
-            <div>
-                <h1 class="styles-color-primary title">Wizyta</h1>
-                <h6 class="subtitle">
-                    identyfikator: <span class="styles-color-accent">{{ appointment.id }}</span>
-                </h6>
-            </div>
-            <ng-container *ngIf="cancelable">
-                <button type="button" mat-raised-button color="warn" class="button" (click)="handleCancelClick()">
-                    ODWOŁAJ<mat-icon class="icon">cancel</mat-icon>
-                </button>
-            </ng-container>
-        </div>
-        <div class="content-center">
+    <app-appointment [appointmentId]="appointment.id" [startsAt]="appointment.startsAt" (cancel)="handleCancel()">
+        <div class="content">
             <app-card title="Data wizyty" icon="calendar_month" class="card">
                 <h1 class="date">{{ appointment.startsAt | date: 'dd.MM.yyyy' }}</h1>
                 <h2 class="time">{{ appointment.startsAt | date: 'HH:mm' }} - {{ endsAt | date: 'HH:mm' }}</h2>
@@ -26,5 +13,5 @@
                 <h1 class="styles-color-warn price">{{ price }} PLN</h1>
             </app-card>
         </div>
-    </div>
+    </app-appointment>
 </ng-container>

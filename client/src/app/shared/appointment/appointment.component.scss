@@ -1,0 +1,52 @@
+@use "sass:math" as math;
+@use 'src/theme/functions' as functions;
+
+.container {
+  display: flex;
+  gap: 40px;
+}
+
+.main-container {
+  @extend .container;
+
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.content {
+  @extend .container;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.button {
+  $factor: math.div(64, 36);
+  line-height: functions.scale(36px, $factor);
+  min-width: functions.scale(64px, $factor);
+  padding: 0 functions.scale(16px, $factor);
+  font-size: functions.scale(14px, $factor);
+}
+
+.label {
+  margin-bottom: 0;
+  font-weight: 600;
+}
+
+.title {
+  @extend .label;
+  font-size: 48px;
+  line-height: 64px;
+}
+
+.subtitle {
+  @extend .label;
+  font-size: 18.76px;
+  line-height: 40px;
+}
+
+.icon {
+  line-height: 0.9;
+  margin-left: 5px;
+}

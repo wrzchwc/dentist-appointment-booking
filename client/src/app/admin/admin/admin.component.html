@@ -2,10 +2,7 @@
     <app-appointments-list title="Rezerwacje">
         <app-appointments-wrapper>
             <ng-container *ngFor="let appointment of appointments">
-                <app-appointment-preview [appointment]="appointment">
-                    <mat-icon color="primary">person</mat-icon>
-                    <h2 class="client">{{ appointment.user.name }} {{ appointment.user.surname }}</h2>
-                </app-appointment-preview>
+                <app-appointment-preview [appointment]="appointment"></app-appointment-preview>
             </ng-container>
         </app-appointments-wrapper>
     </app-appointments-list>
