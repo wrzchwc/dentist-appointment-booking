@@ -11,5 +11,6 @@ router.delete('/me/:appointmentId', controller.deleteClientAppointment);
 router.get('/me', controller.getClientAppointments);
 router.patch('/:appointmentId/starts-at', controller.updateAppointmentStartDate);
 router.get('/:appointmentId', authorisation, controller.getAppointment);
+router.delete('/:appointmentId', authorisation, controller.deleteAppointment);
 router.get('/', authorisation, controller.getAppointments);
 router.post('/', controller.createAppointment);

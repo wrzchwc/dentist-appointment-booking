@@ -136,6 +136,16 @@ export async function deleteClientAppointment({ params, session }: r.DeleteAppoi
     response.sendStatus(200);
 }
 
+export async function deleteAppointment({ params }: r.DeleteAppointment, response: Response) {
+    try {
+        await m.Appointment.destroy({ where: { id: params.appointmentId } });
+    } catch (e) {
+        return response.sendStatus(500);
+    }
+
+    response.sendStatus(200);
+}
+
 function getErrorData(e: unknown | m.ModelError): [number, string] {
     return e instanceof m.ModelError ? [e.httpCode, e.message] : [500, 'Operation failed'];
 }
