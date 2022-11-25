@@ -1,0 +1,18 @@
+@use 'src/theme/dimensions' as dimensions;
+
+:host {
+  padding: 2 * dimensions.$card-padding;
+}
+
+.button {
+  font-weight: 600;
+}
+
+.title {
+  font-weight: 700;
+}
+
+.form-field {
+  width: 100%;
+  font-weight: 500;
+}
