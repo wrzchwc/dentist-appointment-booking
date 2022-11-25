@@ -1,10 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Appointment } from './admin-appointment.service';
+import { AdminAppointmentService, Appointment } from './admin-appointment.service';
 import { NamedPriceItem } from '../../shared/table/services-table.component';
 import { ActivatedRoute } from '@angular/router';
 import { PriceService } from '../../shared/_services/utility/price.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { AppointmentService } from '../../shared/appointment/appointment.service';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-admin-appointment',
@@ -24,7 +25,11 @@ export class AdminAppointmentComponent implements OnDestroy {
     constructor(
         private activatedRoute: ActivatedRoute,
         private priceService: PriceService,
-        private appointmentService: AppointmentService
+        private appointmentService: AppointmentService,
+        // eslint-disable-next-line no-unused-vars
+        private adminAppointmentService: AdminAppointmentService,
+        // eslint-disable-next-line no-unused-vars
+        private location: Location
     ) {
         this.appointment = activatedRoute.snapshot.data['appointment'];
         this.dataSource = appointmentService.createDateSource(this.appointment.services);
@@ -40,5 +45,12 @@ export class AdminAppointmentComponent implements OnDestroy {
         this.onDestroy.next();
     }
 
-    handleCancel() {}
+    handleCancel() {
+        this.adminAppointmentService
+            .cancelAppointment(this.appointment.id)
+            .pipe(takeUntil(this.onDestroy))
+            .subscribe(() => {
+                this.location.back();
+            });
+    }
 }

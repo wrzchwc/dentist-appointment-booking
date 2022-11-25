@@ -18,6 +18,10 @@ export class AdminAppointmentService {
     getAppointment(appointmentId: string) {
         return this.client.get<Appointment>(`${this.baseUrl}/${appointmentId}`);
     }
+
+    cancelAppointment(appointmentId: string) {
+        return this.client.delete(`${this.baseUrl}/${appointmentId}`, { responseType: 'text' });
+    }
 }
 
 export interface Appointment {
