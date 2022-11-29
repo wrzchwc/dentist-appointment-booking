@@ -4,7 +4,7 @@
             <mat-icon color="primary">calendar_month</mat-icon>
             <h2 class="header">{{ appointment.startsAt | date: 'dd.MM.yyyy, HH:mm' }}</h2>
             <ng-container *ngIf="appointment.user">
-                <mat-icon color="primary">calendar_month</mat-icon>
+                <mat-icon color="primary">person</mat-icon>
                 <h2 class="header">{{ appointment.user.name }} {{ appointment.user.surname }}</h2>
             </ng-container>
             <ng-content></ng-content>
