@@ -21,7 +21,9 @@ import { TimeCardComponent } from './time-card/time-card.component';
 import { AppointmentBookingRoutingModule } from './appointment-booking-routing.module';
 import { SummaryComponent } from './summary/summary.component';
 import { MatTableModule } from '@angular/material/table';
-import { SharedModule } from '../shared/shared.module';
+import { AppointmentTimesPipe } from '../shared/appointment-times.pipe';
+import { CardComponent } from '../shared/card/card.component';
+import { ServicesTableComponent } from '../shared/services-table/services-table.component';
 
 @NgModule({
     declarations: [
@@ -49,7 +51,9 @@ import { SharedModule } from '../shared/shared.module';
         MatFormFieldModule,
         MatInputModule,
         MatTableModule,
-        SharedModule,
+        AppointmentTimesPipe,
+        CardComponent,
+        ServicesTableComponent,
     ],
 })
 export class AppointmentBookingModule {}

@@ -2,15 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
-
-export interface Profile {
-    id: string;
-    isAdmin: boolean;
-    name: string;
-    surname: string;
-    email: string;
-    photoUrl: string;
-}
+import { Profile } from '../../shared.model';
 
 @Injectable({
     providedIn: 'root',

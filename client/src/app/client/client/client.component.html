@@ -1,7 +1,7 @@
-<ng-container *ngIf="route.snapshot.data['appointments'].length > 0; else noUpcomingAppointments">
+<ng-container *ngIf="appointments.length > 0; else noUpcomingAppointments">
     <app-appointments-list title="Nadchodzące wizyty">
         <app-appointments-wrapper>
-            <ng-container *ngFor="let appointment of route.snapshot.data['appointments']">
+            <ng-container *ngFor="let appointment of appointments">
                 <app-appointment-preview [appointment]="appointment"></app-appointment-preview>
             </ng-container>
         </app-appointments-wrapper>
@@ -9,7 +9,7 @@
 </ng-container>
 <ng-template #noUpcomingAppointments>
     <div class="info-container">
-        <h1 class="styles-color-primary greeting">Witaj {{ auth.profile?.name }}!</h1>
+        <h1 class="styles-color-primary greeting">Witaj {{ name }}!</h1>
         <h2 class="info-label">Nie masz żadnych nadchodzących wizyt.</h2>
         <h2 class="info-label">
             Kliknij

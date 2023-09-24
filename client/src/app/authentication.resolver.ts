@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Resolve, Router } from '@angular/router';
-import { AuthenticationService, Profile } from './shared/_services/authentication/authentication.service';
+import { AuthenticationService } from './shared/_services/authentication/authentication.service';
 import { catchError, of, tap } from 'rxjs';
+import { Profile } from './shared/shared.model';
 
 @Injectable({
     providedIn: 'root',

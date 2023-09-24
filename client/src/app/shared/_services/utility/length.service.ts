@@ -9,8 +9,6 @@ export interface LengthItem {
     providedIn: 'root',
 })
 export class LengthService {
-    constructor() {}
-
     // Returns sum of lengths in minutes
     calculateTotalLength(items: LengthItem[]): number {
         return items.reduce((sum, { quantity, length }) => sum + quantity * length, 0);

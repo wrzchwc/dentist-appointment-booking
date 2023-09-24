@@ -8,11 +8,11 @@
         </div>
         <ng-container *ngIf="cancelable">
             <div class="container">
-                <button type="button" mat-raised-button color="accent" class="button" (click)="handleReschedule()">
+                <button type="button" mat-raised-button color="accent" class="button" (click)="reschedule()">
                     PRZEŁÓŻ
                     <mat-icon class="icon">more_time</mat-icon>
                 </button>
-                <button type="button" mat-raised-button color="warn" class="button" (click)="cancel.emit()">
+                <button type="button" mat-raised-button color="warn" class="button" (click)="cancel()">
                     ODWOŁAJ
                     <mat-icon class="icon">cancel</mat-icon>
                 </button>

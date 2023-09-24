@@ -7,6 +7,5 @@ import { AuthenticationService } from './shared/_services/authentication/authent
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-    // eslint-disable-next-line no-unused-vars
     constructor(public auth: AuthenticationService) {}
 }

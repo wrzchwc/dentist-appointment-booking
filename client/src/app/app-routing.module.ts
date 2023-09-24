@@ -16,7 +16,7 @@ const routes: Routes = [
             {
                 path: '',
                 canLoad: [AuthenticationGuard],
-                loadChildren: () => import('./client/client.module').then((m) => m.ClientModule),
+                loadChildren: () => import('./client/client.routes').then((m) => m.CLIENT_ROUTES),
             },
         ],
     },
@@ -27,7 +27,7 @@ const routes: Routes = [
     },
     {
         path: '',
-        loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
+        loadComponent: () => import('./home/home.component').then((m) => m.HomeComponent),
         resolve: { profile: AuthenticationResolver },
     },
 ];

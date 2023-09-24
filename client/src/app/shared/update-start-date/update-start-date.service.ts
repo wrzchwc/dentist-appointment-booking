@@ -6,14 +6,11 @@ import { environment } from 'src/environments/environment';
     providedIn: 'root',
 })
 export class UpdateStartDateService {
-    private readonly baseUrl: string;
+    private readonly baseUrl: string = `${environment.apiUrl}/api/appointments`;
 
-    // eslint-disable-next-line no-unused-vars
-    constructor(private client: HttpClient) {
-        this.baseUrl = `${environment.apiUrl}/api/appointments`;
-    }
+    constructor(private readonly httpClient: HttpClient) {}
 
     rescheduleAppointment(serviceId: string, startsAt: Date) {
-        return this.client.patch(`${this.baseUrl}/${serviceId}`, { startsAt });
+        return this.httpClient.patch(`${this.baseUrl}/${serviceId}`, { startsAt });
     }
 }

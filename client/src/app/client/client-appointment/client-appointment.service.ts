@@ -1,24 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Appointment } from '../client-appointments/client-appointments.service';
+import { Appointment } from '../client.model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ClientAppointmentService {
-    private readonly baseUrl: string;
+    private readonly baseUrl: string = `${environment.apiUrl}/api/appointments/me`;
 
-    // eslint-disable-next-line no-unused-vars
-    constructor(private client: HttpClient) {
-        this.baseUrl = `${environment.apiUrl}/api/appointments/me`;
-    }
+    constructor(private httpClient: HttpClient) {}
 
     getAppointment(appointmentId: string) {
-        return this.client.get<Appointment>(`${this.baseUrl}/${appointmentId}`);
+        return this.httpClient.get<Appointment>(`${this.baseUrl}/${appointmentId}`);
     }
 
     cancelAppointment(appointmentId: string) {
-        return this.client.delete(`${this.baseUrl}/${appointmentId}`, { responseType: 'text' });
+        return this.httpClient.delete(`${this.baseUrl}/${appointmentId}`, { responseType: 'text' });
     }
 }

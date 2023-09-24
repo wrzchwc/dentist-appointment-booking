@@ -3,13 +3,14 @@ import { Service } from 'src/app/shared/_services/services.service';
 
 @Pipe({
     name: 'appointmentTimes',
+    standalone: true,
 })
 export class AppointmentTimesPipe implements PipeTransform {
-    transform({ count, length }: Service, unit: string): string {
-        if (count < 1) {
+    transform(service: Service, unit: string): string {
+        if (service.count < 1) {
             throw new Error('Incorrect count value!');
         }
 
-        return count === 1 ? `${length} ${unit}` : `${count} X ${length} ${unit}`;
+        return service.count === 1 ? `${service.length} ${unit}` : `${service.count} X ${service.length} ${unit}`;
     }
 }

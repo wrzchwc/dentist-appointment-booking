@@ -6,10 +6,9 @@ import { Service, ServicesService } from 'src/app/shared/_services/services.serv
     providedIn: 'root',
 })
 export class ServicesResolver implements Resolve<Service[]> {
-    // eslint-disable-next-line no-unused-vars
-    constructor(private services: ServicesService) {}
+    constructor(private readonly servicesService: ServicesService) {}
 
     resolve() {
-        return this.services.getServices();
+        return this.servicesService.getServices();
     }
 }

@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Appointment, ClientAppointmentsService } from './client-appointments.service';
+import { ClientAppointmentsService } from './client-appointments.service';
 import { DateService } from '../../shared/_services/utility/date.service';
+import { Appointment } from '../client.model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ClientAppointmentsResolver implements Resolve<Appointment[]> {
-    // eslint-disable-next-line no-unused-vars
-    constructor(private appointments: ClientAppointmentsService, private date: DateService) {}
+    constructor(
+        private readonly clientAppointmentsService: ClientAppointmentsService,
+        private readonly dateService: DateService
+    ) {}
 
     resolve(): Observable<Appointment[]> {
-        return this.appointments.getAppointments(this.date.currentWorkday);
+        return this.clientAppointmentsService.getAppointments(this.dateService.currentWorkday);
     }
 }

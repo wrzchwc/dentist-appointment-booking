@@ -1,17 +1,23 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Appointment } from '../client-appointments/client-appointments.service';
 import { PriceService } from '../../shared/_services/utility/price.service';
-import { NamedPriceItem } from '../../shared/table/services-table.component';
 import { ClientAppointmentService } from './client-appointment.service';
 import { Subject, takeUntil } from 'rxjs';
-import { Location } from '@angular/common';
+import { DatePipe, Location, NgIf } from '@angular/common';
 import { AppointmentService } from '../../shared/appointment/appointment.service';
+import { Appointment } from '../client.model';
+import { AppointmentComponent } from '../../shared/appointment/appointment.component';
+import { CardComponent } from '../../shared/card/card.component';
+import { ServicesTableComponent } from '../../shared/services-table/services-table.component';
+import { NamedPriceItem } from '../../shared/shared.model';
 
 @Component({
     selector: 'app-client-appointment',
     templateUrl: './client-appointment.component.html',
     styleUrls: ['./client-appointment.component.scss', '../../shared/appointment/appointment.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgIf, AppointmentComponent, CardComponent, ServicesTableComponent, DatePipe],
+    standalone: true,
 })
 export class ClientAppointmentComponent implements OnDestroy {
     readonly appointment: Appointment;

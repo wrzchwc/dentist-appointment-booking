@@ -6,12 +6,9 @@ import { HttpClient } from '@angular/common/http';
     providedIn: 'root',
 })
 export class ServicesService {
-    readonly baseUrl: string;
+    private readonly baseUrl = `${environment.apiUrl}/api/services`;
 
-    // eslint-disable-next-line no-unused-vars
-    constructor(private client: HttpClient) {
-        this.baseUrl = `${environment.apiUrl}/api/services`;
-    }
+    constructor(private client: HttpClient) {}
 
     getServices() {
         return this.client.get<Service[]>(this.baseUrl);

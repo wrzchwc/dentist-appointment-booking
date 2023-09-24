@@ -1,76 +1,92 @@
-/*eslint no-unused-vars: 0*/
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { UpdateStartDateService } from './update-start-date.service';
 import { AppointmentDateService } from '../_services/appointment-date.service';
 import { DateService } from '../_services/utility/date.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatSelectModule } from '@angular/material/select';
+import { AsyncPipe, DatePipe, NgForOf } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+
+interface UpdateStateDateDialogData {
+    readonly id: string;
+    readonly length: number;
+    readonly startsAt: Date;
+}
 
 @Component({
     selector: 'app-update-start-date',
     templateUrl: './update-start-date.component.html',
     styleUrls: ['./update-start-date.component.scss'],
+    imports: [
+        MatDialogModule,
+        MatFormFieldModule,
+        MatDatepickerModule,
+        MatSelectModule,
+        ReactiveFormsModule,
+        DatePipe,
+        MatInputModule,
+        MatButtonModule,
+        NgForOf,
+        AsyncPipe,
+    ],
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UpdateStartDateComponent implements OnInit, OnDestroy {
-    availableDates?: Date[];
-    readonly formGroup: FormGroup;
-    readonly min: string; // minimal date for date picker (check template)
-    private readonly onDestroy: Subject<void>;
+    readonly formGroup = this.formBuilder.group({
+        dateControl: this.formBuilder.control(this.updateStateDateDialogData.startsAt, { nonNullable: true }),
+        timeControl: this.formBuilder.control(this.updateStateDateDialogData.startsAt, { nonNullable: true }),
+    });
 
-    constructor(
-        private dialogRef: MatDialogRef<UpdateStartDateComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: UpdateStateDateDialogData,
-        private builder: FormBuilder,
-        private updateStartDate: UpdateStartDateService,
-        private appointmentDate: AppointmentDateService,
-        private date: DateService
-    ) {
-        this.formGroup = builder.group({
-            dateControl: builder.control<Date>(data.startsAt, { nonNullable: true }),
-            timeControl: builder.control<Date>(data.startsAt, { nonNullable: true }),
-        });
-        this.onDestroy = new Subject<void>();
-        this.min = date.currentDay.toISOString().slice(0, 10);
-        this.appointmentDate
-            .getAvailableDates(new Date(data.startsAt), data.length)
-            .pipe(takeUntil(this.onDestroy))
-            .subscribe((dates) => {
-                this.availableDates = dates;
-            });
+    private readonly destroy$ = new Subject<void>();
+
+    availableDates$ = this.appointmentDateService.getAvailableDates(
+        new Date(this.updateStateDateDialogData.startsAt),
+        this.updateStateDateDialogData.length
+    );
+
+    private _min = this.dateService.currentDay.toISOString().slice(0, 10);
+    get min(): string {
+        return this._min;
     }
 
+    constructor(
+        private readonly dialogRef: MatDialogRef<UpdateStartDateComponent>,
+        @Inject(MAT_DIALOG_DATA) private updateStateDateDialogData: UpdateStateDateDialogData,
+        private readonly formBuilder: FormBuilder,
+        private readonly updateStartDateService: UpdateStartDateService,
+        private readonly appointmentDateService: AppointmentDateService,
+        private readonly dateService: DateService
+    ) {}
+
     ngOnInit(): void {
-        this.formGroup.controls['dateControl'].valueChanges.pipe(takeUntil(this.onDestroy)).subscribe((date) => {
-            this.appointmentDate
-                .getAvailableDates(date, this.data.length)
-                .pipe(takeUntil(this.onDestroy))
-                .subscribe((dates) => {
-                    this.availableDates = dates;
-                });
+        this.formGroup.controls['dateControl'].valueChanges.pipe(takeUntil(this.destroy$)).subscribe((date) => {
+            const { length } = this.updateStateDateDialogData;
+            this.availableDates$ = this.appointmentDateService.getAvailableDates(date, length);
         });
     }
 
     ngOnDestroy(): void {
-        this.onDestroy.next();
+        this.destroy$.next();
     }
 
-    handleReschedule() {
-        this.updateStartDate
-            .rescheduleAppointment(this.data.id, this.formGroup.controls['timeControl'].value)
-            .pipe(takeUntil(this.onDestroy))
+    reschedule(): void {
+        const { value } = this.formGroup.controls['timeControl'];
+
+        this.updateStartDateService
+            .rescheduleAppointment(this.updateStateDateDialogData.id, value)
+            .pipe(takeUntil(this.destroy$))
             .subscribe(() => {
-                this.dialogRef.close(this.formGroup.controls['timeControl'].value);
+                this.dialogRef.close(value);
             });
     }
 
-    handleCancel() {
+    cancel(): void {
         this.dialogRef.close();
     }
-}
-
-interface UpdateStateDateDialogData {
-    id: string;
-    length: number;
-    startsAt: Date;
 }

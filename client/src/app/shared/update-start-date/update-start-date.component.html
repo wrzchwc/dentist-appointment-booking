@@ -2,23 +2,23 @@
 <mat-dialog-content [formGroup]="formGroup">
     <mat-form-field appearance="outline" color="primary" class="form-field picker">
         <mat-label>Wybierz nową datę</mat-label>
-        <input matInput [matDatepicker]="picker" [formControl]="$any(formGroup.controls['dateControl'])" [min]="min" />
+        <input matInput [matDatepicker]="picker" [formControl]="formGroup.controls['dateControl']" [min]="min" />
         <mat-hint>MM/DD/YYYY</mat-hint>
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
     <mat-form-field appearance="outline" color="primary" class="form-field">
         <mat-label>Dostępne terminy</mat-label>
-        <mat-select [formControl]="$any(formGroup.controls['timeControl'])">
-            <ng-container *ngFor="let date of availableDates">
-                <mat-option [value]="date">
-                    {{ date | date: 'HH:mm' }}
+        <mat-select [formControl]="formGroup.controls['timeControl']">
+            <ng-container *ngFor="let availableDate of availableDates$ | async">
+                <mat-option [value]="availableDate">
+                    {{ availableDate | date: 'HH:mm' }}
                 </mat-option>
             </ng-container>
         </mat-select>
     </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button mat-raised-button color="primary" class="button" (click)="handleReschedule()">OK</button>
-    <button mat-button color="accent" class="button" (click)="handleCancel()">ANULUJ</button>
+    <button mat-raised-button color="primary" class="button" (click)="reschedule()">OK</button>
+    <button mat-button color="accent" class="button" (click)="cancel()">ANULUJ</button>
 </mat-dialog-actions>

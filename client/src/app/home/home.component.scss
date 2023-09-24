@@ -6,7 +6,7 @@
 
 .main-container {
     @extend .container;
-    background-image: url('../../../assets/background.svg');
+    background-image: url('../../assets/background.svg');
     width: 100%;
     height: 100%;
     background-size: cover;
@@ -14,10 +14,6 @@
 }
 
 .google-logo {
-    $dimension: 24px;
-
-    height: $dimension;
-    width: $dimension;
     margin-right: 10px;
 }
 

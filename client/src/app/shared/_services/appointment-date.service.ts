@@ -7,14 +7,10 @@ import { environment } from 'src/environments/environment';
     providedIn: 'root',
 })
 export class AppointmentDateService {
-    readonly selectedDate$: BehaviorSubject<Date | null>;
-    private readonly baseUrl: string;
+    readonly selectedDate$: BehaviorSubject<Date | null> = new BehaviorSubject<Date | null>(null);
+    private readonly baseUrl = `${environment.apiUrl}/api/appointments/available-dates`;
 
-    // eslint-disable-next-line no-unused-vars
-    constructor(private httpClient: HttpClient) {
-        this.selectedDate$ = new BehaviorSubject<Date | null>(null);
-        this.baseUrl = `${environment.apiUrl}/api/appointments/available-dates`;
-    }
+    constructor(private readonly httpClient: HttpClient) {}
 
     getAvailableDates(date: Date, length: number): Observable<Date[]> {
         return this.httpClient.get<Date[]>(this.baseUrl, { params: { date: date.toISOString(), length } });

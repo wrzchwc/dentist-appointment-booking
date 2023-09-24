@@ -19,5 +19,9 @@
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^7.4.0"
+  },
+  "dependencies": {
+    "i": "^0.3.7",
+    "npm": "^10.1.0"
   }
 }

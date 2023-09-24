@@ -1,11 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
 import { AdminAppointmentService, Appointment } from './admin-appointment.service';
-import { NamedPriceItem } from '../../shared/table/services-table.component';
 import { ActivatedRoute } from '@angular/router';
 import { PriceService } from '../../shared/_services/utility/price.service';
 import { Subject, takeUntil } from 'rxjs';
 import { AppointmentService } from '../../shared/appointment/appointment.service';
 import { Location } from '@angular/common';
+import { NamedPriceItem } from '../../shared/shared.model';
 
 @Component({
     selector: 'app-admin-appointment',

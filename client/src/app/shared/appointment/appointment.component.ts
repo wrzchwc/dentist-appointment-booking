@@ -1,50 +1,55 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 import { DateService } from '../_services/utility/date.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { filter, Subject, takeUntil } from 'rxjs';
+import { filter } from 'rxjs';
 import { UpdateStartDateComponent } from '../update-start-date/update-start-date.component';
-import { Location } from '@angular/common';
+import { Location, NgIf } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-appointment',
     templateUrl: './appointment.component.html',
     styleUrls: ['./appointment.component.scss'],
+    imports: [MatIconModule, NgIf, MatButtonModule],
+    standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AppointmentComponent implements OnChanges, OnDestroy {
+export class AppointmentComponent implements OnChanges {
     @Input() appointmentId?: string;
     @Input() startsAt?: Date;
-    @Input() length: number;
-    @Output() readonly cancel: EventEmitter<void>;
-    private readonly dialogConfig: MatDialogConfig;
-    private readonly onDestroy: Subject<void>;
+    @Input() length: number = 0;
+
+    @Output() readonly cancelAppointment = new EventEmitter<void>();
+
+    private readonly dialogConfig: MatDialogConfig = { autoFocus: true };
+
     cancelable?: boolean;
 
-    // eslint-disable-next-line no-unused-vars
-    constructor(private date: DateService, private dialog: MatDialog, private location: Location) {
-        this.cancel = new EventEmitter<void>();
-        this.dialogConfig = { autoFocus: true };
-        this.onDestroy = new Subject<void>();
-        this.length = 0;
-    }
+    constructor(
+        private readonly dateService: DateService,
+        private readonly matDialog: MatDialog,
+        private readonly location: Location
+    ) {}
 
     ngOnChanges(): void {
         if (this.startsAt) {
-            this.cancelable = this.date.currentDay < new Date(this.startsAt);
+            this.cancelable = this.dateService.currentDay < new Date(this.startsAt);
         }
     }
 
-    ngOnDestroy(): void {
-        this.onDestroy.next();
-    }
-
-    handleReschedule() {
+    reschedule(): void {
         this.dialogConfig.data = { id: this.appointmentId, startsAt: this.startsAt, length: this.length };
-        this.dialog
+        this.matDialog
             .open(UpdateStartDateComponent, this.dialogConfig)
             .afterClosed()
-            .pipe(takeUntil(this.onDestroy), filter(Boolean))
+            .pipe(filter(Boolean))
             .subscribe(() => {
                 this.location.back();
             });
+    }
+
+    cancel(): void {
+        this.cancelAppointment.emit();
     }
 }

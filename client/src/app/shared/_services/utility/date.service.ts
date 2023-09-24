@@ -1,4 +1,3 @@
-/*eslint no-unused-vars: 0*/
 import { Injectable } from '@angular/core';
 import { WeekDay } from '@angular/common';
 
