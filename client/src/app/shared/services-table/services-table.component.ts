@@ -10,12 +10,7 @@ import { MatTableModule } from '@angular/material/table';
     templateUrl: 'services-table.component.html',
     styleUrls: ['./services-table.component.scss'],
     standalone: true,
-    imports: [
-        NgForOf,
-        RowDefinitionPipe,
-        MatTableModule,
-        UpperCasePipe,
-    ],
+    imports: [NgForOf, RowDefinitionPipe, MatTableModule, UpperCasePipe],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ServicesTableComponent {

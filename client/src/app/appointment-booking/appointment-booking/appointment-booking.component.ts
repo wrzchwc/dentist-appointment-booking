@@ -1,7 +1,6 @@
 /*eslint no-unused-vars: 0*/
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Service } from '../../shared/_services/services.service';
 import { AppointmentDateService } from '../../shared/_services/appointment-date.service';
 import { AppointmentCartService } from '../appointment-cart.service';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
@@ -9,6 +8,7 @@ import { DateService } from '../../shared/_services/utility/date.service';
 import { HealthStateService } from '../health-state/health-state.service';
 import { AppointmentBookingService, AppointmentQuestion } from './appointment-booking.service';
 import { LengthService } from '../../shared/_services/utility/length.service';
+import { Service } from '../../shared/shared.model';
 
 @Component({
     selector: 'app-appointment-booking',

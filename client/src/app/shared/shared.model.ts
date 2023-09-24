@@ -1,5 +1,23 @@
-import { Service } from './_services/services.service';
 import { PriceItem } from './_services/utility/price.service';
+
+export type Service = StandardService | ExceptionalPriceService;
+
+interface StandardService extends ServiceBase {
+    price: number;
+    detail: null;
+}
+
+interface ExceptionalPriceService extends ServiceBase {
+    price: null;
+    detail: 'A';
+}
+
+interface ServiceBase {
+    id: string;
+    name: string;
+    count: 1;
+    length: number;
+}
 
 export type AssociatedService = Service & { readonly appointmentServices: { readonly quantity: number } };
 

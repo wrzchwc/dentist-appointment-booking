@@ -1,31 +1,36 @@
-import { Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { AdminAppointmentsService, Appointment } from './admin-appointments.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { AppointmentsComponent } from '../../shared/appointments/appointments.component';
 
 @Component({
     selector: 'app-admin-appointments',
     templateUrl: './admin-appointments.component.html',
     styleUrls: ['./admin-appointments.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [AppointmentsComponent],
+    standalone: true,
 })
-export class AdminAppointmentsComponent implements OnDestroy {
-    appointments: Appointment[];
-    private readonly onDestroy: Subject<void>;
+export class AdminAppointmentsComponent implements OnInit, OnDestroy {
+    appointments: Appointment[] = [];
 
-    // eslint-disable-next-line no-unused-vars
-    constructor(private route: ActivatedRoute, private service: AdminAppointmentsService) {
-        this.appointments = route.snapshot.data['appointments'];
-        this.onDestroy = new Subject<void>();
+    private readonly destroy$ = new Subject<void>();
+
+    constructor(private route: ActivatedRoute, private service: AdminAppointmentsService) {}
+
+    ngOnInit(): void {
+        this.appointments = this.route.snapshot.data['appointments'];
     }
 
     ngOnDestroy(): void {
-        this.onDestroy.next();
+        this.destroy$.next();
     }
 
-    handleDateChange(date: Date) {
+    loadAppointmentsAt(date: Date) {
         this.service
             .getAppointments(date)
-            .pipe(takeUntil(this.onDestroy))
+            .pipe(takeUntil(this.destroy$))
             .subscribe((appointments) => {
                 this.appointments = appointments;
             });

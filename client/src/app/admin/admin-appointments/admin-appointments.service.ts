@@ -2,19 +2,18 @@ import { Injectable } from '@angular/core';
 import { Appointment as Base } from '../../shared/appointments/appointments.component';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { User } from '../admin.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AdminAppointmentsService {
-    private readonly baseUrl;
+    private readonly baseUrl = `${environment.apiUrl}/api/appointments`;
 
-    // eslint-disable-next-line no-unused-vars
-    constructor(private client: HttpClient) {
-        this.baseUrl = `${environment.apiUrl}/api/appointments`;
-    }
+    constructor(private client: HttpClient) {}
 
-    getAppointments(date: Date) {
+    getAppointments(date: Date): Observable<Appointment[]> {
         const after = new Date(new Date(date).setHours(0, 0, 0, 0));
         const before = new Date(new Date(date).setHours(23, 59, 59, 999));
         return this.client.get<Appointment[]>(this.baseUrl, {
@@ -25,10 +24,4 @@ export class AdminAppointmentsService {
 
 export interface Appointment extends Base {
     user: User;
-}
-
-export interface User {
-    id: string;
-    name: string;
-    surname: string;
 }

@@ -9,8 +9,7 @@ import { Appointment } from '../admin-appointments/admin-appointments.service';
     providedIn: 'root',
 })
 export class AdminResolver implements Resolve<Appointment[]> {
-    // eslint-disable-next-line no-unused-vars
-    constructor(private admin: AdminService, private date: DateService) {}
+    constructor(private readonly admin: AdminService, private readonly date: DateService) {}
 
     resolve(): Observable<Appointment[]> {
         return this.admin.getAppointments(this.date.currentDay);

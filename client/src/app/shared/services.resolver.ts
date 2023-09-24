@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { Service, ServicesService } from 'src/app/shared/_services/services.service';
+import { ServicesService } from 'src/app/shared/_services/services.service';
+import { Service } from './shared.model';
 
 @Injectable({
     providedIn: 'root',

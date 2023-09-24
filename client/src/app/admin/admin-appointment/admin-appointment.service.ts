@@ -1,25 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { User as Base } from '../admin-appointments/admin-appointments.service';
 import { AssociatedService } from '../../shared/shared.model';
+import { Observable } from 'rxjs';
+import { User } from './admin-appointment.model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AdminAppointmentService {
-    private readonly baseUrl: string;
+    private readonly baseUrl = `${environment.apiUrl}/api/appointments`;
 
-    // eslint-disable-next-line no-unused-vars
-    constructor(private client: HttpClient) {
-        this.baseUrl = `${environment.apiUrl}/api/appointments`;
-    }
+    constructor(private readonly client: HttpClient) {}
 
-    getAppointment(appointmentId: string) {
+    getAppointment(appointmentId: string): Observable<Appointment> {
         return this.client.get<Appointment>(`${this.baseUrl}/${appointmentId}`);
     }
 
-    cancelAppointment(appointmentId: string) {
+    cancelAppointment(appointmentId: string): Observable<string> {
         return this.client.delete(`${this.baseUrl}/${appointmentId}`, { responseType: 'text' });
     }
 }
@@ -38,9 +36,4 @@ interface Fact {
     healthSurvey: {
         additionalInfo: string | null;
     };
-}
-
-interface User extends Base {
-    email: string;
-    photoUrl: string;
 }

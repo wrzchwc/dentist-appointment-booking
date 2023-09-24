@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Service } from 'src/app/shared/_services/services.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { LengthItem } from 'src/app/shared/_services/utility/length.service';
-import { NamedPriceItem } from '../shared/shared.model';
+import { NamedPriceItem, Service } from '../shared/shared.model';
 
 @Injectable({
     providedIn: 'root',

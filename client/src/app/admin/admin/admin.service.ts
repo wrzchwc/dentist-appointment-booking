@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Appointment } from '../admin-appointments/admin-appointments.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -11,7 +12,7 @@ export class AdminService {
 
     constructor(private readonly httpClient: HttpClient) {}
 
-    getAppointments(after: Date) {
+    getAppointments(after: Date): Observable<Appointment[]> {
         const before = new Date(new Date(after).setHours(17, 0, 0, 0)).toISOString();
         return this.httpClient.get<Appointment[]>(this.baseUrl, { params: { after: after.toISOString(), before } });
     }

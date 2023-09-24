@@ -23,7 +23,7 @@ const routes: Routes = [
     {
         path: 'admin',
         canLoad: [AuthenticationGuard],
-        loadChildren: () => import('./admin/admin.module').then((m) => m.AdminModule),
+        loadChildren: () => import('./admin/admin.routes').then((m) => m.ADMIN_ROUTES),
     },
     {
         path: '',
