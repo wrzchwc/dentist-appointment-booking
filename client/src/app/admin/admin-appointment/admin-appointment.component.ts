@@ -5,7 +5,7 @@ import { PriceService } from '../../shared/_services/utility/price.service';
 import { Subject, takeUntil } from 'rxjs';
 import { AppointmentService } from '../../shared/appointment/appointment.service';
 import { DatePipe, Location, NgForOf, NgIf, NgOptimizedImage } from '@angular/common';
-import { NamedPriceItem } from '../../shared/shared.model';
+import { NamedPriceItem } from '../../shared/model';
 import { AppointmentComponent } from '../../shared/appointment/appointment.component';
 import { CardComponent } from '../../shared/card/card.component';
 import { ServicesTableComponent } from '../../shared/services-table/services-table.component';

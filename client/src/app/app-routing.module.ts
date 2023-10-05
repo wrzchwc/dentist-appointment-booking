@@ -10,24 +10,24 @@ const routes: Routes = [
             {
                 path: 'appointment-booking',
                 canLoad: [AuthenticationGuard],
-                loadChildren: () =>
-                    import('./appointment-booking/appointment-booking.module').then((m) => m.AppointmentBookingModule),
+                loadChildren: async () =>
+                    (await import('./appointment-booking/routes')).APPOINTMENT_BOOKING_ROUTES,
             },
             {
                 path: '',
                 canLoad: [AuthenticationGuard],
-                loadChildren: () => import('./client/client.routes').then((m) => m.CLIENT_ROUTES),
+                loadChildren: async () => (await import('./client/routes')).CLIENT_ROUTES,
             },
         ],
     },
     {
         path: 'admin',
         canLoad: [AuthenticationGuard],
-        loadChildren: () => import('./admin/admin.routes').then((m) => m.ADMIN_ROUTES),
+        loadChildren: async () => (await import('./admin/routes')).ADMIN_ROUTES,
     },
     {
         path: '',
-        loadComponent: () => import('./home/home.component').then((m) => m.HomeComponent),
+        loadComponent: async () => (await import('./home/home.component')).HomeComponent,
         resolve: { profile: AuthenticationResolver },
     },
 ];
@@ -36,4 +36,5 @@ const routes: Routes = [
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

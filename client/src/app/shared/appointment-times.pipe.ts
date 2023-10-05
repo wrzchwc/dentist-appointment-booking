@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Service } from './shared.model';
+import { Service } from './model';
 
 @Pipe({
     name: 'appointmentTimes',

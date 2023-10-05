@@ -1,35 +1,55 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { LengthItem } from 'src/app/shared/_services/utility/length.service';
-import { NamedPriceItem, Service } from '../shared/shared.model';
+import { NamedPriceItem, Service } from '../shared/model';
+import { Quantity } from './model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AppointmentCartService {
-    readonly change$: Subject<void>;
-    private readonly cart: Map<string, [BehaviorSubject<number>, Service]>;
+    readonly change$: Subject<void> = new Subject();
 
-    constructor() {
-        this.cart = new Map<string, [BehaviorSubject<number>, Service]>();
-        this.change$ = new Subject<void>();
-    }
+    private readonly cart: Map<string, [BehaviorSubject<number>, Service]> = new Map();
 
-    initialize(services: Service[]) {
+    initialize(services: Service[]): void {
         services.forEach((service) => {
             this.cart.set(service.id, [new BehaviorSubject<number>(0), service]);
         });
     }
 
     get valid(): boolean {
-        return Boolean(this.getCartValuesWithPositiveSubjectValue().find(([, service]) => service));
+        return !!this.getCartValuesWithPositiveSubjectValue().find(([, service]) => service);
     }
 
-    quantityOf(service: Service) {
+    get priceItems(): NamedPriceItem[] {
+        return this.getCartValuesWithPositiveSubjectValue()
+            .map(([{ value }, { price, detail, name }]) => ({
+                quantity: value,
+                price,
+                detail,
+                name,
+            }));
+    }
+
+    get lengthItems(): LengthItem[] {
+        return this.getCartValuesWithPositiveSubjectValue()
+            .map(([{ value }, { length }]) => ({
+                length,
+                quantity: value,
+            }));
+    }
+
+    get quantities(): Quantity[] {
+        return this.getCartValuesWithPositiveSubjectValue()
+            .map(([{ value }, { id }]) => ({ id, quantity: value }));
+    }
+
+    quantityOf(service: Service): BehaviorSubject<number> {
         return this.cart.get(service.id)?.at(0) as BehaviorSubject<number>;
     }
 
-    add(service: Service) {
+    add(service: Service): void {
         const entry = this.cart.get(service.id);
 
         if (entry) {
@@ -41,7 +61,7 @@ export class AppointmentCartService {
         }
     }
 
-    remove(service: Service) {
+    remove(service: Service): void {
         const entry = this.cart.get(service.id);
 
         if (entry) {
@@ -53,40 +73,7 @@ export class AppointmentCartService {
         }
     }
 
-    getPriceItems(): NamedPriceItem[] {
-        return this.getCartValuesWithPositiveSubjectValue().map(this.mapToPriceItem);
-    }
-
-    private mapToPriceItem([{ value }, { price, detail, name }]: [BehaviorSubject<number>, Service]): NamedPriceItem {
-        return { quantity: value, price, detail, name };
-    }
-
-    getLengthItems(): LengthItem[] {
-        return this.getCartValuesWithPositiveSubjectValue().map(this.mapToLengthItem);
-    }
-
     private getCartValuesWithPositiveSubjectValue(): Array<[BehaviorSubject<number>, Service]> {
-        return Array.from(this.cart.values()).filter(this.filterForPositiveSubjectValue);
+        return Array.from(this.cart.values()).filter(([{ value }]) => value > 0);
     }
-
-    private filterForPositiveSubjectValue([{ value }]: [BehaviorSubject<number>, Service]): boolean {
-        return value > 0;
-    }
-
-    private mapToLengthItem([{ value }, { length }]: [BehaviorSubject<number>, Service]): LengthItem {
-        return { length, quantity: value };
-    }
-
-    getIdQuantityObjects(): IdQuantity[] {
-        return this.getCartValuesWithPositiveSubjectValue().map(this.mapToIdQuantityObject);
-    }
-
-    private mapToIdQuantityObject([{ value }, { id }]: [BehaviorSubject<number>, Service]): IdQuantity {
-        return { id, quantity: value };
-    }
-}
-
-export interface IdQuantity {
-    id: string;
-    quantity: number;
 }

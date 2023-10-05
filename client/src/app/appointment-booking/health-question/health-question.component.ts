@@ -1,42 +1,45 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
-import { AppointmentQuestion } from '../appointment-booking/appointment-booking.service';
-import { FormBuilder, FormControl, FormRecord } from '@angular/forms';
-import { HealthStateDescriptor, IdInfo } from '../health-state/health-state.service';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormRecord, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
+import { AppointmentQuestion, HealthStateDescriptor, Info } from '../model';
+import { NgIf } from '@angular/common';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
     selector: 'app-health-question',
     templateUrl: './health-question.component.html',
     styleUrls: ['./health-question.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgIf, ReactiveFormsModule, MatFormFieldModule, MatRadioModule, MatInputModule],
+    standalone: true,
 })
 export class HealthQuestionComponent implements OnChanges, OnDestroy {
-    @Input() question?: AppointmentQuestion;
-    @Output() private readonly positive: EventEmitter<HealthStateDescriptor>;
-    @Output() private readonly update: EventEmitter<IdInfo>;
-    @Output() private readonly negative: EventEmitter<string>;
-    readonly response: FormRecord<FormControl<string | boolean>>;
-    private readonly onDestroy: Subject<void>;
+    @Input() question: AppointmentQuestion | undefined;
 
-    // eslint-disable-next-line no-unused-vars
-    constructor(private builder: FormBuilder) {
-        this.response = this.builder.record({
-            positive: this.builder.control<boolean>(false, { nonNullable: true }),
-        });
-        this.positive = new EventEmitter<HealthStateDescriptor>();
-        this.update = new EventEmitter<IdInfo>();
-        this.negative = new EventEmitter<string>();
-        this.onDestroy = new Subject<void>();
-    }
+    @Output() private readonly positive: EventEmitter<HealthStateDescriptor> = new EventEmitter();
+    @Output() private readonly update: EventEmitter<Info> = new EventEmitter();
+    @Output() private readonly negative: EventEmitter<string> = new EventEmitter();
+
+    readonly response: FormRecord<FormControl<string | boolean>> = this.builder.record({
+        positive: this.builder.control<boolean>(false, { nonNullable: true }),
+    });
+
+    private readonly destroy$: Subject<void> = new Subject();
+
+    constructor(private readonly builder: FormBuilder) {}
 
     ngOnDestroy(): void {
-        this.onDestroy.next();
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
-    ngOnChanges() {
+    ngOnChanges(): void {
         if (this.question?.subquestion) {
             const control = this.builder.control<string>('', { nonNullable: true });
             this.response.addControl('detail', control);
-            control.valueChanges.pipe(takeUntil(this.onDestroy), debounceTime(375)).subscribe(() => {
+            control.valueChanges.pipe(takeUntil(this.destroy$), debounceTime(375)).subscribe(() => {
                 if (this.question) {
                     this.update.emit({ id: this.question.fact.id, additionalInfo: control.value });
                 }
@@ -44,14 +47,18 @@ export class HealthQuestionComponent implements OnChanges, OnDestroy {
         }
     }
 
-    handlePositiveSelection() {
+    get subQuestion(): string {
+        return this.question?.subquestion || '';
+    }
+
+    handlePositiveSelection(): void {
         if (this.question !== undefined) {
             const { fact, womenOnly } = this.question;
             this.positive.emit({ id: this.question.fact.id, payload: { fact: fact.value, womenOnly } });
         }
     }
 
-    handleNegativeSelection() {
+    handleNegativeSelection(): void {
         this.negative.emit(this.question?.fact.id);
     }
 }

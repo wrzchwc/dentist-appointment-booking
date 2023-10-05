@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LengthItem, LengthService } from '../_services/utility/length.service';
 import { DateService } from '../_services/utility/date.service';
-import { AssociatedService, NamedPriceItem } from '../shared.model';
+import { AssociatedService, NamedPriceItem } from '../model';
 
 @Injectable({
     providedIn: 'root',

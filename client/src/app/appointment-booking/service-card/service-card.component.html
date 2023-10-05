@@ -20,11 +20,11 @@
                     class="icon"
                     type="button"
                     (click)="handleRemoveServiceClick()"
-                    [disabled]="(cart.quantityOf(service) | async) === 0"
+                    [disabled]="(getQuantityOf(service) | async) === 0"
                 >
                     <mat-icon class="icon">remove_circle</mat-icon>
                 </button>
-                <span class="count">{{ cart.quantityOf(service) | async }}</span>
+                <span class="count">{{ getQuantityOf(service) | async }}</span>
                 <button mat-icon-button color="primary" class="icon" type="button" (click)="handleAddServiceClick()">
                     <mat-icon class="icon">add_circle</mat-icon>
                 </button>

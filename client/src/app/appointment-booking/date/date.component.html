@@ -4,7 +4,7 @@
         Szacowana długość wizyty to <span class="styles-color-accent">{{ appointmentLength }} min</span>
     </p>
     <h2 class="subtitle" (click)="ignoreClick($event)">
-        Dostępne terminy w dniu {{ date.currentWorkday | date: 'dd.MM.yyyy' }}
+        Dostępne terminy w dniu {{ currentWorkday | date: 'dd.MM.yyyy' }}
     </h2>
     <div class="time-cards-container">
         <ng-container *ngFor="let date of availableTimes">
@@ -17,13 +17,13 @@
             color="accent"
             (click)="handlePreviousWorkday()"
             class="button"
-            [disabled]="isPreviousWorkdayDisabled()"
+            [disabled]="isPreviousWorkdayDisabled"
             type="button"
         >
-            Terminy w dniu {{ date.previousWorkday | date: 'dd.MM.yyyy' }}
+            Terminy w dniu {{ previousWorkday | date: 'dd.MM.yyyy' }}
         </button>
         <button mat-raised-button color="primary" (click)="handleNextWorkday()" class="button" type="button">
-            Terminy w dniu {{ date.nextWorkday | date: 'dd.MM.yyyy' }}
+            Terminy w dniu {{ nextWorkday | date: 'dd.MM.yyyy' }}
         </button>
     </div>
 </section>

@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Observable } from 'rxjs';
-import { Profile } from '../shared.model';
+import { Profile } from '../model';
 
 @Component({
     selector: 'app-header',

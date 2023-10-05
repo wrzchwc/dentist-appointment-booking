@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { DisplayedColumn } from './services-table.model';
-import { NamedPriceItem } from '../shared.model';
+import { NamedPriceItem } from '../model';
 import { NgForOf, UpperCasePipe } from '@angular/common';
 import { RowDefinitionPipe } from './row-definition.pipe';
 import { MatTableModule } from '@angular/material/table';

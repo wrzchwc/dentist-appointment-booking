@@ -1,11 +1,11 @@
-<ng-container *ngIf="auth.profile">
+<ng-container *ngIf="profile as profile">
     <section class="main-container">
         <h1 class="styles-color-primary title">Oto podsumowanie Twojej wizyty</h1>
         <section class="content-wrapper">
-            <ng-container *ngIf="state.facts">
+            <ng-container *ngIf="facts as facts">
                 <div class="content-container">
                     <app-card title="Stan zdrowia" icon="medical_information">
-                        <ng-container *ngFor="let fact of state.facts">
+                        <ng-container *ngFor="let fact of facts">
                             <h3 class="card-content">{{ fact }}</h3>
                         </ng-container>
                     </app-card>
@@ -13,24 +13,22 @@
             </ng-container>
             <div class="content-container">
                 <app-card title="Pacjent(ka)" icon="person">
-                    <h3 class="card-content">{{ auth.profile.name }} {{ auth.profile.surname }}</h3>
-                    <h4 class="card-content">{{ auth.profile.email }}</h4>
+                    <h3 class="card-content">{{ profile.name }} {{ profile.surname }}</h3>
+                    <h4 class="card-content">{{ profile.email }}</h4>
                 </app-card>
                 <app-card title="Zakres leczenia" icon="medical_services">
-                    <app-services-table [dataSource]="cart.getPriceItems()"></app-services-table>
+                    <app-services-table [dataSource]="priceItems"></app-services-table>
                 </app-card>
             </div>
             <div class="content-container">
                 <app-card title="Termin wizyty" icon="event_available">
-                    <h3 class="card-content">{{ time.selectedDate$ | async | date: 'dd.MM.yyyy' }} r.</h3>
+                    <h3 class="card-content">{{ selectedDate$ | async | date: 'dd.MM.yyyy' }} r.</h3>
                     <h4 class="card-content">
-                        {{ time.selectedDate$ | async | date: 'HH:mm' }} - {{ endsAt | date: 'HH:mm' }}
+                        {{ selectedDate$ | async | date: 'HH:mm' }} - {{ endsAt | date: 'HH:mm' }}
                     </h4>
                 </app-card>
                 <app-card title="Szacowana cena wizyty" icon="payments">
-                    <h3 class="styles-color-warn card-content">
-                        {{ price.calculateTotalPrice(cart.getPriceItems()) }} PLN
-                    </h3>
+                    <h3 class="styles-color-warn card-content">{{ price }} PLN</h3>
                 </app-card>
             </div>
         </section>

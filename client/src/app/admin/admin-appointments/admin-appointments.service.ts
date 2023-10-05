@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Appointment as Base } from '../../shared/appointments/appointments.component';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { User } from '../admin.model';
+import { User } from '../model';
 import { Observable } from 'rxjs';
 
 @Injectable({

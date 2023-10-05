@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ClientAppointmentsService } from './client-appointments.service';
 import { Subject, takeUntil } from 'rxjs';
-import { Appointment } from '../client.model';
+import { Appointment } from '../model';
 import { AppointmentsComponent } from '../../shared/appointments/appointments.component';
 
 @Component({

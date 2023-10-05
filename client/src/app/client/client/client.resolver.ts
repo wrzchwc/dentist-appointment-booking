@@ -3,7 +3,7 @@ import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
 import { DateService } from '../../shared/_services/utility/date.service';
 import { ClientService } from './client.service';
-import { Appointment } from '../client.model';
+import { Appointment } from '../model';
 
 @Injectable({
     providedIn: 'root',

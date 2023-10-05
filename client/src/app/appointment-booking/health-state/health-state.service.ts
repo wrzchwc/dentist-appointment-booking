@@ -1,70 +1,45 @@
 import { Injectable } from '@angular/core';
+import { HealthStateDescriptor, HealthStatePayload, Info } from '../model';
 
 @Injectable({
     providedIn: 'root',
 })
 export class HealthStateService {
-    private readonly state: Map<string, HealthStatePayload>;
-
-    constructor() {
-        this.state = new Map<string, HealthStatePayload>();
-    }
+    private readonly state: Map<string, HealthStatePayload> = new Map();
 
     get facts(): string[] {
         return Array.from(this.state.values()).map(({ fact }) => fact);
     }
 
-    store(descriptor: HealthStateDescriptor) {
+    get infos(): Info[] {
+        return Array.from(this.state.entries()).map(([id, { additionalInfo }]) => ({ id, additionalInfo }));
+    }
+
+    store(descriptor: HealthStateDescriptor): void {
         this.state.set(descriptor.id, descriptor.payload);
     }
 
-    update({ id, additionalInfo }: IdInfo) {
-        const value = this.state.get(id);
+    update(info: Info): void {
+        const value = this.state.get(info.id);
         if (value !== undefined) {
-            value.additionalInfo = additionalInfo;
+            value.additionalInfo = info.additionalInfo;
         }
     }
 
-    remove(id: string) {
+    remove(id: string): void {
         this.state.delete(id);
     }
 
-    clear() {
+    clear(): void {
         this.state.clear();
     }
 
-    clearWomenOnly() {
-        const identifiers = Array.from(this.state.entries()).filter(this.filterForWomenOnly).map(this.mapToId);
-        identifiers.forEach((identifier) => {
-            this.state.delete(identifier);
-        });
+    clearWomenOnly(): void {
+        Array.from(this.state.entries())
+            .filter(([, payload]) => payload.womenOnly)
+            .map(([id]) => id)
+            .forEach((identifier) => {
+                this.state.delete(identifier);
+            });
     }
-
-    private filterForWomenOnly([, { womenOnly }]: [string, HealthStatePayload]): boolean {
-        return womenOnly;
-    }
-
-    private mapToId([id]: [string, HealthStatePayload]): string {
-        return id;
-    }
-
-    getIdInfoItems(): IdInfo[] {
-        return Array.from(this.state.entries()).map(([id, { additionalInfo }]) => ({ id, additionalInfo }));
-    }
-}
-
-export interface HealthStateDescriptor {
-    id: string;
-    payload: HealthStatePayload;
-}
-
-interface HealthStatePayload {
-    fact: string;
-    additionalInfo?: string;
-    womenOnly: boolean;
-}
-
-export interface IdInfo {
-    id: string;
-    additionalInfo?: string;
 }

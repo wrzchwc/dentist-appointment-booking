@@ -5,11 +5,11 @@ import { ClientAppointmentService } from './client-appointment.service';
 import { Subject, takeUntil } from 'rxjs';
 import { DatePipe, Location, NgIf } from '@angular/common';
 import { AppointmentService } from '../../shared/appointment/appointment.service';
-import { Appointment } from '../client.model';
+import { Appointment } from '../model';
 import { AppointmentComponent } from '../../shared/appointment/appointment.component';
 import { CardComponent } from '../../shared/card/card.component';
 import { ServicesTableComponent } from '../../shared/services-table/services-table.component';
-import { NamedPriceItem } from '../../shared/shared.model';
+import { NamedPriceItem } from '../../shared/model';
 
 @Component({
     selector: 'app-client-appointment',

@@ -2,13 +2,13 @@
     <article class="main-container" [formGroup]="response">
         <div class="question-container">
             <p class="question">{{ question.question }}</p>
-            <ng-container *ngIf="question.subquestion && response.controls['positive'].value">
+            <ng-container *ngIf="subQuestion && response.controls['positive'].value">
                 <mat-form-field appearance="outline">
-                    <mat-label>{{ question.subquestion }}</mat-label>
+                    <mat-label>{{ subQuestion }}</mat-label>
                     <textarea
                         matInput
                         type="text"
-                        [placeholder]="question.subquestion"
+                        [placeholder]="subQuestion"
                         [formControl]="response.controls['detail']"
                     >
                     </textarea>
