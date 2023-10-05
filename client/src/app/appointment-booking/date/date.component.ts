@@ -1,7 +1,7 @@
 import { AfterViewChecked, ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { DateService } from 'src/app/shared/_services/utility/date.service';
-import { AppointmentDateService } from '../../shared/_services/appointment-date.service';
-import { LengthService } from '../../shared/_services/utility/length.service';
+import { DateService } from 'src/app/shared/services/date.service';
+import { AppointmentDateService } from '../../shared/services/appointment-date.service';
+import { LengthService } from '../../shared/services/length.service';
 import { AppointmentCartService } from '../appointment-cart.service';
 import { DatePipe, NgForOf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';

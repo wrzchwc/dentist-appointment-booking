@@ -1,20 +1,20 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PriceService } from '../../shared/_services/utility/price.service';
+import { PriceService } from '../../shared/services/price.service';
 import { ClientAppointmentService } from './client-appointment.service';
 import { Subject, takeUntil } from 'rxjs';
 import { DatePipe, Location, NgIf } from '@angular/common';
-import { AppointmentService } from '../../shared/appointment/appointment.service';
+import { AppointmentService } from '../../shared/components/page/appointment/appointment.service';
 import { Appointment } from '../model';
-import { AppointmentComponent } from '../../shared/appointment/appointment.component';
-import { CardComponent } from '../../shared/card/card.component';
-import { ServicesTableComponent } from '../../shared/services-table/services-table.component';
+import { AppointmentComponent } from '../../shared/components/page/appointment/appointment.component';
+import { CardComponent } from '../../shared/components/ui/card/card.component';
+import { ServicesTableComponent } from '../../shared/components/ui/services-table/services-table.component';
 import { NamedPriceItem } from '../../shared/model';
 
 @Component({
     selector: 'app-client-appointment',
     templateUrl: './client-appointment.component.html',
-    styleUrls: ['./client-appointment.component.scss', '../../shared/appointment/appointment.scss'],
+    styleUrls: ['./client-appointment.component.scss', '../../shared/components/page/appointment/appointment.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgIf, AppointmentComponent, CardComponent, ServicesTableComponent, DatePipe],
     standalone: true,
@@ -31,9 +31,7 @@ export class ClientAppointmentComponent implements OnDestroy {
     constructor(
         private activatedRoute: ActivatedRoute,
         private priceService: PriceService,
-        // eslint-disable-next-line no-unused-vars
         private clientAppointmentService: ClientAppointmentService,
-        // eslint-disable-next-line no-unused-vars
         private location: Location,
         private appointmentService: AppointmentService
     ) {

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { TooltipService } from '../../shared/_services/tooltip.service';
+import { TooltipService } from '../../shared/services/tooltip.service';
 import { AppointmentCartService } from '../appointment-cart.service';
 import { Service } from '../../shared/model';
 import { Observable } from 'rxjs';
@@ -7,7 +7,7 @@ import { AsyncPipe, NgIf } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { AppointmentTimesPipe } from '../../shared/appointment-times.pipe';
+import { AppointmentTimesPipe } from '../../shared/pipes/appointment-times.pipe';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({

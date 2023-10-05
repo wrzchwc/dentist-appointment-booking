@@ -1,7 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { AuthenticationResolver } from './authentication.resolver';
-import { AuthenticationGuard } from './authentication.guard';
+import { AuthenticationResolver } from './shared/resolvers/authentication.resolver';
+import { AuthenticationGuard } from './shared/guards/authentication.guard';
 
 const routes: Routes = [
     {
@@ -27,7 +27,7 @@ const routes: Routes = [
     },
     {
         path: '',
-        loadComponent: async () => (await import('./home/home.component')).HomeComponent,
+        loadComponent: async () => (await import('./shared/components/page/home/home.component')).HomeComponent,
         resolve: { profile: AuthenticationResolver },
     },
 ];

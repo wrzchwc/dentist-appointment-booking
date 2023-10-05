@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ClientAppointmentsService } from './client-appointments.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Appointment } from '../model';
-import { AppointmentsComponent } from '../../shared/appointments/appointments.component';
+import { AppointmentsComponent } from '../../shared/components/page/appointments/appointments.component';
 
 @Component({
     selector: 'app-client-appointments',

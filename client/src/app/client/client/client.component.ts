@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AuthenticationService } from '../../shared/_services/authentication/authentication.service';
+import { AuthenticationService } from '../../shared/services/authentication.service';
 import { ActivatedRoute } from '@angular/router';
-import { AppointmentsListComponent } from '../../shared/appointments-list/appointments-list.component';
+import { AppointmentsListComponent } from '../../shared/components/page/appointments-list/appointments-list.component';
 import { NgForOf, NgIf } from '@angular/common';
-import { AppointmentsWrapperComponent } from '../../shared/appointments-wrapper/appointments-wrapper.component';
-import { AppointmentPreviewComponent } from '../../shared/appointment-preview/appointment-preview.component';
+import { AppointmentsWrapperComponent } from '../../shared/components/page/appointments-wrapper/appointments-wrapper.component';
+import { AppointmentPreviewComponent } from '../../shared/components/ui/appointment-preview/appointment-preview.component';
 import { Appointment } from '../../admin/admin-appointment/admin-appointment.service';
 
 @Component({

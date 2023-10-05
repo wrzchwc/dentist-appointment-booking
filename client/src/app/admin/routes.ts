@@ -4,7 +4,7 @@ import { AdminAppointmentComponent } from './admin-appointment/admin-appointment
 import { AdminAppointmentsResolver } from './admin-appointments/admin-appointments.resolver';
 import { AdminAppointmentsComponent } from './admin-appointments/admin-appointments.component';
 import { PriceListComponent } from './price-list/price-list.component';
-import { ServicesResolver } from '../shared/services.resolver';
+import { ServicesResolver } from '../shared/resolvers/services.resolver';
 import { AdminComponent } from './admin/admin.component';
 import { AdminResolver } from './admin/admin.resolver';
 

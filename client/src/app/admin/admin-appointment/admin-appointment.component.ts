@@ -1,19 +1,19 @@
 import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { AdminAppointmentService, Appointment } from './admin-appointment.service';
 import { ActivatedRoute } from '@angular/router';
-import { PriceService } from '../../shared/_services/utility/price.service';
+import { PriceService } from '../../shared/services/price.service';
 import { Subject, takeUntil } from 'rxjs';
-import { AppointmentService } from '../../shared/appointment/appointment.service';
+import { AppointmentService } from '../../shared/components/page/appointment/appointment.service';
 import { DatePipe, Location, NgForOf, NgIf, NgOptimizedImage } from '@angular/common';
 import { NamedPriceItem } from '../../shared/model';
-import { AppointmentComponent } from '../../shared/appointment/appointment.component';
-import { CardComponent } from '../../shared/card/card.component';
-import { ServicesTableComponent } from '../../shared/services-table/services-table.component';
+import { AppointmentComponent } from '../../shared/components/page/appointment/appointment.component';
+import { CardComponent } from '../../shared/components/ui/card/card.component';
+import { ServicesTableComponent } from '../../shared/components/ui/services-table/services-table.component';
 
 @Component({
     selector: 'app-admin-appointment',
     templateUrl: './admin-appointment.component.html',
-    styleUrls: ['./admin-appointment.component.scss', '../../shared/appointment/appointment.scss'],
+    styleUrls: ['./admin-appointment.component.scss', '../../shared/components/page/appointment/appointment.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [AppointmentComponent, NgIf, CardComponent, ServicesTableComponent, DatePipe, NgOptimizedImage, NgForOf],
     standalone: true,

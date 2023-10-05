@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { AppointmentDateService } from '../../shared/_services/appointment-date.service';
+import { AppointmentDateService } from '../../shared/services/appointment-date.service';
 import { filter, map, Subject, takeUntil } from 'rxjs';
 import { MatCardModule } from '@angular/material/card';
 import { DatePipe, NgClass, NgIf } from '@angular/common';
@@ -25,7 +25,7 @@ export class TimeCardComponent implements OnInit, OnDestroy {
         this.appointmentDateService.selectedDate$
             .pipe(takeUntil(this.destroy$), filter(Boolean), map(Date.prototype.getTime))
             .subscribe((time) => {
-                this._notSelected = time !== new Date(this.date).getTime();
+                this._notSelected = time !== this.date.getTime();
             });
     }
 

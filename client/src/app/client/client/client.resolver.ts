@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
 import { Observable } from 'rxjs';
-import { DateService } from '../../shared/_services/utility/date.service';
+import { DateService } from '../../shared/services/date.service';
 import { ClientService } from './client.service';
 import { Appointment } from '../model';
 

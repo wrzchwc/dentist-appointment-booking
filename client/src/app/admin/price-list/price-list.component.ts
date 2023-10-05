@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TooltipService } from '../../shared/_services/tooltip.service';
+import { TooltipService } from '../../shared/services/tooltip.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { UpdatePriceComponent } from '../update-price/update-price.component';
 import { filter, Subject, takeUntil } from 'rxjs';
@@ -8,7 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
-import { AppointmentTimesPipe } from '../../shared/appointment-times.pipe';
+import { AppointmentTimesPipe } from '../../shared/pipes/appointment-times.pipe';
 import { NgForOf, NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { Service } from '../../shared/model';

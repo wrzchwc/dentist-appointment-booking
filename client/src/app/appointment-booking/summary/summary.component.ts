@@ -1,15 +1,15 @@
 import { AfterViewChecked, ChangeDetectionStrategy, Component } from '@angular/core';
-import { AuthenticationService } from '../../shared/_services/authentication/authentication.service';
-import { AppointmentDateService } from '../../shared/_services/appointment-date.service';
+import { AuthenticationService } from '../../shared/services/authentication.service';
+import { AppointmentDateService } from '../../shared/services/appointment-date.service';
 import { AppointmentCartService } from '../appointment-cart.service';
-import { PriceService } from '../../shared/_services/utility/price.service';
-import { LengthService } from '../../shared/_services/utility/length.service';
+import { PriceService } from '../../shared/services/price.service';
+import { LengthService } from '../../shared/services/length.service';
 import { filter, Observable } from 'rxjs';
 import { HealthStateService } from '../health-state/health-state.service';
 import { NamedPriceItem, Profile } from '../../shared/model';
 import { AsyncPipe, DatePipe, NgForOf, NgIf } from '@angular/common';
-import { CardComponent } from '../../shared/card/card.component';
-import { ServicesTableComponent } from '../../shared/services-table/services-table.component';
+import { CardComponent } from '../../shared/components/ui/card/card.component';
+import { ServicesTableComponent } from '../../shared/components/ui/services-table/services-table.component';
 
 @Component({
     selector: 'app-summary',

@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { DateService } from '../../shared/_services/utility/date.service';
+import { DateService } from '../../shared/services/date.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Appointment } from '../admin-appointments/admin-appointments.service';
-import { AppointmentsListComponent } from '../../shared/appointments-list/appointments-list.component';
-import { AppointmentsWrapperComponent } from '../../shared/appointments-wrapper/appointments-wrapper.component';
-import { AppointmentPreviewComponent } from '../../shared/appointment-preview/appointment-preview.component';
+import { AppointmentsListComponent } from '../../shared/components/page/appointments-list/appointments-list.component';
+import { AppointmentsWrapperComponent } from '../../shared/components/page/appointments-wrapper/appointments-wrapper.component';
+import { AppointmentPreviewComponent } from '../../shared/components/ui/appointment-preview/appointment-preview.component';
 import { DatePipe, NgForOf, NgIf } from '@angular/common';
 
 @Component({
@@ -24,9 +24,13 @@ import { DatePipe, NgForOf, NgIf } from '@angular/common';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminComponent {
+    constructor(private readonly date: DateService, private readonly route: ActivatedRoute) {}
+
     get appointments(): Appointment[] {
         return this.route.snapshot.data['appointments'];
     }
 
-    constructor(public readonly date: DateService, public readonly route: ActivatedRoute) {}
+    get currentDay(): Date {
+        return this.date.currentDay;
+    }
 }

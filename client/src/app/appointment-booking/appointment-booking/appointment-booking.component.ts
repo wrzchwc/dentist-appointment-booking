@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { AppointmentDateService } from '../../shared/_services/appointment-date.service';
+import { AppointmentDateService } from '../../shared/services/appointment-date.service';
 import { AppointmentCartService } from '../appointment-cart.service';
 import { debounceTime, map, Observable, Subject, takeUntil } from 'rxjs';
-import { DateService } from '../../shared/_services/utility/date.service';
+import { DateService } from '../../shared/services/date.service';
 import { HealthStateService } from '../health-state/health-state.service';
 import { AppointmentBookingService } from './appointment-booking.service';
-import { LengthService } from '../../shared/_services/utility/length.service';
+import { LengthService } from '../../shared/services/length.service';
 import { Service } from '../../shared/model';
 import { AppointmentQuestion } from '../model';
 import { MatStepperModule } from '@angular/material/stepper';

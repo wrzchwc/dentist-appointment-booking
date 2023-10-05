@@ -8,7 +8,6 @@ import { AdminAppointmentService } from './admin-appointment.service';
     providedIn: 'root',
 })
 export class AdminAppointmentResolver implements Resolve<Appointment> {
-    // eslint-disable-next-line no-unused-vars
     constructor(private appointment: AdminAppointmentService) {}
 
     resolve(route: ActivatedRouteSnapshot): Observable<Appointment> {

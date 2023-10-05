@@ -1,5 +1,3 @@
-import { PriceItem } from './_services/utility/price.service';
-
 export type Service = StandardService | ExceptionalPriceService;
 
 interface StandardService extends ServiceBase {
@@ -32,4 +30,10 @@ export interface Profile {
     readonly surname: string;
     readonly email: string;
     readonly photoUrl: string;
+}
+
+export interface PriceItem {
+    price: number | null;
+    detail: 'A' | 'B' | 'C' | null;
+    quantity: number;
 }

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { AppointmentBookingComponent } from './appointment-booking/appointment-booking.component';
-import { ServicesResolver } from '../shared/services.resolver';
+import { ServicesResolver } from '../shared/resolvers/services.resolver';
 import { AppointmentQuestionsResolver } from './appointment-questions.resolver';
 
 export const APPOINTMENT_BOOKING_ROUTES: Routes = [

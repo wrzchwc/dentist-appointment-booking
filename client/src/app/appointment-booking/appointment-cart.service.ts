@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { LengthItem } from 'src/app/shared/_services/utility/length.service';
+import { LengthItem } from 'src/app/shared/services/length.service';
 import { NamedPriceItem, Service } from '../shared/model';
 import { Quantity } from './model';
 
@@ -19,11 +19,11 @@ export class AppointmentCartService {
     }
 
     get valid(): boolean {
-        return !!this.getCartValuesWithPositiveSubjectValue().find(([, service]) => service);
+        return !!this.cartValuesWithPositiveSubjectValue.find(([, service]) => service);
     }
 
     get priceItems(): NamedPriceItem[] {
-        return this.getCartValuesWithPositiveSubjectValue()
+        return this.cartValuesWithPositiveSubjectValue
             .map(([{ value }, { price, detail, name }]) => ({
                 quantity: value,
                 price,
@@ -33,7 +33,7 @@ export class AppointmentCartService {
     }
 
     get lengthItems(): LengthItem[] {
-        return this.getCartValuesWithPositiveSubjectValue()
+        return this.cartValuesWithPositiveSubjectValue
             .map(([{ value }, { length }]) => ({
                 length,
                 quantity: value,
@@ -41,7 +41,7 @@ export class AppointmentCartService {
     }
 
     get quantities(): Quantity[] {
-        return this.getCartValuesWithPositiveSubjectValue()
+        return this.cartValuesWithPositiveSubjectValue
             .map(([{ value }, { id }]) => ({ id, quantity: value }));
     }
 
@@ -73,7 +73,7 @@ export class AppointmentCartService {
         }
     }
 
-    private getCartValuesWithPositiveSubjectValue(): Array<[BehaviorSubject<number>, Service]> {
+    private get cartValuesWithPositiveSubjectValue(): Array<[BehaviorSubject<number>, Service]> {
         return Array.from(this.cart.values()).filter(([{ value }]) => value > 0);
     }
 }

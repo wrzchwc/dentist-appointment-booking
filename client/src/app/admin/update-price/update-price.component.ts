@@ -23,13 +23,17 @@ export class UpdatePriceComponent implements OnDestroy {
 
     constructor(
         private readonly dialogRef: MatDialogRef<UpdatePriceComponent>,
-        @Inject(MAT_DIALOG_DATA) public readonly data: UpdatePriceDialogData,
+        @Inject(MAT_DIALOG_DATA) private readonly data: UpdatePriceDialogData,
         private readonly builder: FormBuilder,
         private readonly service: UpdatePriceService
     ) {}
 
     ngOnDestroy(): void {
         this.destroy$.next();
+    }
+
+    get name(): string {
+        return this.data.name;
     }
 
     updatePrice(): void {
