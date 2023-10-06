@@ -13,8 +13,7 @@ export class AuthenticationService {
     profile?: Profile;
     authenticated$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-    constructor(private client: HttpClient) {
-    }
+    constructor(private client: HttpClient) {}
 
     getProfile(): Observable<Profile> {
         return this.client.get<Profile>(`${this.baseUrl}/users/me`);

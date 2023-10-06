@@ -23,26 +23,23 @@ export class AppointmentCartService {
     }
 
     get priceItems(): NamedPriceItem[] {
-        return this.cartValuesWithPositiveSubjectValue
-            .map(([{ value }, { price, detail, name }]) => ({
-                quantity: value,
-                price,
-                detail,
-                name,
-            }));
+        return this.cartValuesWithPositiveSubjectValue.map(([{ value }, { price, detail, name }]) => ({
+            quantity: value,
+            price,
+            detail,
+            name,
+        }));
     }
 
     get lengthItems(): LengthItem[] {
-        return this.cartValuesWithPositiveSubjectValue
-            .map(([{ value }, { length }]) => ({
-                length,
-                quantity: value,
-            }));
+        return this.cartValuesWithPositiveSubjectValue.map(([{ value }, { length }]) => ({
+            length,
+            quantity: value,
+        }));
     }
 
     get quantities(): Quantity[] {
-        return this.cartValuesWithPositiveSubjectValue
-            .map(([{ value }, { id }]) => ({ id, quantity: value }));
+        return this.cartValuesWithPositiveSubjectValue.map(([{ value }, { id }]) => ({ id, quantity: value }));
     }
 
     quantityOf(service: Service): BehaviorSubject<number> {

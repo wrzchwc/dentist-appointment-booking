@@ -5,7 +5,7 @@ import { AppointmentBookingService } from './appointment-booking/appointment-boo
 import { AppointmentQuestion } from './model';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class AppointmentQuestionsResolver implements Resolve<AppointmentQuestion[]> {
     constructor(private readonly booking: AppointmentBookingService) {}

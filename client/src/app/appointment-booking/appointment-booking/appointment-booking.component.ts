@@ -50,9 +50,8 @@ export class AppointmentBookingComponent implements OnInit, OnDestroy {
         private readonly cart: AppointmentCartService,
         private readonly date: DateService,
         private readonly healthState: HealthStateService,
-        private readonly length: LengthService,
-    ) {
-    }
+        private readonly length: LengthService
+    ) {}
 
     get isCartValid(): boolean {
         return this.cart.valid;
@@ -82,9 +81,7 @@ export class AppointmentBookingComponent implements OnInit, OnDestroy {
             .getAvailableDates(this.date.currentWorkday, this.length.calculateTotalLength(this.cart.lengthItems))
             .pipe(
                 takeUntil(this.destroy$),
-                map((times) => times.filter(
-                    (time) => new Date(time) >= this.date.currentWorkday),
-                ),
+                map((times) => times.filter((time) => new Date(time) >= this.date.currentWorkday))
             )
             .subscribe((availableTimes) => {
                 this.availableTimes = availableTimes;

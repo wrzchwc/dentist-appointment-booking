@@ -1,12 +1,26 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppModule } from './app/app.module';
+import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { environment } from './environments/environment';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule, HttpHandler } from '@angular/common/http';
+import { CredentialsInterceptor } from './app/shared/interceptors/credentials.interceptor';
+import { provideRouter } from '@angular/router';
+import { APP_ROUTES } from './app/routes';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 if (environment.production) {
     enableProdMode();
 }
 
-platformBrowserDynamic()
-    .bootstrapModule(AppModule)
-    .catch((err) => console.error(err));
+bootstrapApplication(AppComponent, {
+    providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: CredentialsInterceptor,
+            multi: true,
+        },
+        provideRouter(APP_ROUTES),
+        importProvidersFrom(HttpClientModule),
+        provideAnimations()
+    ],
+}).catch(console.error);

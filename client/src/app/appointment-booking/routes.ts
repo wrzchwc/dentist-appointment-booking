@@ -9,5 +9,5 @@ export const APPOINTMENT_BOOKING_ROUTES: Routes = [
         component: AppointmentBookingComponent,
         title: 'Rezerwacja wizyty',
         resolve: { services: ServicesResolver, appointmentQuestions: AppointmentQuestionsResolver },
-    }
+    },
 ];

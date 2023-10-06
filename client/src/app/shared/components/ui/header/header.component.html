@@ -7,7 +7,14 @@
     }"
 >
     <div class="logo-container">
-        <img ngSrc='/client/src/assets/favicon.svg' alt="" class="logo-item" [routerLink]="logoUrl" height="48" width="48" />
+        <img
+            ngSrc='assets/favicon.svg'
+            alt=""
+            class="logo-item"
+            [routerLink]="logoUrl"
+            height="48"
+            width="48"
+        />
         <h1 class="logo-item app-name styles-color-primary" [routerLink]="logoUrl">Dentist Appointment Booking</h1>
     </div>
     <ng-container *ngIf="authenticated$ | async">
