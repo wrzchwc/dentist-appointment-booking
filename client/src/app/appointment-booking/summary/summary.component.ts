@@ -2,7 +2,6 @@ import { AfterViewChecked, ChangeDetectionStrategy, Component } from '@angular/c
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { AppointmentDateService } from '../../shared/services/appointment-date.service';
 import { AppointmentCartService } from '../appointment-cart.service';
-import { PriceService } from '../../shared/services/price.service';
 import { LengthService } from '../../shared/services/length.service';
 import { filter, Observable } from 'rxjs';
 import { HealthStateService } from '../health-state/health-state.service';
@@ -10,13 +9,14 @@ import { NamedPriceItem, Profile } from '../../shared/model';
 import { AsyncPipe, DatePipe, NgForOf, NgIf } from '@angular/common';
 import { CardComponent } from '../../shared/components/ui/card/card.component';
 import { ServicesTableComponent } from '../../shared/components/ui/services-table/services-table.component';
+import { PricePipe } from '../../shared/pipes/price.pipe';
 
 @Component({
     selector: 'app-summary',
     templateUrl: './summary.component.html',
     styleUrls: ['./summary.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, CardComponent, ServicesTableComponent, DatePipe, AsyncPipe, NgForOf],
+    imports: [NgIf, CardComponent, ServicesTableComponent, DatePipe, AsyncPipe, NgForOf, PricePipe],
     standalone: true,
 })
 export class SummaryComponent implements AfterViewChecked {
@@ -26,7 +26,6 @@ export class SummaryComponent implements AfterViewChecked {
         private readonly auth: AuthenticationService,
         private readonly time: AppointmentDateService,
         private readonly cart: AppointmentCartService,
-        private readonly priceService: PriceService,
         private readonly length: LengthService,
         private readonly state: HealthStateService
     ) {
@@ -60,10 +59,6 @@ export class SummaryComponent implements AfterViewChecked {
 
     get priceItems(): NamedPriceItem[] {
         return this.cart.priceItems;
-    }
-
-    get price(): number {
-        return this.priceService.calculateTotalPrice(this.priceItems);
     }
 
     get facts() {

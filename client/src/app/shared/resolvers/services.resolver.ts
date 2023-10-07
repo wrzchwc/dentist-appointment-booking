@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { ServicesService } from 'src/app/shared/services/services.service';
+import { ServicesService } from 'src/app/client/services/services.service';
 import { Service } from '../model';
 
 @Injectable({

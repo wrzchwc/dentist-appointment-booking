@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DisplayedColumn } from './services-table.model';
+import { DisplayedColumn } from './model';
 
 @Pipe({
     name: 'rowDefinition',

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { LengthItem } from 'src/app/shared/services/length.service';
-import { NamedPriceItem, Service } from '../shared/model';
+import { LengthItem, NamedPriceItem, Service } from '../shared/model';
 import { Quantity } from './model';
 
 @Injectable({

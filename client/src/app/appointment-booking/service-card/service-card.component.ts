@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { TooltipService } from '../../shared/services/tooltip.service';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { AppointmentCartService } from '../appointment-cart.service';
 import { Service } from '../../shared/model';
 import { Observable } from 'rxjs';
@@ -9,35 +8,22 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AppointmentTimesPipe } from '../../shared/pipes/appointment-times.pipe';
 import { MatButtonModule } from '@angular/material/button';
+import { TooltipPipe } from '../../shared/pipes/tooltip.pipe';
 
 @Component({
     selector: 'app-service-card',
     templateUrl: './service-card.component.html',
     styleUrls: ['./service-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, MatCardModule, MatIconModule, MatTooltipModule, AsyncPipe, AppointmentTimesPipe, MatButtonModule],
+    imports: [NgIf, MatCardModule, MatIconModule, MatTooltipModule, AsyncPipe, AppointmentTimesPipe, MatButtonModule, TooltipPipe],
     standalone: true,
 })
-export class ServiceCardComponent implements OnInit, OnChanges {
+export class ServiceCardComponent {
     @Input() service: Service | undefined;
 
     @Output() serviceChange: EventEmitter<void> = new EventEmitter();
 
-    private _tooltip: string = '';
-
-    constructor(private readonly tooltipService: TooltipService, private readonly cart: AppointmentCartService) {}
-
-    ngOnInit(): void {
-        this._tooltip = this.tooltipService.getTooltip(this.service?.detail);
-    }
-
-    ngOnChanges(): void {
-        this._tooltip = this.tooltipService.getTooltip(this.service?.detail);
-    }
-
-    get tooltip(): string {
-        return this._tooltip;
-    }
+    constructor(private readonly cart: AppointmentCartService) {}
 
     getQuantityOf(service: Service): Observable<number> {
         return this.cart.quantityOf(service);

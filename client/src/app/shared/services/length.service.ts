@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-
-export interface LengthItem {
-    quantity: number;
-    length: number;
-}
+import { LengthItem } from '../model';
 
 @Injectable({
     providedIn: 'root',

@@ -10,7 +10,7 @@ import { AppointmentQuestion, Quantity, Info } from '../model';
 export class AppointmentBookingService {
     private readonly baseUrl = `${environment.apiUrl}/api/appointments`;
 
-    constructor(private client: HttpClient) {}
+    constructor(private readonly client: HttpClient) {}
 
     createAppointment(startsAt: Date, services: Quantity[], facts?: Info[]): Observable<Object> {
         return this.client.post(this.baseUrl, { startsAt, services, facts });

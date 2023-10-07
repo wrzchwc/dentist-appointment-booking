@@ -1,0 +1,77 @@
+@use '../../../../../../node_modules/@angular/material/index' as mat;
+@use 'src/theme/functions' as functions;
+
+.main {
+    display: flex;
+    justify-content: flex-start;
+    cursor: default;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-container {
+    @extend .container;
+    padding: 25px;
+    background: mat.get-color-from-palette(mat.$gray-palette, 50);
+    gap: functions.gap(2);
+    flex-wrap: wrap;
+}
+
+.action-container {
+    @extend .container;
+    gap: functions.gap(2);
+}
+
+.details-container {
+    @extend .bold;
+    @extend .container;
+    gap: functions.gap(1);
+    color: mat.get-color-from-palette(mat.$gray-palette, 900);
+    font-size: 14px;
+    line-height: 17px;
+}
+
+.detail-container {
+    @extend .container;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.title {
+    $dimension: 58px;
+    @extend .bold;
+    font-size: $dimension - 10px;
+    line-height: $dimension;
+    margin-bottom: 0;
+}
+
+.service-name {
+    @extend .bold;
+    font-size: 32px;
+    line-height: 39px;
+}
+
+.times-detail {
+    width: 106px;
+}
+
+.price-detail {
+    width: 62px;
+}
+
+.menu {
+    @extend .bold;
+    font-size: 14px;
+    line-height: 17px;
+}

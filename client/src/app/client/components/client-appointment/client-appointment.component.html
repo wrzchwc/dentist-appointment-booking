@@ -1,0 +1,25 @@
+<ng-container *ngIf='appointment'>
+    <app-appointment
+        [appointmentId]='appointment.id'
+        [startsAt]='appointment.startsAt'
+        (cancelAppointment)='handleCancel()'
+        [length]='length'
+    >
+        <div class='content'>
+            <app-card title='Data wizyty' icon='calendar_month' class='card'>
+                <h1 class='date'>{{ appointment.startsAt | date: 'dd.MM.yyyy' }}</h1>
+                <h2 class='time'>
+                    {{ appointment.startsAt | date: 'HH:mm' }}
+                    - {{ appointment.startsAt | endDate:length | date: 'HH:mm' }}
+                </h2>
+                <h3 class='time'>{{ length }} minut</h3>
+            </app-card>
+            <app-card title='Usługi' icon='medical_services' class='card'>
+                <app-services-table [dataSource]='dataSource'></app-services-table>
+            </app-card>
+            <app-card title='Szacowana cena wizyty' icon='payments' class='card'>
+                <h1 class='styles-color-warn price'>{{ dataSource | price }} PLN</h1>
+            </app-card>
+        </div>
+    </app-appointment>
+</ng-container>

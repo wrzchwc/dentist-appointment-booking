@@ -37,3 +37,8 @@ export interface PriceItem {
     detail: 'A' | 'B' | 'C' | null;
     quantity: number;
 }
+
+export interface LengthItem {
+    quantity: number;
+    length: number;
+}

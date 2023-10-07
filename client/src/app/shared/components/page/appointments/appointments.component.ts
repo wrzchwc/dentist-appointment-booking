@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { DateService } from '../../../services/date.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -33,9 +33,9 @@ export class AppointmentsComponent implements OnChanges, OnDestroy {
     @Input() listTitle: string = '';
     @Input() appointments: Appointment[] = [];
 
-    @Output() readonly dateChange = new EventEmitter<Date>();
+    @Output() readonly dateChange: EventEmitter<Date> = new EventEmitter();
 
-    readonly pickerControl = this.formBuilder.control(this.dateService.currentWorkday, {
+    readonly pickerControl: FormControl<Date> = this.formBuilder.control(this.dateService.currentWorkday, {
         nonNullable: true,
     });
 

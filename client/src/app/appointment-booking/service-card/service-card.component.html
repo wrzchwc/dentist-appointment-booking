@@ -10,7 +10,7 @@
                 <article class="detail-container price-detail">
                     <mat-icon color="primary">payments</mat-icon>
                     <span *ngIf="service.price">{{ service.price }} PLN</span>
-                    <mat-icon color="accent" [matTooltip]="tooltip" *ngIf="service.detail === 'A'"> info</mat-icon>
+                    <mat-icon color="accent" [matTooltip]="service.detail | tooltip" *ngIf="service.detail === 'A'"> info</mat-icon>
                 </article>
             </div>
             <div class="cart-container">

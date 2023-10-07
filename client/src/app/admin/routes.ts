@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
-import { AdminAppointmentResolver } from './admin-appointment/admin-appointment.resolver';
-import { AdminAppointmentComponent } from './admin-appointment/admin-appointment.component';
-import { AdminAppointmentsResolver } from './admin-appointments/admin-appointments.resolver';
-import { AdminAppointmentsComponent } from './admin-appointments/admin-appointments.component';
-import { PriceListComponent } from './price-list/price-list.component';
+import { AdminAppointmentResolver } from './components/page/admin-appointment/admin-appointment.resolver';
+import { AdminAppointmentComponent } from './components/page/admin-appointment/admin-appointment.component';
+import { AdminAppointmentsResolver } from './components/page/admin-appointments/admin-appointments.resolver';
+import { AdminAppointmentsComponent } from './components/page/admin-appointments/admin-appointments.component';
+import { PriceListComponent } from './components/page/price-list/price-list.component';
 import { ServicesResolver } from '../shared/resolvers/services.resolver';
-import { AdminComponent } from './admin/admin.component';
-import { AdminResolver } from './admin/admin.resolver';
+import { AdminComponent } from './components/page/admin/admin.component';
+import { AdminResolver } from './components/page/admin/admin.resolver';
 
 export const ADMIN_ROUTES: Routes = [
     {

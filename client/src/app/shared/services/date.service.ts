@@ -24,7 +24,7 @@ export class DateService {
             return new Date(date.setHours(9, 0, 0, 0));
         } else if (this.isDay(WeekDay.Sunday, date) || this.isAfterWorkingTime(date)) {
             return this.calculateNextWorkday(date);
-        } else if (this.isBeforeWorkingTime(date)) {
+        } else if (date.getHours() < 9) {
             date.setHours(9, 0, 0, 0);
             return date;
         }
@@ -87,11 +87,7 @@ export class DateService {
         return date.getDay() === day;
     }
 
-    isBeforeWorkingTime(date: Date): boolean {
-        return date.getHours() < 9;
-    }
-
-    reset() {
+    reset(): void {
         this._currentWorkday = this.getCurrentWorkdayDate();
         this._previousWorkday = this.calculatePreviousWorkday(this._currentWorkday);
         this._nextWorkday = this.calculateNextWorkday(this._currentWorkday);
