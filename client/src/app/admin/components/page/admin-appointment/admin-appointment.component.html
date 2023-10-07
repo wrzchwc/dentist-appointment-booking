@@ -15,7 +15,7 @@
                 <h3 class='time'>{{ length }} minut</h3>
             </app-card>
             <app-card title='Usługi' icon='medical_services' class='card'>
-                <app-services-table [dataSource]='dateSource'></app-services-table>
+                <app-services-table [dataSource]='dataSource'></app-services-table>
             </app-card>
             <app-card title='Szacowana cena wizyty' icon='payments' class='card'>
                 <h1 class='styles-color-warn price'>{{ dataSource | price }} PLN</h1>
