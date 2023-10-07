@@ -1,15 +1,16 @@
-import { AfterViewChecked, ChangeDetectionStrategy, Component } from '@angular/core';
+import { AfterViewChecked, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { AppointmentDateService } from '../../shared/services/appointment-date.service';
 import { AppointmentCartService } from '../appointment-cart.service';
 import { LengthService } from '../../shared/services/length.service';
-import { filter, Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { HealthStateService } from '../health-state/health-state.service';
 import { NamedPriceItem, Profile } from '../../shared/model';
 import { AsyncPipe, DatePipe, NgForOf, NgIf } from '@angular/common';
 import { CardComponent } from '../../shared/components/ui/card/card.component';
 import { ServicesTableComponent } from '../../shared/components/ui/services-table/services-table.component';
 import { PricePipe } from '../../shared/pipes/price.pipe';
+import { DateTime } from 'luxon';
 
 @Component({
     selector: 'app-summary',
@@ -19,34 +20,40 @@ import { PricePipe } from '../../shared/pipes/price.pipe';
     imports: [NgIf, CardComponent, ServicesTableComponent, DatePipe, AsyncPipe, NgForOf, PricePipe],
     standalone: true,
 })
-export class SummaryComponent implements AfterViewChecked {
-    private _endsAt: Date = new Date();
+export class SummaryComponent implements OnInit, AfterViewChecked {
+    private readonly appointmentLength: number = this.length.calculateTotalLength(this.cart.lengthItems);
+
+    private _endsAt: DateTime = DateTime.now();
 
     constructor(
         private readonly auth: AuthenticationService,
         private readonly time: AppointmentDateService,
         private readonly cart: AppointmentCartService,
         private readonly length: LengthService,
-        private readonly state: HealthStateService
+        private readonly state: HealthStateService,
     ) {
-        time.selectedDate$.pipe(filter(Boolean)).subscribe((value) => {
-            const copy = new Date(value);
-            const appointmentLength = length.calculateTotalLength(cart.lengthItems);
-            this._endsAt = new Date(copy.setMinutes(copy.getMinutes() + appointmentLength));
-        });
+    }
+
+    ngOnInit(): void {
+        this.time.selectedDate$
+            .pipe(
+                filter(Boolean),
+                map((date) => DateTime.fromJSDate(date)),
+            )
+            .subscribe((dateTime) => {
+                this._endsAt = dateTime.plus({ minute: this.appointmentLength });
+            });
     }
 
     ngAfterViewChecked(): void {
         const { value } = this.time.selectedDate$;
         if (value) {
-            const copy = new Date(value);
-            const appointmentLength = this.length.calculateTotalLength(this.cart.lengthItems);
-            this._endsAt = new Date(copy.setMinutes(value.getMinutes() + appointmentLength));
+            this._endsAt = DateTime.fromJSDate(value).plus({ minute: this.appointmentLength });
         }
     }
 
     get endsAt(): Date {
-        return this._endsAt;
+        return this._endsAt.toJSDate();
     }
 
     get profile(): Profile | undefined {

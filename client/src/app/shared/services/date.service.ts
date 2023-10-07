@@ -1,50 +1,27 @@
 import { Injectable } from '@angular/core';
 import { WeekDay } from '@angular/common';
-
-type DaysToWorkday = 3 | 1;
+import { DateObjectUnits, DateTime } from 'luxon';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DateService {
-    private _currentWorkday: Date;
-    private _previousWorkday: Date;
-    private _nextWorkday: Date;
+    private readonly START: DateObjectUnits = {hour: 9, minute: 0, second: 0, millisecond: 0};
 
-    constructor() {
-        this._currentWorkday = this.getCurrentWorkdayDate();
-        this._previousWorkday = this.calculatePreviousWorkday(this._currentWorkday);
-        this._nextWorkday = this.calculateNextWorkday(this._currentWorkday);
-    }
-
-    private getCurrentWorkdayDate(): Date {
-        const date = this.currentDay;
-        if (this.isDay(WeekDay.Saturday, date)) {
-            date.setDate(date.getDate() + 2);
-            return new Date(date.setHours(9, 0, 0, 0));
-        } else if (this.isDay(WeekDay.Sunday, date) || this.isAfterWorkingTime(date)) {
-            return this.calculateNextWorkday(date);
-        } else if (date.getHours() < 9) {
-            date.setHours(9, 0, 0, 0);
-            return date;
-        }
-        return date;
-    }
-
-    isAfterWorkingTime(date: Date): boolean {
-        return date.getHours() > 17;
-    }
+    private _currentWorkday: DateTime = this.getCurrentWorkdayDate();
+    private _previousWorkday: DateTime = this.calculatePreviousWorkday(this._currentWorkday);
+    private _nextWorkday: DateTime = this.calculateNextWorkday(this._currentWorkday);
 
     get currentWorkday(): Date {
-        return this._currentWorkday;
+        return this._currentWorkday.toJSDate();
     }
 
     get previousWorkday(): Date {
-        return this._previousWorkday;
+        return this._previousWorkday.toJSDate();
     }
 
     get nextWorkday(): Date {
-        return this._nextWorkday;
+        return this._nextWorkday.toJSDate();
     }
 
     get currentDay(): Date {
@@ -57,39 +34,43 @@ export class DateService {
         this._previousWorkday = this.calculateNextWorkday(this._previousWorkday);
     }
 
-    private calculateNextWorkday(date: Date): Date {
-        const nextWeekday = new Date(new Date(date).setDate(date.getDate() + this.daysToNextWorkday(date)));
-        return new Date(nextWeekday.setHours(9, 0, 0, 0));
-    }
-
-    private daysToNextWorkday(date: Date): DaysToWorkday {
-        return this.isDay(WeekDay.Friday, date) ? 3 : 1;
-    }
-
     workdayBackward(): void {
         this._currentWorkday = this.calculatePreviousWorkday(this._currentWorkday);
         this._previousWorkday = this.calculatePreviousWorkday(this._previousWorkday);
         this._nextWorkday = this.calculatePreviousWorkday(this._nextWorkday);
     }
 
-    private calculatePreviousWorkday(date: Date): Date {
-        const copy = new Date(date);
-        const offsetReversed = new Date(copy.setDate(copy.getDate() - this.daysToPreviousWorkday(date)));
-        const current = this.getCurrentWorkdayDate();
-        return offsetReversed.getDate() === current.getDate() ? current : offsetReversed;
-    }
-
-    private daysToPreviousWorkday(date: Date): DaysToWorkday {
-        return this.isDay(WeekDay.Monday, date) ? 3 : 1;
-    }
-
-    private isDay(day: WeekDay, date: Date): boolean {
-        return date.getDay() === day;
-    }
-
     reset(): void {
         this._currentWorkday = this.getCurrentWorkdayDate();
         this._previousWorkday = this.calculatePreviousWorkday(this._currentWorkday);
         this._nextWorkday = this.calculateNextWorkday(this._currentWorkday);
+    }
+
+    private getCurrentWorkdayDate(): DateTime {
+        const dateTime: DateTime = DateTime.fromJSDate(new Date());
+
+        if (this.isDay(WeekDay.Saturday, dateTime)) {
+            return dateTime.plus({day: 2}).set(this.START);
+        } else if (this.isDay(WeekDay.Sunday, dateTime) || dateTime.hour > 17) {
+            return this.calculateNextWorkday(dateTime);
+        } else if (dateTime.hour < 9) {
+            return dateTime.set(this.START);
+        }
+        return dateTime;
+    }
+
+    private calculateNextWorkday(dateTime: DateTime): DateTime {
+        return dateTime.plus({ day: this.isDay(WeekDay.Friday, dateTime) ? 3 : 1 }).set(this.START);
+    }
+
+    private calculatePreviousWorkday(dateTime: DateTime): DateTime {
+        const offsetReversed = dateTime.minus({ day: this.isDay(WeekDay.Monday, dateTime) ? 3 : 1 });
+        const current = this.getCurrentWorkdayDate();
+
+        return offsetReversed.day === current.day ? current :offsetReversed;
+    }
+
+    private isDay(day: WeekDay, dateTime: DateTime): boolean {
+        return dateTime.day === day;
     }
 }

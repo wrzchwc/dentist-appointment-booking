@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Appointment } from '../../model';
+import { DateTime } from 'luxon';
 
 @Injectable({
     providedIn: 'root',
@@ -9,14 +10,17 @@ import { Appointment } from '../../model';
 export class ClientAppointmentsService {
     private readonly baseUrl: string = `${environment.apiUrl}/api/appointments/me`;
 
-    constructor(private readonly httpClient: HttpClient) {}
+    constructor(private readonly httpClient: HttpClient) {
+    }
 
     getAppointments(date: Date) {
-        const after = new Date(new Date(date).setHours(0, 0, 0, 0));
-        const before = new Date(new Date(date).setHours(23, 59, 59, 999));
+        const dateTime: DateTime = DateTime.fromJSDate(date);
 
         return this.httpClient.get<Appointment[]>(this.baseUrl, {
-            params: { after: after.toISOString(), before: before.toISOString() },
+            params: {
+                after: dateTime.set({ hour: 0, minute: 0, second: 0, millisecond: 0 }).toJSDate().toISOString(),
+                before: dateTime.set({hour: 23, minute: 59, second: 59, millisecond: 999}).toJSDate().toISOString()
+            },
         });
     }
 }

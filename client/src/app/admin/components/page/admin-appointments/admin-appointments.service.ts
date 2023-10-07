@@ -4,20 +4,24 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { User } from '../../../model';
 import { Observable } from 'rxjs';
+import { DateTime } from 'luxon';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AdminAppointmentsService {
-    private readonly baseUrl = `${environment.apiUrl}/api/appointments`;
+    private readonly baseUrl: string = `${environment.apiUrl}/api/appointments`;
 
     constructor(private readonly client: HttpClient) {}
 
     getAppointments(date: Date): Observable<Appointment[]> {
-        const after = new Date(new Date(date).setHours(0, 0, 0, 0));
-        const before = new Date(new Date(date).setHours(23, 59, 59, 999));
+        const dateTime: DateTime = DateTime.fromJSDate(date);
+
         return this.client.get<Appointment[]>(this.baseUrl, {
-            params: { after: after.toISOString(), before: before.toISOString() },
+            params: {
+                after: dateTime.set({hour: 0, minute: 0, second: 0, millisecond: 0}).toJSDate().toISOString(),
+                before: dateTime.set({hour: 23, minute: 59, second: 59, millisecond: 999}).toJSDate().toISOString()
+            },
         });
     }
 }
