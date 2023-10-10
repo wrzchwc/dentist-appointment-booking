@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { DateService } from '../../../../shared/services/date.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Appointment } from '../admin-appointments/admin-appointments.service';
 import { AppointmentsListComponent } from '../../../../shared/components/page/appointments-list/appointments-list.component';
 import { AppointmentsWrapperComponent } from '../../../../shared/components/page/appointments-wrapper/appointments-wrapper.component';
 import { AppointmentPreviewComponent } from '../../../../shared/components/ui/appointment-preview/appointment-preview.component';
 import { DatePipe, NgForOf, NgIf } from '@angular/common';
+import { AdminAppointmentPreview } from '../../../../shared';
 
 @Component({
     selector: 'app-admin',
@@ -26,7 +26,7 @@ import { DatePipe, NgForOf, NgIf } from '@angular/common';
 export class AdminComponent {
     constructor(private readonly date: DateService, private readonly route: ActivatedRoute) {}
 
-    get appointments(): Appointment[] {
+    get appointments(): AdminAppointmentPreview[] {
         return this.route.snapshot.data['appointments'];
     }
 

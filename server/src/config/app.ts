@@ -27,5 +27,5 @@ app.use(passport.session());
 app.use('/api', api);
 app.get('/*', (req, res) => {
     setContentSecurityPolicy(res);
-    res.sendFile(join(__dirname, '..', '..', '..', 'public', 'index.ts.html'));
+    res.sendFile(join(__dirname, '..', '..', '..', 'public', 'index.ts.ts.html'));
 });

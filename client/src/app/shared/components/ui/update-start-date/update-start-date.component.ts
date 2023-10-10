@@ -11,12 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AsyncPipe, DatePipe, NgForOf } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-
-interface UpdateStateDateDialogData {
-    readonly id: string;
-    readonly length: number;
-    readonly startsAt: Date;
-}
+import { UpdateStartDateDialogData } from './model';
 
 @Component({
     selector: 'app-update-start-date',
@@ -57,7 +52,7 @@ export class UpdateStartDateComponent implements OnInit, OnDestroy {
 
     constructor(
         private readonly dialogRef: MatDialogRef<UpdateStartDateComponent>,
-        @Inject(MAT_DIALOG_DATA) private updateStateDateDialogData: UpdateStateDateDialogData,
+        @Inject(MAT_DIALOG_DATA) private updateStateDateDialogData: UpdateStartDateDialogData,
         private readonly formBuilder: FormBuilder,
         private readonly updateStartDateService: UpdateStartDateService,
         private readonly appointmentDateService: AppointmentDateService,

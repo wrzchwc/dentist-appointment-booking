@@ -4,8 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AppointmentsListComponent } from '../../../shared/components/page/appointments-list/appointments-list.component';
 import { NgForOf, NgIf } from '@angular/common';
 import { AppointmentsWrapperComponent } from '../../../shared/components/page/appointments-wrapper/appointments-wrapper.component';
-import { AppointmentPreviewComponent } from '../../../shared/components/ui/appointment-preview/appointment-preview.component';
-import { Appointment } from '../../../admin/components/page/admin-appointment/admin-appointment.service';
+import { Appointment1, AppointmentPreviewComponent } from '../../../shared';
 
 @Component({
     selector: 'app-client',
@@ -21,7 +20,7 @@ export class ClientComponent {
         private readonly route: ActivatedRoute
     ) {}
 
-    get appointments(): Appointment[] {
+    get appointments(): Appointment1[] {
         return this.route.snapshot.data['appointments'];
     }
 

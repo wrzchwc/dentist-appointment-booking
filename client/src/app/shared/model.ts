@@ -1,23 +1,27 @@
-export type Service = StandardService | ExceptionalPriceService;
+import { User } from '../admin/components/page/admin-appointment/model';
 
-interface StandardService extends ServiceBase {
-    price: number;
-    detail: null;
+export interface Service {
+    readonly id: string;
+    readonly name: string;
+    readonly count: 1;
+    readonly length: number;
+    price: number | null;
+    readonly detail: 'A' | null;
 }
 
-interface ExceptionalPriceService extends ServiceBase {
-    price: null;
-    detail: 'A';
+export interface AssociatedService extends Service {
+    readonly appointmentServices: AppointmentServices;
 }
 
-interface ServiceBase {
-    id: string;
-    name: string;
-    count: 1;
-    length: number;
+interface AppointmentServices {
+    readonly quantity: number;
 }
 
-export type AssociatedService = Service & { readonly appointmentServices: { readonly quantity: number } };
+export interface PriceItem {
+    readonly price: number | null;
+    readonly detail: 'A' | 'B' | 'C' | null;
+    readonly quantity: number;
+}
 
 export interface NamedPriceItem extends PriceItem {
     readonly name: string;
@@ -32,13 +36,40 @@ export interface Profile {
     readonly photoUrl: string;
 }
 
-export interface PriceItem {
-    price: number | null;
-    detail: 'A' | 'B' | 'C' | null;
-    quantity: number;
+export interface LengthItem {
+    readonly quantity: number;
+    readonly length: number;
 }
 
-export interface LengthItem {
-    quantity: number;
-    length: number;
+export interface Appointment1 {
+    readonly id: string;
+    readonly startsAt: Date;
+    readonly facts: Fact[];
+    readonly services: AssociatedService[];
+    readonly user: User;
+}
+
+interface Fact {
+    readonly id: string;
+    readonly value: string;
+    readonly healthSurvey: HealthSurvey;
+}
+
+interface HealthSurvey {
+    readonly additionalInfo: string | null;
+}
+
+export interface AppointmentPreview {
+    id: string;
+    startsAt: Date;
+    services: ServicePreview[];
+}
+
+interface ServicePreview {
+    id: string;
+    name: string;
+}
+
+export interface AdminAppointmentPreview extends AppointmentPreview {
+    user: User;
 }

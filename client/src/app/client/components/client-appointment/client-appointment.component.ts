@@ -14,7 +14,7 @@ import { EndDatePipe } from '../../../shared/pipes/end-date.pipe';
 @Component({
     selector: 'app-client-appointment',
     templateUrl: './client-appointment.component.html',
-    styleUrls: ['./client-appointment.component.scss', '../../../shared/components/page/appointment/appointment.scss'],
+    styleUrls: ['../../../shared/components/page/appointment/appointment.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [NgIf, AppointmentComponent, CardComponent, ServicesTableComponent, DatePipe, PricePipe, EndDatePipe],
     standalone: true,
@@ -31,8 +31,7 @@ export class ClientAppointmentComponent implements OnDestroy {
         private readonly clientAppointmentService: ClientAppointmentService,
         private readonly location: Location,
         private readonly appointmentService: AppointmentService
-    ) {
-    }
+    ) {}
 
     ngOnDestroy(): void {
         this.destroy$.next();

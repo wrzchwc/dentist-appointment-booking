@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { AdminAppointmentsService, Appointment } from './admin-appointments.service';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { AdminAppointmentsService } from './admin-appointments.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AppointmentsComponent } from '../../../../shared/components/page/appointments/appointments.component';
+import { AdminAppointmentPreview } from '../../../../shared';
 
 @Component({
     selector: 'app-admin-appointments',
@@ -12,19 +13,16 @@ import { AppointmentsComponent } from '../../../../shared/components/page/appoin
     imports: [AppointmentsComponent],
     standalone: true,
 })
-export class AdminAppointmentsComponent implements OnInit, OnDestroy {
-    appointments: Appointment[] = [];
+export class AdminAppointmentsComponent implements OnDestroy {
+    appointments: AdminAppointmentPreview[] = this.route.snapshot.data['appointments'];
 
-    private readonly destroy$ = new Subject<void>();
+    private readonly destroy$: Subject<void> = new Subject();
 
     constructor(private readonly route: ActivatedRoute, private readonly service: AdminAppointmentsService) {}
 
-    ngOnInit(): void {
-        this.appointments = this.route.snapshot.data['appointments'];
-    }
-
     ngOnDestroy(): void {
         this.destroy$.next();
+        this.destroy$.complete();
     }
 
     loadAppointmentsAt(date: Date) {

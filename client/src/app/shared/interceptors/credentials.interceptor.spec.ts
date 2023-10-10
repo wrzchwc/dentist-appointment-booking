@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-
-import { CredentialsInterceptor } from './credentials.interceptor.spec';
+import { CredentialsInterceptor } from './credentials.interceptor';
 
 describe('INTInterceptor', () => {
     beforeEach(() =>

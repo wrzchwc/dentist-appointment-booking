@@ -30,15 +30,14 @@ export class SummaryComponent implements OnInit, AfterViewChecked {
         private readonly time: AppointmentDateService,
         private readonly cart: AppointmentCartService,
         private readonly length: LengthService,
-        private readonly state: HealthStateService,
-    ) {
-    }
+        private readonly state: HealthStateService
+    ) {}
 
     ngOnInit(): void {
         this.time.selectedDate$
             .pipe(
                 filter(Boolean),
-                map((date) => DateTime.fromJSDate(date)),
+                map((date) => DateTime.fromJSDate(date))
             )
             .subscribe((dateTime) => {
                 this._endsAt = dateTime.plus({ minute: this.appointmentLength });

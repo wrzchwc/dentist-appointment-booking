@@ -19,7 +19,7 @@ export class ClientAppointmentsComponent implements OnDestroy {
         return this._appointments;
     }
 
-    private readonly destroy$ = new Subject<void>();
+    private readonly destroy$: Subject<void> = new Subject();
 
     constructor(
         private readonly clientAppointmentsService: ClientAppointmentsService,
@@ -28,6 +28,7 @@ export class ClientAppointmentsComponent implements OnDestroy {
 
     ngOnDestroy(): void {
         this.destroy$.next();
+        this.destroy$.complete();
     }
 
     handleDateChange(date: Date): void {

@@ -6,7 +6,7 @@ import { DateObjectUnits, DateTime } from 'luxon';
     providedIn: 'root',
 })
 export class DateService {
-    private readonly START: DateObjectUnits = {hour: 9, minute: 0, second: 0, millisecond: 0};
+    private readonly START: DateObjectUnits = { hour: 9, minute: 0, second: 0, millisecond: 0 };
 
     private _currentWorkday: DateTime = this.getCurrentWorkdayDate();
     private _previousWorkday: DateTime = this.calculatePreviousWorkday(this._currentWorkday);
@@ -50,7 +50,7 @@ export class DateService {
         const dateTime: DateTime = DateTime.fromJSDate(new Date());
 
         if (this.isDay(WeekDay.Saturday, dateTime)) {
-            return dateTime.plus({day: 2}).set(this.START);
+            return dateTime.plus({ day: 2 }).set(this.START);
         } else if (this.isDay(WeekDay.Sunday, dateTime) || dateTime.hour > 17) {
             return this.calculateNextWorkday(dateTime);
         } else if (dateTime.hour < 9) {
@@ -67,7 +67,7 @@ export class DateService {
         const offsetReversed = dateTime.minus({ day: this.isDay(WeekDay.Monday, dateTime) ? 3 : 1 });
         const current = this.getCurrentWorkdayDate();
 
-        return offsetReversed.day === current.day ? current :offsetReversed;
+        return offsetReversed.day === current.day ? current : offsetReversed;
     }
 
     private isDay(day: WeekDay, dateTime: DateTime): boolean {

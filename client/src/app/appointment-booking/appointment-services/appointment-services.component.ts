@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Service } from '../../shared/model';
 import { NgForOf } from '@angular/common';
 import { ServiceCardComponent } from '../service-card/service-card.component';
+import { Service } from '../../shared';
 
 @Component({
     selector: 'app-appointment-services',

@@ -6,8 +6,7 @@ import { AssociatedService, NamedPriceItem } from '../../../model';
     providedIn: 'root',
 })
 export class AppointmentService {
-    constructor(private readonly lengthService: LengthService) {
-    }
+    constructor(private readonly lengthService: LengthService) {}
 
     createDateSource(services: AssociatedService[]): NamedPriceItem[] {
         return services.map((service) => ({
@@ -19,11 +18,11 @@ export class AppointmentService {
     }
 
     calculateLength(services: AssociatedService[]): number {
-        return this.lengthService.calculateTotalLength(services.map((service) => ({
-                    quantity: service.appointmentServices.quantity,
-                    length: service.length,
-                }
-            ),
-        ));
+        return this.lengthService.calculateTotalLength(
+            services.map((service) => ({
+                quantity: service.appointmentServices.quantity,
+                length: service.length,
+            }))
+        );
     }
 }

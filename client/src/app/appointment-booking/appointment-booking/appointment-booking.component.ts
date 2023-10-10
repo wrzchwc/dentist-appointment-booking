@@ -7,7 +7,6 @@ import { DateService } from '../../shared/services/date.service';
 import { HealthStateService } from '../health-state/health-state.service';
 import { AppointmentBookingService } from './appointment-booking.service';
 import { LengthService } from '../../shared/services/length.service';
-import { Service } from '../../shared/model';
 import { AppointmentQuestion } from '../model';
 import { MatStepperModule } from '@angular/material/stepper';
 import { AsyncPipe } from '@angular/common';
@@ -16,6 +15,7 @@ import { AppointmentServicesComponent } from '../appointment-services/appointmen
 import { DateComponent } from '../date/date.component';
 import { HealthStateComponent } from '../health-state/health-state.component';
 import { SummaryComponent } from '../summary/summary.component';
+import { Service } from '../../shared';
 
 @Component({
     selector: 'app-appointment-booking',

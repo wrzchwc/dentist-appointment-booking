@@ -15,7 +15,16 @@ import { TooltipPipe } from '../../shared/pipes/tooltip.pipe';
     templateUrl: './service-card.component.html',
     styleUrls: ['./service-card.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, MatCardModule, MatIconModule, MatTooltipModule, AsyncPipe, AppointmentTimesPipe, MatButtonModule, TooltipPipe],
+    imports: [
+        NgIf,
+        MatCardModule,
+        MatIconModule,
+        MatTooltipModule,
+        AsyncPipe,
+        AppointmentTimesPipe,
+        MatButtonModule,
+        TooltipPipe,
+    ],
     standalone: true,
 })
 export class ServiceCardComponent {

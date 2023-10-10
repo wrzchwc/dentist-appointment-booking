@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Appointment } from '../admin-appointments/admin-appointments.service';
 import { Observable } from 'rxjs';
 import { DateTime } from 'luxon';
+import { AdminAppointmentPreview } from '../../../../shared';
 
 @Injectable({
     providedIn: 'root',
@@ -11,11 +11,10 @@ import { DateTime } from 'luxon';
 export class AdminService {
     private readonly baseUrl: string = `${environment.apiUrl}/api/appointments`;
 
-    constructor(private readonly httpClient: HttpClient) {
-    }
+    constructor(private readonly httpClient: HttpClient) {}
 
-    getAppointments(after: Date): Observable<Appointment[]> {
-        return this.httpClient.get<Appointment[]>(this.baseUrl, {
+    getAppointments(after: Date): Observable<AdminAppointmentPreview[]> {
+        return this.httpClient.get<AdminAppointmentPreview[]>(this.baseUrl, {
             params: {
                 after: after.toISOString(),
                 before: DateTime.fromJSDate(after)

@@ -24,10 +24,7 @@ export class AppointmentComponent {
 
     private readonly dialogConfig: MatDialogConfig = { autoFocus: true };
 
-    constructor(
-        private readonly matDialog: MatDialog,
-        private readonly location: Location
-    ) {}
+    constructor(private readonly matDialog: MatDialog, private readonly location: Location) {}
 
     reschedule(): void {
         this.dialogConfig.data = { id: this.appointmentId, startsAt: this.startsAt, length: this.length };

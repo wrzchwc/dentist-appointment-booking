@@ -24,6 +24,11 @@ export const APP_ROUTES: Routes = [
         loadChildren: async () => (await import('./admin/routes')).ADMIN_ROUTES,
     },
     {
+        path: 'appointment-preview',
+        canLoad: [AuthenticationGuard],
+        loadChildren: async () => (await import('./appointment-preview/routes')).APPOINTMENT_PREVIEW_ROUTES,
+    },
+    {
         path: '',
         loadComponent: async () => (await import('./shared/components/page/home/home.component')).HomeComponent,
         resolve: { profile: AuthenticationResolver },

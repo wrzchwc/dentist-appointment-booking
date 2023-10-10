@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { Appointment } from '../../../../admin/components/page/admin-appointments/admin-appointments.service';
 import { MatCardModule } from '@angular/material/card';
 import { DatePipe, NgForOf, NgIf } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
+import { AdminAppointmentPreview } from '../../../model';
 
 @Component({
     selector: 'app-appointment-preview',
@@ -16,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppointmentPreviewComponent implements OnChanges {
-    @Input() appointment?: Partial<Appointment>;
+    @Input() appointment?: Partial<AdminAppointmentPreview>;
 
     private _services: string[] = [];
     get services(): string[] {

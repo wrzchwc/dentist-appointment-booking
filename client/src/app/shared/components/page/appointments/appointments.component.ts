@@ -9,6 +9,7 @@ import { AppointmentPreviewComponent } from '../../ui/appointment-preview/appoin
 import { MatInputModule } from '@angular/material/input';
 import { AppointmentsListComponent } from '../appointments-list/appointments-list.component';
 import { AppointmentsWrapperComponent } from '../appointments-wrapper/appointments-wrapper.component';
+import { AppointmentPreview } from '../../../model';
 
 @Component({
     selector: 'app-appointments',
@@ -31,7 +32,7 @@ import { AppointmentsWrapperComponent } from '../appointments-wrapper/appointmen
 })
 export class AppointmentsComponent implements OnChanges, OnDestroy {
     @Input() listTitle: string = '';
-    @Input() appointments: Appointment[] = [];
+    @Input() appointments: AppointmentPreview[] = [];
 
     @Output() readonly dateChange: EventEmitter<Date> = new EventEmitter();
 
@@ -39,11 +40,11 @@ export class AppointmentsComponent implements OnChanges, OnDestroy {
         nonNullable: true,
     });
 
-    private readonly destroy$ = new Subject<void>();
+    private readonly destroy$: Subject<void> = new Subject();
 
     constructor(private readonly formBuilder: FormBuilder, private readonly dateService: DateService) {}
 
-    ngOnChanges() {
+    ngOnChanges(): void {
         this.pickerControl.valueChanges.pipe(takeUntil(this.destroy$)).subscribe((date) => {
             this.dateChange.emit(date);
         });
@@ -52,15 +53,4 @@ export class AppointmentsComponent implements OnChanges, OnDestroy {
     ngOnDestroy(): void {
         this.destroy$.next();
     }
-}
-
-export interface Appointment {
-    id: string;
-    startsAt: Date;
-    services: Service[];
-}
-
-interface Service {
-    id: string;
-    name: string;
 }

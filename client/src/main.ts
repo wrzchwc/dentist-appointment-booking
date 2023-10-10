@@ -2,7 +2,7 @@ import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { environment } from './environments/environment';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule, HttpHandler } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CredentialsInterceptor } from './app/shared/interceptors/credentials.interceptor';
 import { provideRouter } from '@angular/router';
 import { APP_ROUTES } from './app/routes';
@@ -21,6 +21,6 @@ bootstrapApplication(AppComponent, {
         },
         provideRouter(APP_ROUTES),
         importProvidersFrom(HttpClientModule),
-        provideAnimations()
+        provideAnimations(),
     ],
 }).catch(console.error);

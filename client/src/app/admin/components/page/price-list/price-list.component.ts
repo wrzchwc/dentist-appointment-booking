@@ -10,8 +10,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { AppointmentTimesPipe } from '../../../../shared/pipes/appointment-times.pipe';
 import { NgForOf, NgIf } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { Service } from '../../../../shared/model';
 import { TooltipPipe } from '../../../../shared/pipes/tooltip.pipe';
+import { Service } from '../../../../shared';
 
 @Component({
     selector: 'app-price-list',
@@ -27,7 +27,7 @@ import { TooltipPipe } from '../../../../shared/pipes/tooltip.pipe';
         NgForOf,
         NgIf,
         MatButtonModule,
-        TooltipPipe
+        TooltipPipe,
     ],
     standalone: true,
 })
@@ -37,12 +37,9 @@ export class PriceListComponent {
     private readonly dialogConfig: MatDialogConfig = { autoFocus: true };
     private readonly destroy$: Subject<void> = new Subject();
 
-    constructor(
-        private readonly route: ActivatedRoute,
-        private readonly dialog: MatDialog
-    ) {}
+    constructor(private readonly route: ActivatedRoute, private readonly dialog: MatDialog) {}
 
-    handlePriceUpdate(service: Service) {
+    handlePriceUpdate(service: Service): void {
         this.dialogConfig.data = { id: service.id, price: service.price, name: service.name };
         this.dialog
             .open(UpdatePriceComponent, this.dialogConfig)
