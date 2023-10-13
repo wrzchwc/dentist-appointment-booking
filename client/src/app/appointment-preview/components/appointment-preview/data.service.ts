@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { LengthService } from '../../../services/length.service';
-import { AssociatedService, NamedPriceItem } from '../../../model';
+import { AssociatedService, NamedPriceItem, LengthService } from '../../../shared';
 
 @Injectable({
     providedIn: 'root',
 })
-export class AppointmentService {
+export class DataService {
     constructor(private readonly lengthService: LengthService) {}
 
     createDateSource(services: AssociatedService[]): NamedPriceItem[] {

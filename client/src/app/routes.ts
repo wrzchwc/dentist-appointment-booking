@@ -4,19 +4,14 @@ import { AuthenticationResolver } from './shared/resolvers/authentication.resolv
 
 export const APP_ROUTES: Routes = [
     {
+        path: 'appointment-booking',
+        canLoad: [AuthenticationGuard],
+        loadChildren: async () => (await import('./appointment-booking/routes')).APPOINTMENT_BOOKING_ROUTES,
+    },
+    {
         path: 'client',
-        children: [
-            {
-                path: 'appointment-booking',
-                canLoad: [AuthenticationGuard],
-                loadChildren: async () => (await import('./appointment-booking/routes')).APPOINTMENT_BOOKING_ROUTES,
-            },
-            {
-                path: '',
-                canLoad: [AuthenticationGuard],
-                loadChildren: async () => (await import('./client/routes')).CLIENT_ROUTES,
-            },
-        ],
+        canLoad: [AuthenticationGuard],
+        loadChildren: async () => (await import('./client/routes')).CLIENT_ROUTES,
     },
     {
         path: 'admin',

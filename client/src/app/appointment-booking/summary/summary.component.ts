@@ -1,15 +1,18 @@
 import { AfterViewChecked, ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../../shared/services/authentication.service';
-import { AppointmentDateService } from '../../shared/services/appointment-date.service';
+import {
+    AuthenticationService,
+    AppointmentDateService,
+    LengthService,
+    NamedPriceItem,
+    Profile,
+    CardComponent,
+    ServicesTableComponent,
+    PricePipe,
+} from '../../shared';
 import { AppointmentCartService } from '../appointment-cart.service';
-import { LengthService } from '../../shared/services/length.service';
 import { filter, map, Observable } from 'rxjs';
 import { HealthStateService } from '../health-state/health-state.service';
-import { NamedPriceItem, Profile } from '../../shared/model';
 import { AsyncPipe, DatePipe, NgForOf, NgIf } from '@angular/common';
-import { CardComponent } from '../../shared/components/ui/card/card.component';
-import { ServicesTableComponent } from '../../shared/components/ui/services-table/services-table.component';
-import { PricePipe } from '../../shared/pipes/price.pipe';
 import { DateTime } from 'luxon';
 
 @Component({
