@@ -4,6 +4,7 @@ export * from './components/ui/appointment-preview/appointment-preview.component
 export * from './components/ui/services-table/services-table.component';
 export * from './components/ui/card/card.component';
 export * from './components/page/appointment/appointment.component';
+export * from './components/page/appointments/appointments.component';
 export * from './services/authentication.service';
 export * from './services/appointment-date.service';
 export * from './services/length.service';

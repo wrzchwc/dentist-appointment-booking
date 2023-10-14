@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthenticationGuard } from './shared/guards/authentication.guard';
 import { AuthenticationResolver } from './shared/resolvers/authentication.resolver';
+import { AppointmentPreviewClientService } from './appointment-preview/services/appointment-preview-client.service';
 
 export const APP_ROUTES: Routes = [
     {
@@ -21,6 +22,7 @@ export const APP_ROUTES: Routes = [
     {
         path: 'appointment-preview',
         canLoad: [AuthenticationGuard],
+        providers: [AppointmentPreviewClientService],
         loadChildren: async () => (await import('./appointment-preview/routes')).APPOINTMENT_PREVIEW_ROUTES,
     },
     {

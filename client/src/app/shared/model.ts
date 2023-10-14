@@ -1,4 +1,4 @@
-import { User } from '../admin/components/page/admin-appointment/model';
+import { User } from '../appointment-preview/model';
 
 export interface Service {
     readonly id: string;

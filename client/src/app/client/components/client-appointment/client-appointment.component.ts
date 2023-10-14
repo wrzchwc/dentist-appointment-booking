@@ -3,13 +3,16 @@ import { ActivatedRoute } from '@angular/router';
 import { ClientAppointmentService } from './client-appointment.service';
 import { Subject, takeUntil } from 'rxjs';
 import { DatePipe, Location, NgIf } from '@angular/common';
-import { AppointmentService } from '../../../shared/components/page/appointment/appointment.service';
+import { DataService } from '../../../appointment-preview/components/appointment-preview/data.service';
 import { Appointment } from '../../model';
-import { AppointmentComponent } from '../../../shared/components/page/appointment/appointment.component';
-import { CardComponent } from '../../../shared/components/ui/card/card.component';
-import { ServicesTableComponent } from '../../../shared/components/ui/services-table/services-table.component';
-import { PricePipe, NamedPriceItem } from '../../../shared';
-import { EndDatePipe } from '../../../shared/pipes/end-date.pipe';
+import {
+    AppointmentComponent,
+    CardComponent,
+    ServicesTableComponent,
+    PricePipe,
+    NamedPriceItem,
+} from '../../../shared';
+import { EndDatePipe } from '../../../appointment-preview/components/appointment-preview/end-date.pipe';
 
 @Component({
     selector: 'app-client-appointment',
@@ -30,7 +33,7 @@ export class ClientAppointmentComponent implements OnDestroy {
         private readonly activatedRoute: ActivatedRoute,
         private readonly clientAppointmentService: ClientAppointmentService,
         private readonly location: Location,
-        private readonly appointmentService: AppointmentService
+        private readonly appointmentService: DataService
     ) {}
 
     ngOnDestroy(): void {

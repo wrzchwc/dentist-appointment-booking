@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { AdminAppointmentService } from './admin-appointment.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { AppointmentService } from '../../../../shared/components/page/appointment/appointment.service';
+import { DataService } from '../../../../appointment-preview/components/appointment-preview/data.service';
 import { DatePipe, Location, NgForOf, NgIf, NgOptimizedImage } from '@angular/common';
 import { AppointmentComponent } from '../../../../shared/components/page/appointment/appointment.component';
 import { CardComponent } from '../../../../shared/components/ui/card/card.component';
 import { ServicesTableComponent } from '../../../../shared/components/ui/services-table/services-table.component';
 import { Appointment1, NamedPriceItem, PricePipe } from '../../../../shared';
 import { EmailPipe } from './email.pipe';
-import { EndDatePipe } from '../../../../shared/pipes/end-date.pipe';
+import { EndDatePipe } from '../../../../appointment-preview/components/appointment-preview/end-date.pipe';
 
 @Component({
     selector: 'app-admin-appointment',
@@ -42,7 +42,7 @@ export class AdminAppointmentComponent implements OnDestroy {
 
     constructor(
         private readonly activatedRoute: ActivatedRoute,
-        private readonly appointmentService: AppointmentService,
+        private readonly appointmentService: DataService,
         private readonly adminAppointmentService: AdminAppointmentService,
         private readonly location: Location
     ) {}

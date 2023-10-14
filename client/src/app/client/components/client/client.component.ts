@@ -1,10 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { AuthenticationService } from '../../../shared/services/authentication.service';
 import { ActivatedRoute } from '@angular/router';
 import { AppointmentsListComponent } from '../../../shared/components/page/appointments-list/appointments-list.component';
 import { NgForOf, NgIf } from '@angular/common';
 import { AppointmentsWrapperComponent } from '../../../shared/components/page/appointments-wrapper/appointments-wrapper.component';
-import { Appointment1, AppointmentPreviewComponent } from '../../../shared';
+import { Appointment1, AppointmentPreviewComponent, AuthenticationService } from '../../../shared';
 
 @Component({
     selector: 'app-client',

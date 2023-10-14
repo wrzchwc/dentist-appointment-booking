@@ -1,22 +1,13 @@
 import { Routes } from '@angular/router';
-import {
-    AppointmentManagementService,
-    ClientAppointmentManagementService,
-    AdminAppointmentManagementService,
-} from '../appointment-managment';
-import { appointmentPreviewResolver } from './components/appointment-preview/appointment-preview.resolver';
-import { appointmentListTitleResolver } from './components/appointment-list/appointment-list-title.resolver';
+import { appointmentResolver } from './resolvers/appointment.resolver';
+import { appointmentListTitleResolver } from './resolvers/appointment-list-title.resolver';
+import { appointmentsAtDateResolver } from './resolvers/appointments.resolver';
 
 export const APPOINTMENT_PREVIEW_ROUTES: Routes = [
     {
         path: ':appointmentId',
         title: 'Podgląd wizyty',
-        providers: [
-            AppointmentManagementService,
-            ClientAppointmentManagementService,
-            AdminAppointmentManagementService,
-        ],
-        resolve: { appointment: appointmentPreviewResolver },
+        resolve: { preview: appointmentResolver },
         loadComponent: async () =>
             (await import('./components/appointment-preview/appointment-preview.component'))
                 .AppointmentPreviewComponent,
@@ -24,8 +15,9 @@ export const APPOINTMENT_PREVIEW_ROUTES: Routes = [
     {
         path: '',
         title: appointmentListTitleResolver,
-        providers: [],
-        resolve: {},
+        resolve: {
+            appointments: appointmentsAtDateResolver,
+        },
         loadComponent: async () =>
             (await import('./components/appointment-list/appointment-list.component')).AppointmentListComponent,
     },

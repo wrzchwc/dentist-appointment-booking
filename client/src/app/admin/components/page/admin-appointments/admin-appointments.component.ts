@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
 import { AdminAppointmentsService } from './admin-appointments.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { AppointmentsComponent } from '../../../../shared/components/page/appointments/appointments.component';
+import { AppointmentsComponent } from '../../../../shared';
 import { AdminAppointmentPreview } from '../../../../shared';
 
 @Component({

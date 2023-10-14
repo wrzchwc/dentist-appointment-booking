@@ -3,6 +3,7 @@ import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Appointment } from '../../model';
 import { DateTime } from 'luxon';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -12,7 +13,7 @@ export class ClientAppointmentsService {
 
     constructor(private readonly httpClient: HttpClient) {}
 
-    getAppointments(date: Date) {
+    getAppointments(date: Date): Observable<Appointment[]> {
         const dateTime: DateTime = DateTime.fromJSDate(date);
 
         return this.httpClient.get<Appointment[]>(this.baseUrl, {

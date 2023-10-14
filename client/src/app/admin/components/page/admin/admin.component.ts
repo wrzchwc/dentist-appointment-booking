@@ -3,9 +3,8 @@ import { DateService } from '../../../../shared/services/date.service';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AppointmentsListComponent } from '../../../../shared/components/page/appointments-list/appointments-list.component';
 import { AppointmentsWrapperComponent } from '../../../../shared/components/page/appointments-wrapper/appointments-wrapper.component';
-import { AppointmentPreviewComponent } from '../../../../shared/components/ui/appointment-preview/appointment-preview.component';
 import { DatePipe, NgForOf, NgIf } from '@angular/common';
-import { AdminAppointmentPreview } from '../../../../shared';
+import { AdminAppointmentPreview, AppointmentPreviewComponent } from '../../../../shared';
 
 @Component({
     selector: 'app-admin',

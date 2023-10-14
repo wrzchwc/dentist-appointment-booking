@@ -1,1 +1,5 @@
-<p>appointment-list works!</p>
+<app-appointments
+    [listTitle]='listTitle'
+    [appointments]='appointments'
+    (dateChange)='dateChange($event)'
+></app-appointments>

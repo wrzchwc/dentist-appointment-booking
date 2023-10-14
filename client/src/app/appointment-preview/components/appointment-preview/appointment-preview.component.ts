@@ -10,11 +10,11 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { DatePipe, Location, NgForOf, NgIf } from '@angular/common';
-import { AppointmentManagementService } from '../../../appointment-managment';
+import { AppointmentManagementClientService } from '../../../appointment-managment';
 import { EmailPipe } from './email.pipe';
-import { Appointment } from './model';
 import { DataService } from './data.service';
 import { EndDatePipe } from './end-date.pipe';
+import { AppointmentPreview } from '../../model';
 
 @Component({
     selector: 'app-appointment-preview',
@@ -36,11 +36,12 @@ import { EndDatePipe } from './end-date.pipe';
         ServicesTableComponent,
         DatePipe,
     ],
+    providers: [AppointmentManagementClientService],
 })
 export class AppointmentPreviewComponent implements OnDestroy {
-    readonly appointment: Appointment = this.activatedRoute.snapshot.data['appointment'];
-    readonly dataSource: NamedPriceItem[] = this.dataService.createDateSource(this.appointment.services);
-    readonly length: number = this.dataService.calculateLength(this.appointment.services);
+    readonly preview: AppointmentPreview = this.activatedRoute.snapshot.data['appointment'];
+    readonly dataSource: NamedPriceItem[] = this.dataService.createDateSource(this.preview.services);
+    readonly length: number = this.dataService.calculateLength(this.preview.services);
 
     private readonly destroy$: Subject<void> = new Subject();
 
@@ -48,7 +49,7 @@ export class AppointmentPreviewComponent implements OnDestroy {
         private readonly activatedRoute: ActivatedRoute,
         private readonly dataService: DataService,
         private readonly location: Location,
-        private readonly appointmentManagementService: AppointmentManagementService,
+        private readonly appointmentManagementService: AppointmentManagementClientService,
         private readonly authentication: AuthenticationService
     ) {}
 
@@ -63,7 +64,7 @@ export class AppointmentPreviewComponent implements OnDestroy {
 
     cancelAppointment(): void {
         this.appointmentManagementService
-            .cancelAppointment(this.appointment.id)
+            .cancelAppointment(this.preview.id)
             .pipe(takeUntil(this.destroy$))
             .subscribe(() => {
                 this.location.back();
