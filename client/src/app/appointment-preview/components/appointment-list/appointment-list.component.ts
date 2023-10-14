@@ -9,11 +9,8 @@ import { Title } from '@angular/platform-browser';
     selector: 'app-appointment-list',
     standalone: true,
     templateUrl: './appointment-list.component.html',
-    styleUrls: ['./appointment-list.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        AppointmentsComponent
-    ],
+    imports: [AppointmentsComponent],
 })
 export class AppointmentListComponent {
     appointments: Appointment[] = this.activatedRoute.snapshot.data['appointments'];
@@ -22,8 +19,7 @@ export class AppointmentListComponent {
         private readonly activatedRoute: ActivatedRoute,
         private readonly appointmentPreviewClientService: AppointmentPreviewClientService,
         private readonly title: Title
-    ) {
-    }
+    ) {}
 
     get listTitle(): string {
         return this.title.getTitle();

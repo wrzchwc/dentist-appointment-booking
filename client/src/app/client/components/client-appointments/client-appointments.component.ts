@@ -8,7 +8,6 @@ import { AppointmentsComponent } from '../../../shared/components/page/appointme
 @Component({
     selector: 'app-client-appointments',
     templateUrl: './client-appointments.component.html',
-    styleUrls: ['./client-appointments.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [AppointmentsComponent],
     standalone: true,

@@ -55,10 +55,8 @@ export class AppointmentPreviewComponent {
     }
 
     cancelAppointment(): void {
-        this.appointmentManagementService
-            .cancelAppointment(this.preview.id)
-            .subscribe(() => {
-                this.location.back();
-            });
+        this.appointmentManagementService.cancelAppointment(this.preview.id).subscribe(() => {
+            this.location.back();
+        });
     }
 }
