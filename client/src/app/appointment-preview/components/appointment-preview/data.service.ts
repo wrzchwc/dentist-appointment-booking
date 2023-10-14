@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AssociatedService, NamedPriceItem, LengthService } from '../../../shared';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class DataService {
     constructor(private readonly lengthService: LengthService) {}
 

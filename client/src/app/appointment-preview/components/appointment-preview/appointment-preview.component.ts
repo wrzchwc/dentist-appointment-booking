@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
     NamedPriceItem,
     PricePipe,
@@ -8,7 +8,6 @@ import {
     AuthenticationService,
 } from '../../../shared';
 import { ActivatedRoute } from '@angular/router';
-import { Subject, takeUntil } from 'rxjs';
 import { DatePipe, Location, NgForOf, NgIf } from '@angular/common';
 import { AppointmentManagementClientService } from '../../../appointment-managment';
 import { EmailPipe } from './email.pipe';
@@ -36,14 +35,12 @@ import { AppointmentPreview } from '../../model';
         ServicesTableComponent,
         DatePipe,
     ],
-    providers: [AppointmentManagementClientService],
+    providers: [AppointmentManagementClientService, DataService],
 })
-export class AppointmentPreviewComponent implements OnDestroy {
+export class AppointmentPreviewComponent {
     readonly preview: AppointmentPreview = this.activatedRoute.snapshot.data['appointment'];
     readonly dataSource: NamedPriceItem[] = this.dataService.createDateSource(this.preview.services);
     readonly length: number = this.dataService.calculateLength(this.preview.services);
-
-    private readonly destroy$: Subject<void> = new Subject();
 
     constructor(
         private readonly activatedRoute: ActivatedRoute,
@@ -53,11 +50,6 @@ export class AppointmentPreviewComponent implements OnDestroy {
         private readonly authentication: AuthenticationService
     ) {}
 
-    ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
-    }
-
     get isAdmin(): boolean {
         return !!this.authentication.profile?.isAdmin;
     }
@@ -65,7 +57,6 @@ export class AppointmentPreviewComponent implements OnDestroy {
     cancelAppointment(): void {
         this.appointmentManagementService
             .cancelAppointment(this.preview.id)
-            .pipe(takeUntil(this.destroy$))
             .subscribe(() => {
                 this.location.back();
             });
